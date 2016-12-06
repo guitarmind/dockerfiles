@@ -1,7 +1,7 @@
 FROM r-base:3.3.0
 MAINTAINER markpeng@exosite.com
 
-RUN apt-get update && apt-get install -y openssh-server libcurl4-openssl-dev libssl-dev libxml2-dev curl autoconf git htop
+RUN apt-get update && apt-get install -y openssh-server libcurl4-openssl-dev libssl-dev libxml2-dev curl autoconf
 
 # install required R dependencies and setup R packages
 RUN echo "r <- getOption('repos'); r['CRAN'] <- 'http://cran.us.r-project.org'; options(repos = r);" > ~/.Rprofile && \
@@ -58,6 +58,6 @@ RUN set -xe \
     && apt-get purge -y --auto-remove $buildDeps \
     && rm -rf /var/lib/apt/lists/*
 
-RUN apt-get install -y erlang-snmp
+RUN apt-get update && apt-get install -y erlang-snmp git htop
 
 CMD ["R"]
