@@ -41,7 +41,8 @@ ENV R_BASE_VERSION 3.3.2
 RUN apt-get update \
   && apt-get install -y --force-yes --no-install-recommends \
     littler \
-                r-cran-littler \
+    r-cran-littler \
+    libopenblas-base \
     r-base=${R_BASE_VERSION}* \
     r-base-dev=${R_BASE_VERSION}* \
     r-recommended=${R_BASE_VERSION}* \
