@@ -1,7 +1,7 @@
-FROM r-base:3.3.0
+FROM guitarmind/r-base
 MAINTAINER markpeng@exosite.com
 
-RUN apt-get update && apt-get install -y openssh-server libcurl4-openssl-dev libssl-dev libxml2-dev curl autoconf libkrb5-dev
+RUN apt-get update && apt-get install -y openssh-server libcurl4-openssl-dev libssl-dev libxml2-dev curl autoconf openssl libkrb5-dev libssl1.0.0 libwxbase3.0-0 libwxgtk3.0-0
 
 # install required R dependencies and setup R packages
 RUN echo "r <- getOption('repos'); r['CRAN'] <- 'http://cran.us.r-project.org'; options(repos = r);" > ~/.Rprofile && \
@@ -10,34 +10,13 @@ RUN echo "r <- getOption('repos'); r['CRAN'] <- 'http://cran.us.r-project.org'; 
     Rscript -e "install.packages('devtools')" && \
     Rscript -e "devtools::install_github('twitter/AnomalyDetection')"
 
-# install elixir dependencies
-ENV OTP_VERSION="18.3.4.4"
+# install erlang/elixir dependencies
+ENV OTP_VERSION="18.3.4"
 
 # We'll install the build dependencies for erlang-odbc along with the erlang
 # build process:
-RUN set -xe \
-    && OTP_DOWNLOAD_URL="https://github.com/erlang/otp/archive/OTP-$OTP_VERSION.tar.gz" \
-    && OTP_DOWNLOAD_SHA256="3956f5c4fcd05848c7fe048d5c4ef7eaf002a8312cba0674150c5a10ab0e9f04" \
-    && runtimeDeps='libodbc1 \
-            libsctp1' \
-    && buildDeps='unixodbc-dev \
-            libsctp-dev' \
-    && apt-get update \
-    && apt-get install -y --no-install-recommends $runtimeDeps \
-    && apt-get install -y --no-install-recommends $buildDeps \
-    && curl -fSL -o otp-src.tar.gz "$OTP_DOWNLOAD_URL" \
-    && echo "$OTP_DOWNLOAD_SHA256 otp-src.tar.gz" | sha256sum -c - \
-    && mkdir -p /usr/src/otp-src \
-    && tar -xzf otp-src.tar.gz -C /usr/src/otp-src --strip-components=1 \
-    && rm otp-src.tar.gz \
-    && cd /usr/src/otp-src \
-    && ./otp_build autoconf \
-    && ./configure --enable-sctp --with-ssl=/usr/bin \
-    && make -j$(nproc) \
-    && make install \
-    && find /usr/local -name examples | xargs rm -rf \
-    && apt-get purge -y --auto-remove $buildDeps \
-    && rm -rf /usr/src/otp-src /var/lib/apt/lists/*
+RUN wget https://packages.erlang-solutions.com/erlang/esl-erlang/FLAVOUR_1_general/esl-erlang_$OTP_VERSION-1~debian~jessie_amd64.deb && \
+    dpkg -i esl-erlang_$OTP_VERSION-1~debian~jessie_amd64.deb
 
 # elixir expects utf8.
 ENV ELIXIR_VERSION="v1.3.4" \
