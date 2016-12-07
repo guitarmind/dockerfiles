@@ -1,7 +1,7 @@
 FROM r-base:3.3.0
 MAINTAINER markpeng@exosite.com
 
-RUN apt-get update && apt-get install -y openssh-server libcurl4-openssl-dev libssl-dev libxml2-dev curl autoconf libssl-dev libkrb5-dev
+RUN apt-get update && apt-get install -y openssh-server libcurl4-openssl-dev libssl-dev libxml2-dev curl autoconf libkrb5-dev
 
 # install required R dependencies and setup R packages
 RUN echo "r <- getOption('repos'); r['CRAN'] <- 'http://cran.us.r-project.org'; options(repos = r);" > ~/.Rprofile && \
