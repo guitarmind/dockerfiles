@@ -13,10 +13,9 @@ RUN echo "r <- getOption('repos'); r['CRAN'] <- 'http://cran.us.r-project.org'; 
 # install erlang/elixir dependencies
 ENV OTP_VERSION="18.3.4"
 
-# We'll install the build dependencies for erlang-odbc along with the erlang
-# build process:
-RUN wget https://packages.erlang-solutions.com/erlang/esl-erlang/FLAVOUR_1_general/esl-erlang_$OTP_VERSION-1~debian~jessie_amd64.deb && \
-    dpkg -i esl-erlang_$OTP_VERSION-1~debian~jessie_amd64.deb
+RUN echo "deb https://packages.erlang-solutions.com/debian jessie contrib" >> /etc/apt/sources.list && \
+    wget https://packages.erlang-solutions.com/debian/erlang_solutions.asc && apt-key add erlang_solutions.asc && \
+    apt-get update && apt-get install -y esl-erlang=1:$OTP_VERSION
 
 # elixir expects utf8.
 ENV ELIXIR_VERSION="v1.3.4" \
