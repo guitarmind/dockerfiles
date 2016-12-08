@@ -1,4 +1,4 @@
-FROM guitarmind/r-base
+FROM guitarmind/r-base:latest
 MAINTAINER markpeng@exosite.com
 
 RUN apt-get update && apt-get install -y git htop openssh-server libcurl4-openssl-dev libssl-dev libxml2-dev curl openssl libkrb5-dev libssl1.0.0 libwxbase3.0-0 libwxgtk3.0-0
