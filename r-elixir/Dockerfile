@@ -1,7 +1,8 @@
-FROM guitarmind/r-base:latest
+FROM guitarmind/r-base
 MAINTAINER markpeng@exosite.com
 
-RUN apt-get update && apt-get install -y git htop openssh-server libcurl4-openssl-dev libssl-dev libxml2-dev curl openssl libkrb5-dev libssl1.0.0 libwxbase3.0-0 libwxgtk3.0-0
+RUN apt-get update && apt-get install -y unzip git htop openssh-server libcurl4-openssl-dev \
+    libssl-dev libxml2-dev curl openssl libkrb5-dev libssl1.0.0 libwxbase3.0-0 libwxgtk3.0-0
 
 # install required R dependencies and setup R packages
 RUN echo "r <- getOption('repos'); r['CRAN'] <- 'http://cran.us.r-project.org'; options(repos = r);" > ~/.Rprofile && \
@@ -24,16 +25,10 @@ ENV ELIXIR_VERSION="v1.3.4" \
 RUN set -xe \
     && ELIXIR_DOWNLOAD_URL="https://github.com/elixir-lang/elixir/releases/download/${ELIXIR_VERSION}/Precompiled.zip" \
     && ELIXIR_DOWNLOAD_SHA256="eac16c41b88e7293a31d6ca95b5d72eaec92349a1f16846344f7b88128587e10"\
-    && buildDeps=' \
-        unzip \
-    ' \
-    && apt-get update \
-    && apt-get install -y --no-install-recommends $buildDeps \
     && curl -fSL -o elixir-precompiled.zip $ELIXIR_DOWNLOAD_URL \
     && echo "$ELIXIR_DOWNLOAD_SHA256 elixir-precompiled.zip" | sha256sum -c - \
     && unzip -d /usr/local elixir-precompiled.zip \
     && rm elixir-precompiled.zip \
-    && apt-get purge -y --auto-remove $buildDeps \
     && rm -rf /var/lib/apt/lists/*
 
 CMD ["iex"]
