@@ -7,7 +7,7 @@ RUN apk --update add ncurses-libs ca-certificates \
     erlang-crypto erlang-public-key erlang-ssl erlang-ssh erlang-asn1 \
     erlang-inets erlang-mnesia erlang-odbc erlang-xmerl erlang-runtime-tools \
     erlang-observer erlang-os-mon erlang-erl-interface erlang-parsetools \
-    erlang-snmp wget git g++ make libcurl && \
+    erlang-snmp wget git g++ make libcurl bash && \
     rm -rf /var/cache/apk/*
 
 RUN mix local.hex --force && \
