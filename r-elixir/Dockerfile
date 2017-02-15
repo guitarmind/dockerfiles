@@ -14,6 +14,7 @@ RUN echo "r <- getOption('repos'); r['CRAN'] <- 'http://cran.us.r-project.org'; 
     Rscript -e "install.packages('httr')" && \
     Rscript -e "install.packages('RCurl')" && \
     Rscript -e "install.packages('devtools')" && \
+    Rscript -e "install.packages('TSA')" && \
     Rscript -e "devtools::install_github('twitter/AnomalyDetection')"
 
 # install erlang/elixir dependencies
