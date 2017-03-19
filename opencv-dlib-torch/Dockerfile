@@ -16,7 +16,7 @@
 #   docker push bamos/ubuntu-opencv-dlib-torch:ubuntu_14.04-opencv_2.4.11-dlib_18.16-torch_2016.03.19
 
 FROM ubuntu:14.04
-MAINTAINER Brandon Amos <brandon.amos.cs@gmail.com>
+MAINTAINER Mark Peng <markpeng.ntu@gmail.com>
 
 RUN apt-get update && apt-get install -y \
     build-essential \
@@ -75,10 +75,10 @@ RUN cd ~ && \
     mkdir -p dlib-tmp && \
     cd dlib-tmp && \
     curl -L \
-         https://github.com/davisking/dlib/archive/v19.0.tar.gz \
+         https://github.com/davisking/dlib/archive/v19.4.tar.gz \
          -o dlib.tar.bz2 && \
     tar xf dlib.tar.bz2 && \
-    cd dlib-19.0/python_examples && \
+    cd dlib-19.4/python_examples && \
     mkdir build && \
     cd build && \
     cmake ../../tools/python && \
