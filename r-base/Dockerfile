@@ -34,7 +34,7 @@ ENV LC_ALL en_US.UTF-8
 ENV LANG en_US.UTF-8
 
 RUN echo "deb https://cloud.r-project.org/bin/linux/debian jessie-cran3/" >> /etc/apt/sources.list
-ENV R_BASE_VERSION 3.3.2
+ENV R_BASE_VERSION 3.4.0
 
 ## Now install R and littler, and create a link for littler in /usr/local/bin
 ## Also set a default CRAN repo, and make sure littler knows about it too
