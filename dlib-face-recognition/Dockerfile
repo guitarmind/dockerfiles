@@ -1,7 +1,7 @@
 # This is a sample Dockerfile you can modify to deploy your own app based on face_recognition
 # Modified version of https://github.com/ageitgey/face_recognition by Mark Peng
 
-FROM python:3.4-slim
+FROM python:2.7-slim
 
 RUN apt-get -y update
 RUN apt-get install -y --fix-missing \
@@ -22,8 +22,8 @@ RUN apt-get install -y --fix-missing \
     liblapack-dev \
     libswscale-dev \
     pkg-config \
-    python3-dev \
-    python3-numpy \
+    python-dev \
+    python-numpy \
     software-properties-common \
     zip \
     libffi-dev \
@@ -31,6 +31,25 @@ RUN apt-get install -y --fix-missing \
     libopenblas-dev \
     && apt-get clean && rm -rf /tmp/* /var/tmp/*
 
+# Install OpenCV
+RUN cd ~ && \
+    mkdir -p ocv-tmp && \
+    cd ocv-tmp && \
+    curl -L https://github.com/Itseez/opencv/archive/2.4.11.zip -o ocv.zip && \
+    unzip ocv.zip && \
+    cd opencv-2.4.11 && \
+    mkdir release && \
+    cd release && \
+    cmake -D CMAKE_BUILD_TYPE=RELEASE \
+          -D CMAKE_INSTALL_PREFIX=/usr/local \
+          -D BUILD_PYTHON_SUPPORT=ON \
+          -D ENABLE_AVX=ON \
+          .. && \
+    make -j8 && \
+    make install && \
+    rm -rf ~/ocv-tmp
+
+# Install dlib
 RUN cd ~ && \
     mkdir -p dlib && \
     git clone -b 'v19.7' --single-branch https://github.com/davisking/dlib.git dlib/ && \
