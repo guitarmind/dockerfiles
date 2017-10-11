@@ -44,6 +44,7 @@ RUN cd ~ && \
           -D CMAKE_INSTALL_PREFIX=/usr/local \
           -D BUILD_PYTHON_SUPPORT=ON \
           -D ENABLE_AVX=ON \
+          -D WITH_V4L=ON \
           .. && \
     make -j8 && \
     make install && \
