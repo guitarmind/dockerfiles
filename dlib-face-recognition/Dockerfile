@@ -46,6 +46,7 @@ RUN cd ~ && \
           -D ENABLE_AVX=ON \
           -D WITH_TBB=ON \
           -D WITH_V4L=ON \
+          -D WITH_FFMPEG=OFF \
           .. && \
     make -j8 && \
     make install && \
