@@ -24,6 +24,7 @@ RUN apt-get install -y --fix-missing \
     pkg-config \
     python-dev \
     python-numpy \
+    python-setuptools \
     software-properties-common \
     zip \
     libffi-dev \
