@@ -30,6 +30,9 @@ RUN apt-get install -y --fix-missing \
     libffi-dev \
     libssl-dev \
     libopenblas-dev \
+    portaudio19-dev \
+    python-pyaudio \
+    python-opencv \
     && apt-get clean && rm -rf /tmp/* /var/tmp/*
 
 # Install OpenCV
