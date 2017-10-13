@@ -58,7 +58,8 @@ RUN cd ~ && \
     mkdir -p dlib && \
     git clone -b 'v19.7' --single-branch https://github.com/davisking/dlib.git dlib/ && \
     cd  dlib/ && \
-    python setup.py install --yes USE_AVX_INSTRUCTIONS
+    python setup.py install --yes USE_AVX_INSTRUCTIONS && \
+    cp -r /root/dlib/dist /usr/local/lib/python2.7/site-packages
 
 
 # Install face_recognition dependencies and pre-trained models
