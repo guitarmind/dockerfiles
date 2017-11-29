@@ -6,7 +6,7 @@ RUN apt-get update && apt-get install -y unzip git htop openssh-server libcurl4-
 
 # install required R dependencies and setup R packages
 RUN echo "r <- getOption('repos'); r['CRAN'] <- 'http://cran.us.r-project.org'; options(repos = r);" > ~/.Rprofile && \
-    Rscript -e "install.packages('Rserve')" && \
+    Rscript -e "install.packages('Rserve',,'http://www.rforge.net/')" && \
     Rscript -e "install.packages('zoo')" && \
     Rscript -e "install.packages('xts')" && \
     Rscript -e "install.packages('fpp')" && \
