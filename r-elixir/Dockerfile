@@ -18,7 +18,8 @@ RUN echo "r <- getOption('repos'); r['CRAN'] <- 'http://cran.us.r-project.org'; 
     Rscript -e "devtools::install_github('twitter/AnomalyDetection')" && \
     Rscript -e "install.packages('ggmap')" && \
     Rscript -e "install.packages('data.table')" && \
-    Rscript -e "install.packages('tidyverse')"
+    Rscript -e "install.packages('tidyverse')" && \
+    Rscript -e "install.packages('prophet')"
 
 # install erlang/elixir dependencies
 ENV OTP_VERSION="18.3.4"
