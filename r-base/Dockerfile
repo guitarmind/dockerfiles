@@ -35,7 +35,7 @@ ENV LANG en_US.UTF-8
 
 RUN apt-key adv --keyserver keys.gnupg.net --recv-key 'FCAE2A0E115C3D8A'
 RUN echo "deb https://cloud.r-project.org/bin/linux/debian jessie-cran34/" >> /etc/apt/sources.list
-ENV R_BASE_VERSION 3.4.3
+ENV R_BASE_VERSION 3.4.4
 
 ## Now install R and littler, and create a link for littler in /usr/local/bin
 ## Also set a default CRAN repo, and make sure littler knows about it too
@@ -47,7 +47,7 @@ RUN apt-get update \
     r-base=${R_BASE_VERSION}* \
     r-base-dev=${R_BASE_VERSION}* \
     r-recommended=${R_BASE_VERSION}* \
-        && echo 'options(repos = c(CRAN = "https://cran.rstudio.com/"), download.file.method = "libcurl")' >> /etc/R/Rprofile.site \
+        && echo 'options(repos = c(CRAN = "https://cloud.r-project.org/"), download.file.method = "libcurl")' >> /etc/R/Rprofile.site \
         && echo 'source("/etc/R/Rprofile.site")' >> /etc/littler.r \
   && ln -s /usr/share/doc/littler/examples/install.r /usr/local/bin/install.r \
   && ln -s /usr/share/doc/littler/examples/install2.r /usr/local/bin/install2.r \
