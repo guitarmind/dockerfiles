@@ -22,19 +22,19 @@ RUN echo "r <- getOption('repos'); r['CRAN'] <- 'http://cran.us.r-project.org'; 
     Rscript -e "install.packages('fasttime')"
 
 # install erlang/elixir dependencies
-ENV OTP_VERSION="18.3.4"
+ENV OTP_VERSION="19.3.6"
 
 RUN echo "deb https://packages.erlang-solutions.com/debian jessie contrib" >> /etc/apt/sources.list && \
     wget https://packages.erlang-solutions.com/debian/erlang_solutions.asc && apt-key add erlang_solutions.asc && \
     apt-get update && apt-get install -y esl-erlang=1:$OTP_VERSION
 
 # elixir expects utf8.
-ENV ELIXIR_VERSION="v1.3.4" \
+ENV ELIXIR_VERSION="v1.4.5" \
     LANG=C.UTF-8
 
 RUN set -xe \
     && ELIXIR_DOWNLOAD_URL="https://github.com/elixir-lang/elixir/releases/download/${ELIXIR_VERSION}/Precompiled.zip" \
-    && ELIXIR_DOWNLOAD_SHA256="eac16c41b88e7293a31d6ca95b5d72eaec92349a1f16846344f7b88128587e10"\
+    && ELIXIR_DOWNLOAD_SHA256="a740e634e3c68b1477e16d75a0fd400237a46c62ceb5d04551dbc46093a03f98"\
     && curl -fSL -o elixir-precompiled.zip $ELIXIR_DOWNLOAD_URL \
     && echo "$ELIXIR_DOWNLOAD_SHA256 elixir-precompiled.zip" | sha256sum -c - \
     && unzip -d /usr/local elixir-precompiled.zip \
