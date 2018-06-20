@@ -21,7 +21,8 @@ RUN echo "r <- getOption('repos'); r['CRAN'] <- 'http://cran.us.r-project.org'; 
     Rscript -e "install.packages('ggmap')" && \
     Rscript -e "install.packages('data.table')" && \
     Rscript -e "install.packages('tidyverse')" && \
-    Rscript -e "install.packages('fasttime')"
+    Rscript -e "install.packages('fasttime')" && \
+    Rscript -e "install.packages('rgeolocate', type = 'source')"
 
 # install erlang/elixir dependencies
 ENV OTP_VERSION="19.3.6"
