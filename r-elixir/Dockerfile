@@ -2,7 +2,7 @@ FROM guitarmind/r-base
 MAINTAINER markpeng@exosite.com
 
 RUN apt-get update && apt-get install -y unzip git htop openssh-server libcurl4-openssl-dev \
-    libssl-dev libxml2-dev curl openssl libkrb5-dev libssl1.0.0 libwxbase3.0-0 libwxgtk3.0-0
+    libssl-dev libxml2-dev curl openssl libkrb5-dev libssl1.0.0 libwxbase3.0-0 libwxgtk3.0-0 pigz
 
 # install required R dependencies and setup R packages
 RUN echo "r <- getOption('repos'); r['CRAN'] <- 'http://cran.us.r-project.org'; options(repos = r);" > ~/.Rprofile && \
