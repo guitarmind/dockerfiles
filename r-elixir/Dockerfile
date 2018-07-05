@@ -22,6 +22,7 @@ RUN echo "r <- getOption('repos'); r['CRAN'] <- 'http://cran.us.r-project.org'; 
     Rscript -e "install.packages('data.table')" && \
     Rscript -e "install.packages('tidyverse')" && \
     Rscript -e "install.packages('fasttime')" && \
+    Rscript -e "devtools::install_github('r-lib/filelock')" && \
     Rscript -e "install.packages('rgeolocate', type = 'source')"
 
 # install erlang/elixir dependencies
