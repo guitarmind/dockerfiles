@@ -162,6 +162,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     apt-get update && \
     apt-get install nvidia-opencl-dev opencl-headers && \
     apt-get install --no-install-recommends git cmake build-essential libboost-dev libboost-system-dev libboost-filesystem-dev && \
+    mkdir -p /etc/OpenCL/vendors && echo "libnvidia-opencl.so.1" > /etc/OpenCL/vendors/nvidia.icd && \
 
     $GIT_CLONE git clone --recursive https://github.com/Microsoft/LightGBM ~/LightGBM && \
     cd ~/LightGBM && \
