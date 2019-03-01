@@ -18,7 +18,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
            /etc/apt/sources.list.d/cuda.list \
            /etc/apt/sources.list.d/nvidia-ml.list && \
 
-    apt-get update && \
+    apt-get update --fix-missing && \
 
 # ==================================================================
 # tools
