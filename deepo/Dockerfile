@@ -42,7 +42,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         software-properties-common \
         && \
     add-apt-repository ppa:deadsnakes/ppa && \
-    apt-get update && \
+    apt-get update --fix-missing && \
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
         python3.6 \
         python3.6-dev \
