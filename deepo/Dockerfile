@@ -169,7 +169,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         libboost-filesystem-dev && \
     mkdir -p /etc/OpenCL/vendors && echo "libnvidia-opencl.so.1" > /etc/OpenCL/vendors/nvidia.icd && \
 
-    $GIT_CLONE git clone --recursive https://github.com/Microsoft/LightGBM ~/LightGBM && \
+    $GIT_CLONE --recursive https://github.com/Microsoft/LightGBM ~/LightGBM && \
     cd ~/LightGBM && \
     mkdir build && \
     cd build && \
