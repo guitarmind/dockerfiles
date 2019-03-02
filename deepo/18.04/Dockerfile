@@ -158,6 +158,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         psutil \
         seaborn \
         bayesian-optimization \
+        numba \
         && \
 
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
