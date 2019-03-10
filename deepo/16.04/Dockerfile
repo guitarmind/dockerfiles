@@ -161,6 +161,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         bayesian-optimization \
         numba \
         pyarrow==0.11 \
+        joblib \
         && \
 
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
