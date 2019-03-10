@@ -32,6 +32,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         wget \
         git \
         vim \
+        pigz \
         && \
 
 # ==================================================================
@@ -159,6 +160,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         seaborn \
         bayesian-optimization \
         numba \
+        pyarrow==0.11 \
         && \
 
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
