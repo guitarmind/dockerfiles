@@ -162,6 +162,9 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         numba \
         pyarrow==0.11 \
         joblib \
+        PyWavelets \
+        statsmodels \
+        plotly \
         && \
 
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
