@@ -165,6 +165,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         PyWavelets \
         statsmodels \
         plotly \
+        python-setuptools \
         && \
 
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
@@ -177,6 +178,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         libboost-filesystem-dev && \
     mkdir -p /etc/OpenCL/vendors && echo "libnvidia-opencl.so.1" > /etc/OpenCL/vendors/nvidia.icd && \
 
+    # LightGBM
     $GIT_CLONE --recursive https://github.com/Microsoft/LightGBM ~/LightGBM && \
     cd ~/LightGBM && \
     mkdir build && \
@@ -186,6 +188,18 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     cd .. && \
     cd python-package/ && \
     python setup.py install --precompile && \
+    cd .. && \
+
+    # Xgboost
+    $GIT_CLONE --recursive https://github.com/dmlc/xgboost ~/xgboost && \
+    cd ~/xgboost && \
+    mkdir build && \
+    cd build && \
+    cmake .. -DUSE_CUDA=ON && \
+    make -j$(nproc) && \
+    cd .. && \
+    cd python-package/ && \
+    python setup.py install && \
     cd .. && \
 
 # ==================================================================
