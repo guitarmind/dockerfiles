@@ -154,6 +154,25 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 # markpeng
 # ------------------------------------------------------------------
 
+    # Upgrade CMake
+    # apt-get remove -y cmake && \
+    apt-get remove -y --purge --auto-remove cmake && \
+    mkdir /opt/cmake && \
+    cd /opt/cmake && \
+    # wget https://github.com/Kitware/CMake/releases/download/v3.14.3/cmake-3.14.3.tar.gz && \
+    wget https://github.com/Kitware/CMake/releases/download/v3.14.3/cmake-3.14.3-Linux-x86_64.sh && \
+    # tar -xzvf cmake-3.14.3.tar.gz && \
+    # cd cmake-3.14.3/ && \
+    # sh ./bootstrap && \
+    # make -j"$(nproc)" && \
+    # make install && \
+    sh ./cmake-3.14.3-Linux-x86_64.sh --prefix=/opt/cmake --skip-license && \
+    ln -s /opt/cmake/bin/cmake /usr/local/bin/cmake && \
+    ln -s /opt/cmake/bin/cmake /usr/bin/cmake && \
+    cmake --version && \
+
+    # rm -rf ~/temp && \
+    
     $PIP_INSTALL \
         pip \
         psutil \
@@ -165,17 +184,19 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         PyWavelets \
         statsmodels \
         plotly \
-        python-setuptools \
+        # python-setuptools \
+        # cmake \
         && \
 
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
         nvidia-opencl-dev opencl-headers \
         git \
-        cmake \
+        # cmake \
         build-essential \
         libboost-dev \
         libboost-system-dev \
-        libboost-filesystem-dev && \
+        libboost-filesystem-dev \
+        python-setuptools && \
     mkdir -p /etc/OpenCL/vendors && echo "libnvidia-opencl.so.1" > /etc/OpenCL/vendors/nvidia.icd && \
 
     # LightGBM
