@@ -10,6 +10,7 @@ RUN apk add --no-cache \
     \
     ln -s locale.h /usr/include/xlocale.h && \
     \
+    pip install Cython && \
     pip install numpy && \
     pip install pandas && \
     pip install scipy && \
