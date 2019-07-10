@@ -175,6 +175,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         PyWavelets \
         statsmodels \
         plotly \
+        librosa \
         && \
 
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
