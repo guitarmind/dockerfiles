@@ -2,24 +2,42 @@
 FROM guitarmind/python-base
 MAINTAINER markpeng@exosite.com
 
-RUN apk add --no-cache \
+RUN apk update && \
+    apk add --no-cache \
         --virtual=.build-dependencies \
         g++ gfortran file binutils \
-        musl-dev python3-dev cython openblas-dev && \
-    apk add libstdc++ openblas && \
-    \
-    ln -s locale.h /usr/include/xlocale.h && \
-    \
-    pip install Cython && \
-    pip install numpy && \
-    pip install pandas && \
-    pip install scipy && \
-    pip install scikit-learn && \
-    \
+        musl-dev python3-dev cython openblas-dev \
+        build-base freetype-dev libpng-dev \
+        libffi-dev openssl-dev \
+        llvm-dev \
+        && \
+
+    apk add libstdc++ openblas \
+        && \
+
+    ln -s locale.h /usr/include/xlocale.h \
+        && \
+
+    # Minimum required packages
+    pip install Cython \
+        numpy \
+        pandas \
+        scipy \
+        && \
+
+    # Dependency packages
+    pip install scikit-learn \
+        matplotlib \
+        statsmodels \
+        PyWavelets \
+        librosa \
+        && \
+
     rm -r /root/.cache && \
     find /usr/lib/python3.*/ -name 'tests' -exec rm -r '{}' + && \
-    find /usr/lib/python3.*/site-packages/ -name '*.so' -print -exec sh -c 'file "{}" | grep -q "not stripped" && strip -s "{}"' \; && \
-    \
-    rm /usr/include/xlocale.h && \
-    \
+    find /usr/lib/python3.*/site-packages/ -name '*.so' -print -exec sh -c 'file "{}" | grep -q "not stripped" && strip -s "{}"' \; \
+        && \
+
+    rm /usr/include/xlocale.h \
+        && \
     apk del .build-dependencies
