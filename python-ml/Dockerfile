@@ -33,6 +33,9 @@ RUN apk update && \
         librosa \
         && \
 
+    # Cleanup
+    rm -rf /var/cache/apk/* && \
+
     rm -r /root/.cache && \
     find /usr/lib/python3.*/ -name 'tests' -exec rm -r '{}' + && \
     find /usr/lib/python3.*/site-packages/ -name '*.so' -print -exec sh -c 'file "{}" | grep -q "not stripped" && strip -s "{}"' \; \
