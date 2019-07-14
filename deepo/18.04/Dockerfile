@@ -90,6 +90,14 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 # pytorch
 # ------------------------------------------------------------------
 
+    # Python 3.6, CUDA 10.0
+    $PIP_INSTALL \
+        https://download.pytorch.org/whl/cu100/torch-1.1.0-cp36-cp36m-linux_x86_64.whl \
+        && \
+    $PIP_INSTALL \
+        https://download.pytorch.org/whl/cu100/torchvision-0.3.0-cp36-cp36m-linux_x86_64.whl \
+        && \
+
     $PIP_INSTALL \
         future \
         numpy \
@@ -97,11 +105,6 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         enum34 \
         pyyaml \
         typing \
-    	torchvision_nightly \
-        && \
-    $PIP_INSTALL \
-        torch_nightly -f \
-        https://download.pytorch.org/whl/nightly/cu100/torch_nightly.html \
         && \
 
 # ==================================================================
