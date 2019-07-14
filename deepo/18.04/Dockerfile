@@ -84,7 +84,12 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     $PIP_INSTALL \
         jupyter \
         tornado==5.1.1 \
+        jupyter_contrib_nbextensions \
         && \
+    jupyter contrib nbextension install --user && \
+    jupyter nbextension enable code_prettify/code_prettify && \
+    jupyter nbextension enable collapsible_headings/main && \
+    jupyter nbextension enable toggle_all_line_numbers/main && \
 
 # ==================================================================
 # pytorch
