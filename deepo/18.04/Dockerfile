@@ -84,6 +84,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     $PIP_INSTALL \
         jupyter \
         tornado==5.1.1 \
+        yapf \
         jupyter_contrib_nbextensions \
         && \
     jupyter contrib nbextension install --user && \
