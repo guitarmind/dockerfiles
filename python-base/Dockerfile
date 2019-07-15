@@ -10,7 +10,12 @@ ENV LANG C.UTF-8
 
 # install ca-certificates so that HTTPS works consistently
 # other runtime dependencies for Python are installed later
-RUN apk add --no-cache ca-certificates
+RUN apk update && \
+    apk add --no-cache \
+        ca-certificates \
+        libressl \
+        pcre \
+        zlib
 
 ENV GPG_KEY 0D96DF4D4110E5C43FBFB17F2D347EA6AA65421D
 ENV PYTHON_VERSION 3.6.9
@@ -33,6 +38,7 @@ RUN set -ex \
   && rm python.tar.xz \
   \
   && apk add --no-cache --virtual .build-deps  \
+    build-base \
     bzip2-dev \
     coreutils \
     dpkg-dev dpkg \
@@ -43,12 +49,14 @@ RUN set -ex \
     libc-dev \
     libffi-dev \
     libnsl-dev \
+    libressl-dev \
     libtirpc-dev \
     linux-headers \
     make \
     ncurses-dev \
     openssl-dev \
     pax-utils \
+    pcre-dev \
     readline-dev \
     sqlite-dev \
     tcl-dev \
@@ -56,6 +64,7 @@ RUN set -ex \
     tk-dev \
     xz-dev \
     zlib-dev \
+
 # add build deps before removing fetch deps in case there's overlap
   && apk del .fetch-deps \
   \
