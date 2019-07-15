@@ -18,8 +18,8 @@ RUN apk update && \
         zlib
 
 ENV GPG_KEY 0D96DF4D4110E5C43FBFB17F2D347EA6AA65421D
-ENV PYTHON_VERSION 3.6.9 \
-    NGINX_VERSION 1.15.9
+ENV PYTHON_VERSION=3.6.9 \
+    NGINX_VERSION=1.15.9
 
 RUN set -ex \
   && apk add --no-cache --virtual .fetch-deps \
