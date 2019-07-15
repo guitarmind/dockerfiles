@@ -121,7 +121,7 @@ RUN set -ex \
     sed -i -e 's/#access_log  logs\/access.log  main;/access_log \/dev\/stdout;/' -e 's/#error_log  logs\/error.log  notice;/error_log stderr notice;/' /etc/nginx/nginx.conf && \
     adduser -D nginx && \
     mkdir -p /var/cache/nginx && \
-    rm -rf /tmp/*
+    rm -rf /tmp/* \
 
 # add build deps before removing fetch deps in case there's overlap
   && apk del .fetch-deps \
