@@ -1,5 +1,5 @@
 # Based on https://github.com/frol/docker-alpine-python-machinelearning
-FROM guitarmind/python-base
+FROM guitarmind/python-nginx
 MAINTAINER markpeng@exosite.com
 
 RUN apk update && \
