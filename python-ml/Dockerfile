@@ -33,6 +33,12 @@ RUN apk update && \
         librosa \
         && \
 
+    # Model hosting related packages
+    pip install flask \
+        gevent \
+        gunicorn \
+        && \
+
     # Cleanup
     rm -rf /var/cache/apk/* && \
 
