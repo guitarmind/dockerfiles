@@ -37,6 +37,7 @@ RUN apk update && \
     pip install flask \
         gevent \
         gunicorn \
+        requests \
         && \
 
     # Cleanup
