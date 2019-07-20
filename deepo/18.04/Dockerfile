@@ -185,6 +185,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         statsmodels \
         plotly \
         librosa \
+        tqdm \
         && \
 
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
