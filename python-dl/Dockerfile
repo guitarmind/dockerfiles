@@ -43,10 +43,18 @@ RUN apk update && \
     bash compile.sh && \
     cp -p output/bazel /usr/bin/ && \
 
-    # Tensorflow and Keras with Intel MKL-DNN for AWS EC2 M5 instnace with Xeon Skylake SP processor (support AVX-512)
-    # ./configure && \
-    # bazel build --config=mkl --config=opt --copt=-march="skylake" //tensorflow/tools/pip_package:build_pip_package && \
-    # ./bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkgs && \
+    # Tensorflow with Intel MKL-DNN for AWS EC2 M5 instnace with Xeon Skylake SP processor (support AVX-512)
+    cd /tmp && \
+    wget -O tensorflow-${TENSORFLOW_VERSION}.tar.gz https://github.com/tensorflow/tensorflow/archive/v${TENSORFLOW_VERSION}.tar.gz && \
+    tar xzf tensorflow-${TENSORFLOW_VERSION}.tar.gz && \
+    cd /tmp/tensorflow-${TENSORFLOW_VERSION} && \
+    ./configure && \
+    bazel build --config=mkl --config=opt --copt=-march="skylake-avx512" \
+    # bazel build --config=mkl --config=opt --copt=-march="skylake" \
+        --cxxopt="-D_GLIBCXX_USE_CXX11_ABI=0" \
+        --local_ram_resources=2048 \
+        //tensorflow/tools/pip_package:build_pip_package && \
+    ./bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkgs && \
 
     # Cleanup
     rm -rf /var/cache/apk/* && \
