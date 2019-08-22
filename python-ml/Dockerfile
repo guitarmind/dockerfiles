@@ -3,13 +3,14 @@ FROM guitarmind/python-nginx
 MAINTAINER markpeng@exosite.com
 
 RUN apk update && \
+    apk del llvm5-libs llvm5 llvm5-dev && \
     apk add --no-cache \
         --virtual=.build-dependencies \
         g++ gfortran file binutils \
         musl-dev python3-dev cython openblas-dev \
         build-base freetype-dev libpng-dev \
         libffi-dev openssl-dev \
-        llvm-dev \
+        cmake \
         && \
 
     apk add libstdc++ openblas \
@@ -17,6 +18,19 @@ RUN apk update && \
 
     ln -s locale.h /usr/include/xlocale.h \
         && \
+
+    # LLVM 7.0
+    cd /tmp &&\
+    wget http://releases.llvm.org/7.0.1/llvm-7.0.1.src.tar.xz && \
+    tar xvf llvm-7.0.1.src.tar.xz && \
+    cd /tmp/llvm-7.0.1.src && \
+    ls -la && \
+    mkdir build && \
+    cd build && \
+    cmake .. -G "Unix Makefiles" -DLLVM_TARGETS_TO_BUILD="X86" \
+        -DCMAKE_BUILD_TYPE=MinSizeRel && \
+    make -j$(nproc) && \
+    make install && \
 
     # Minimum required packages
     pip install Cython \
@@ -30,6 +44,7 @@ RUN apk update && \
         matplotlib \
         statsmodels \
         PyWavelets \
+        llvmlite \
         librosa \
         && \
 

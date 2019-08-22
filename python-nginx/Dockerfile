@@ -1,5 +1,5 @@
 # Based on https://github.com/docker-library/python/tree/master/3.6/alpine3.10
-FROM alpine:3.10
+FROM alpine:3.8
 
 # ensure local python is preferred over distribution python
 ENV PATH /usr/local/bin:$PATH
@@ -50,7 +50,6 @@ RUN set -ex \
     libc-dev \
     libffi-dev \
     libnsl-dev \
-    libressl-dev \
     libtirpc-dev \
     linux-headers \
     make \
