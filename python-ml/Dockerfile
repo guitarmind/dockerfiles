@@ -9,7 +9,7 @@ RUN apk update && \
         musl-dev python3-dev cython openblas-dev \
         build-base freetype-dev libpng-dev \
         libffi-dev openssl-dev \
-        llvm-dev \
+        llvm-libs llvm-dev \
         && \
 
     apk add libstdc++ openblas \
