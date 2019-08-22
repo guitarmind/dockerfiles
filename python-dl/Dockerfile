@@ -1,20 +1,22 @@
 # Based on https://github.com/frol/docker-alpine-python-machinelearning
 # FROM guitarmind/python-nginx
 # FROM guitarmind/python-ml
-FROM python-dl-bazel
+FROM python-nginx
+# FROM python-dl-bazel
 MAINTAINER markpeng@exosite.com
 
 ENV JAVA_HOME=/usr/lib/jvm/java-1.8-openjdk \
-    GCC_VERSION=4.8.5 \
+    GCC_VERSION=4.8.3 \
     BAZEL_VERSION=0.15.0 \
     TENSORFLOW_VERSION=1.12.0 \
     LOCAL_RESOURCES=10240,6,1.0
     # LOCAL_RESOURCES=2048,4,1.0
 
+# RUN \
 RUN apk update && \
     apk add --no-cache \
         --virtual=.build-dependencies \
-        # g++ \
+        g++ \
         gfortran file binutils \
         musl-dev python3-dev cython openblas-dev \
         build-base freetype-dev libpng-dev \
@@ -25,9 +27,15 @@ RUN apk update && \
         patch \
         libexecinfo-dev \
         libc6-compat \
+        linux-headers \
         # GCC
+        # dejagnu \
+        isl-dev \
+        gmp-dev \
         mpc1-dev \
         mpfr-dev \
+        # texinfo \
+        zlib-dev \
         && \
 
     apk add libstdc++ openblas \
@@ -46,48 +54,72 @@ RUN apk update && \
     # RUN make $MAKE_JOBS install
 
     # Bazel download and install
-    # cd /tmp && \
-    # wget https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/bazel-${BAZEL_VERSION}-dist.zip && \
-    # mkdir bazel-${BAZEL_VERSION} && \
-    # unzip -qd bazel-${BAZEL_VERSION} bazel-${BAZEL_VERSION}-dist.zip && \
-    # cd /tmp/bazel-${BAZEL_VERSION} && \
-    # sed -i -e 's/-classpath/-J-Xmx8192m -J-Xms128m -classpath/g' scripts/bootstrap/compile.sh && \
-    # bash compile.sh && \
-    # cp -p output/bazel /usr/bin/ && \
+    cd /tmp && \
+    wget https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/bazel-${BAZEL_VERSION}-dist.zip && \
+    mkdir bazel-${BAZEL_VERSION} && \
+    unzip -qd bazel-${BAZEL_VERSION} bazel-${BAZEL_VERSION}-dist.zip && \
+    cd /tmp/bazel-${BAZEL_VERSION} && \
+    sed -i -e 's/-classpath/-J-Xmx8192m -J-Xms128m -classpath/g' scripts/bootstrap/compile.sh && \
+    bash compile.sh && \
+    cp -p output/bazel /usr/bin/ && \
 
     # Install right GCC version
-    cd /tmp && \
-    wget -q https://ftp.gnu.org/gnu/gcc/gcc-${GCC_VERSION}/gcc-${GCC_VERSION}.tar.gz && \
-    tar -xzf gcc-${GCC_VERSION}.tar.gz && \
-    cd /tmp/gcc-${GCC_VERSION} && \
-    ./configure \
-        --prefix=/usr/local \
-        --build=$(uname -m)-alpine-linux-musl \
-        --host=$(uname -m)-alpine-linux-musl \
-        --target=$(uname -m)-alpine-linux-musl \
-        --with-pkgversion="Alpine ${GCC_VERSION}" \
-        --enable-checking=release \
-        --disable-fixed-point \
-        --disable-libmpx \
-        --disable-libmudflap \
-        --disable-libsanitizer \
-        --disable-libssp \
-        --disable-libstdcxx-pch \
-        --disable-multilib \
-        --disable-nls \
-        --disable-symvers \
-        --disable-werror \
-        --enable-__cxa_atexit \
-        --enable-default-pie \
-        --enable-languages=c,c++ \
-        --enable-shared \
-        --enable-threads \
-        --enable-tls \
-        --with-linker-hash-style=gnu \
-        --with-system-zlib && \
-    make -j $(nproc) && \
-    make -j $(nproc) install-strip && \
-    gcc -v && \
+    # cd /tmp && \
+    # wget https://ftp.gnu.org/gnu/gcc/gcc-${GCC_VERSION}/gcc-${GCC_VERSION}.tar.gz && \
+    # tar -xzf gcc-${GCC_VERSION}.tar.gz && \
+    # cd /tmp/gcc-${GCC_VERSION} && \
+    # # ls -la && \
+    # # echo -e " \
+    # # #ifdef __GNUC__ \n\
+    # # __inline \n\
+    # # #endif \n\
+    # # static unsigned int hash (const char *, unsigned int); \n\
+    # # #ifdef __GNUC__ \n\
+    # # __inline \n\
+    # # #ifdef __GNUC_STDC_INLINE__ \n\
+    # # __attribute__ ((__gnu_inline__)) \n\
+    # # #endif \n\
+    # # #endif \n\
+    # # const char * libc_name_p (const char *, unsigned int); \n\ $(cat gcc/cp/cfns.gperf)" >> gcc/cp/cfns.gperf && \
+    # sed -i '1s/^/\n\n#ifdef __GNUC__\n__inline\n#endif\nstatic unsigned int hash (const char *, unsigned int);\n#ifdef __GNUC__\n__inline\n#ifdef __GNUC_STDC_INLINE__\n__attribute__ ((__gnu_inline__))\n#endif\n#endif\nconst char * libc_name_p (const char *, unsigned int); \n\n/' gcc/cp/cfns.gperf && \
+    # sed -i '1s/^/\n\n#ifdef __GNUC__\n__inline\n#endif\nstatic unsigned int hash (const char *, unsigned int);\n#ifdef __GNUC__\n__inline\n#ifdef __GNUC_STDC_INLINE__\n__attribute__ ((__gnu_inline__))\n#endif\n#endif\nconst char * libc_name_p (const char *, unsigned int); \n\n/' gcc/cp/cfns.h && \
+    # # sed -i '$ a \\n\n#ifdef __GNUC__\n__inline\n#endif\nstatic unsigned int hash (const char *, unsigned int);\n#ifdef __GNUC__\n__inline\n#ifdef __GNUC_STDC_INLINE__\n__attribute__ ((__gnu_inline__))\n#endif\n#endif\nconst char * libc_name_p (const char *, unsigned int); \n' gcc/cp/cfns.gperf && \
+    # # sed -i '$ a \\n\n#ifdef __GNUC__\n__inline\n#endif\nstatic unsigned int hash (const char *, unsigned int);\n#ifdef __GNUC__\n__inline\n#ifdef __GNUC_STDC_INLINE__\n__attribute__ ((__gnu_inline__))\n#endif\n#endif\nconst char * libc_name_p (const char *, unsigned int); \n' gcc/cp/cfns.h && \
+    # # >> gcc/cp/cfns.{gperf,h} && \
+    # head gcc/cp/cfns.gperf && \
+    # head gcc/cp/cfns.h && \
+    # # tail -n 50 gcc/cp/cfns.gperf && \
+    # # tail -n 50 gcc/cp/cfns.h && \
+    # ./configure \
+    #     --prefix=/usr/local \
+    #     --build=$(uname -m)-alpine-linux-musl \
+    #     --host=$(uname -m)-alpine-linux-musl \
+    #     --target=$(uname -m)-alpine-linux-musl \
+    #     --with-pkgversion="Alpine ${GCC_VERSION}" \
+    #     --enable-checking=release \
+    #     --disable-fixed-point \
+    #     --disable-libmpx \
+    #     --disable-libmudflap \
+    #     --disable-libsanitizer \
+    #     --disable-libssp \
+    #     --disable-libstdcxx-pch \
+    #     --disable-multilib \
+    #     --disable-nls \
+    #     --disable-symvers \
+    #     --disable-werror \
+    #     --enable-__cxa_atexit \
+    #     --enable-default-pie \
+    #     --enable-languages=c,c++ \
+    #     --enable-shared \
+    #     --enable-threads \
+    #     --enable-tls \
+    #     --with-linker-hash-style=gnu \
+    #     --with-system-zlib && \
+    #     # --with-system-zlib \
+    #     # --disable-werror && \
+    # make -j $(nproc) && \
+    # make -j $(nproc) install-strip && \
+    # gcc -v && \
 
     # Tensorflow with Intel MKL-DNN for AWS EC2 M5 instnace with Xeon Skylake SP processor (support AVX-512)
     # cd /tmp && \
