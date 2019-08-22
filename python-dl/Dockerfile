@@ -65,7 +65,8 @@ RUN apk update && \
     TF_NEED_CUDA=0 \
     TF_NEED_MPI=0 \
     ./configure && \
-    bazel build --config=mkl --config=opt \
+    bazel build --config=mkl \
+        # --config=opt \
         --copt=-march="native" \
         # --copt=-march="skylake-avx512" \
         --cxxopt="-D_GLIBCXX_USE_CXX11_ABI=0" \
