@@ -2,7 +2,8 @@
 # FROM guitarmind/python-nginx
 # FROM guitarmind/python-ml
 # FROM python-nginx
-FROM python-dl-bazel
+FROM python-ml
+# FROM python-dl-bazel
 MAINTAINER markpeng@exosite.com
 
 ENV JAVA_HOME=/usr/lib/jvm/java-1.8-openjdk \
@@ -54,14 +55,14 @@ RUN apk update && \
     # RUN make $MAKE_JOBS install
 
     # Bazel download and install
-    # cd /tmp && \
-    # wget https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/bazel-${BAZEL_VERSION}-dist.zip && \
-    # mkdir bazel-${BAZEL_VERSION} && \
-    # unzip -qd bazel-${BAZEL_VERSION} bazel-${BAZEL_VERSION}-dist.zip && \
-    # cd /tmp/bazel-${BAZEL_VERSION} && \
-    # sed -i -e 's/-classpath/-J-Xmx8192m -J-Xms128m -classpath/g' scripts/bootstrap/compile.sh && \
-    # bash compile.sh && \
-    # cp -p output/bazel /usr/bin/ && \
+    cd /tmp && \
+    wget https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/bazel-${BAZEL_VERSION}-dist.zip && \
+    mkdir bazel-${BAZEL_VERSION} && \
+    unzip -qd bazel-${BAZEL_VERSION} bazel-${BAZEL_VERSION}-dist.zip && \
+    cd /tmp/bazel-${BAZEL_VERSION} && \
+    sed -i -e 's/-classpath/-J-Xmx8192m -J-Xms128m -classpath/g' scripts/bootstrap/compile.sh && \
+    bash compile.sh && \
+    cp -p output/bazel /usr/bin/ && \
 
     # Install right GCC version
     # cd /tmp && \
