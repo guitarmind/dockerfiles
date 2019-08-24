@@ -123,7 +123,7 @@ RUN set -ex \
     mkdir -p /var/cache/nginx && \
     rm -rf /tmp/* \
 
-# add build deps before removing fetch deps in case there's overlap
+  # add build deps before removing fetch deps in case there's overlap
   && apk del .fetch-deps \
   \
   && cd /usr/src/python \
