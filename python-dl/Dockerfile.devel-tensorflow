@@ -1,0 +1,171 @@
+# Based on https://github.com/frol/docker-alpine-python-machinelearning
+FROM guitarmind/python-nginx
+MAINTAINER markpeng@exosite.com
+
+ENV JAVA_HOME=/usr/lib/jvm/java-1.8-openjdk \
+    BAZEL_VERSION=0.15.0 \
+    TENSORFLOW_VERSION=1.12.0 \
+    # Change this if your machine doesn't have that much memory and CPUs
+    LOCAL_RESOURCES=10240,6,1.0
+    # LOCAL_RESOURCES=2048,4,1.0
+
+# Include pre-built MKL image from Ubuntu 18.04
+ARG TF_SERVING_BUILD_IMAGE=tensorflow/serving:${TENSORFLOW_VERSION}-devel-mkl
+FROM ${TF_SERVING_BUILD_IMAGE} as build_image
+
+# Install MKL libraries
+COPY --from=build_image /usr/local/lib/libiomp5.so /usr/local/lib
+COPY --from=build_image /usr/local/lib/libmklml_gnu.so /usr/local/lib
+COPY --from=build_image /usr/local/lib/libmklml_intel.so /usr/local/lib
+ENV LIBRARY_PATH="/usr/local/lib:$LIBRARY_PATH" \
+    LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
+
+# Setting MKL environment variables can improve performance.
+# https://www.tensorflow.org/guide/performance/overview
+# Read about Tuning MKL for the best performance
+# Add export MKLDNN_VERBOSE=1 to the below script,
+# to see MKL messages in the docker logs when you send predict request.
+
+# Based on our observations during experiments,
+# setting tensorflow_session_parallelism=<1/4th of physical cores> and
+# setting OMP_NUM_THREADS=<Total physical cores>
+# gave optimal performance results with MKL
+# KMP_BLOCKTIME=<Varies based on your model>
+
+# NOTE: We don't guarantee same settings to give optimal peformance across all hardware
+# please tune variables as required.
+
+ENV OMP_NUM_THREADS=2
+ENV KMP_BLOCKTIME=1
+ENV KMP_SETTINGS=1
+ENV KMP_AFFINITY='granularity=fine,verbose,compact,1,0'
+ENV MKLDNN_VERBOSE=0
+
+# Recommended settings, may vary depending on the model.
+# Set TENSORFLOW_INTRA_OP_PARALLELISM=#No.of Physical cores
+# Set TENSORFLOW_INTER_OP_PARALLELISM=#No.of Sockets
+# For more information vist below reference
+# https://www.tensorflow.org/guide/performance/overview#tuning_mkl_for_the_best_performance
+
+# NOTE: As TENSORFLOW_INTRA_OP_PARALLELISM and TENSORFLOW_INTER_OP_PARALLELISM are
+# configured via SessionOptions in tensorflow, these values
+# will override the values configured via TF_NUM_INTEROP_THREADS and TF_NUM_INTRAOP_THREADS
+# environment variables in tensorflow.
+# https://github.com/tensorflow/tensorflow/commit/d1823e2e966e96ee4ea7baa202ad9f292ac7427b
+
+# Defaults
+ENV TENSORFLOW_INTRA_OP_PARALLELISM=2
+ENV TENSORFLOW_INTER_OP_PARALLELISM=2
+
+RUN apk update && \
+    apk add --no-cache \
+        --virtual=.build-dependencies \
+        g++ \
+        gfortran file binutils \
+        musl-dev \
+        python3-dev cython openblas-dev \
+        build-base freetype-dev libpng-dev \
+        libffi-dev openssl-dev \
+        llvm-dev \
+        bash zip \
+        openjdk8 \
+        patch \
+        libexecinfo-dev \
+        libc6-compat \
+        linux-headers \
+        && \
+
+    apk add --no-cache libstdc++ openblas \
+        && \
+
+    ln -s locale.h /usr/include/xlocale.h \
+        && \
+
+    # Minimum required packages
+    pip install Cython \
+        numpy \
+        pandas \
+        scipy \
+        && \
+
+    # Bazel download and install
+    cd /tmp && \
+    wget https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/bazel-${BAZEL_VERSION}-dist.zip && \
+    mkdir bazel-${BAZEL_VERSION} && \
+    unzip -qd bazel-${BAZEL_VERSION} bazel-${BAZEL_VERSION}-dist.zip && \
+    cd /tmp/bazel-${BAZEL_VERSION} && \
+    sed -i -e 's/-classpath/-J-Xmx8192m -J-Xms128m -classpath/g' scripts/bootstrap/compile.sh && \
+    bash compile.sh && \
+    cp -p output/bazel /usr/bin/ && \
+
+    # Tensorflow with Intel MKL-DNN for AWS EC2 M5 instnace with Xeon Skylake SP processor (support AVX-512)
+    cd /tmp && \
+    apk add --no-cache \
+        --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing/ \
+        hdf5 && \
+    apk add --no-cache --virtual .build-edge-deps \
+        --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing/ \
+        hdf5-dev && \
+    pip3 install h5py && \
+    pip3 install --no-cache-dir wheel && \
+    pip3 install keras_applications==1.0.6 --no-deps && \
+    pip3 install keras_preprocessing==1.0.5 --no-deps && \
+    pip3 install h5py==2.8.0 && \
+    wget -O tensorflow-${TENSORFLOW_VERSION}.tar.gz https://github.com/tensorflow/tensorflow/archive/v${TENSORFLOW_VERSION}.tar.gz && \
+    tar xzf tensorflow-${TENSORFLOW_VERSION}.tar.gz && \
+    cd /tmp/tensorflow-${TENSORFLOW_VERSION} && \
+    sed -i -e '/define TF_GENERATE_BACKTRACE/d' tensorflow/core/platform/default/stacktrace.h && \
+    sed -i -e '/define TF_GENERATE_STACKTRACE/d' tensorflow/core/platform/stacktrace_handler.cc && \
+    TF_NEED_JEMALLOC=1 \
+    TF_NEED_IGNITE=0 \
+    TF_NEED_GCP=0 \
+    TF_NEED_HDFS=0 \
+    TF_NEED_S3=0 \
+    TF_ENABLE_XLA=0 \
+    TF_NEED_GDR=0 \
+    TF_NEED_VERBS=0 \
+    TF_NEED_OPENCL=0 \
+    TF_NEED_CUDA=0 \
+    TF_NEED_MPI=0 \
+    ./configure && \
+    bazel build \
+        --config=mkl \
+        --config=opt \
+        --copt=-march="native" \
+        # --copt=-march="skylake-avx512" \
+        --cxxopt="-D_GLIBCXX_USE_CXX11_ABI=0" \
+        --local_resources=${LOCAL_RESOURCES} \
+        --verbose_failures \
+        //tensorflow/tools/pip_package:build_pip_package && \
+    # bazel build --config=mkl \
+    #     --config=opt \
+    #     --copt=-mavx --copt=-mavx2 --copt=-mfma --copt=-mavx512f --copt=-mavx512pf --copt=-mavx512cd --copt=-mavx512er \
+    #     # --copt=-march="native" \
+    #     # --copt=-march="skylake-avx512" \
+    #     --cxxopt="-D_GLIBCXX_USE_CXX11_ABI=0" \
+    #     --local_resources=${LOCAL_RESOURCES} \
+    #     --verbose_failures \
+    #     //tensorflow/tools/pip_package:build_pip_package && \
+    ./bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkgs && \
+    cp /tmp/tensorflow_pkgs/tensorflow-${TENSORFLOW_VERSION}-cp36-cp36m-linux_x86_64.whl /root && \
+    pip3 install --no-cache-dir \
+        /root/tensorflow-${TENSORFLOW_VERSION}-cp36-cp36m-linux_x86_64.whl && \
+        python3 -c 'import tensorflow'
+
+    # Cleanup
+    rm -rf /var/cache/apk/* && \
+    rm -rf /tmp/* && \
+    # Clean up Bazel cache when done
+    bazel clean --expunge --color=yes && \
+    rm -f /usr/bin/bazel && \
+    rm "/root/.wget-hsts" && \
+
+    rm -r /root/.cache && \
+    find /usr/lib/python3.*/ -name 'tests' -exec rm -r '{}' + && \
+    find /usr/lib/python3.*/site-packages/ -name '*.so' -print -exec sh -c 'file "{}" | grep -q "not stripped" && strip -s "{}"' \; \
+        && \
+
+    rm /usr/include/xlocale.h \
+        && \
+    apk del .build-edge-deps && \
+    apk del .build-dependencies
