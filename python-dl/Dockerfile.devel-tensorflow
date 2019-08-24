@@ -124,7 +124,7 @@ RUN apk update && \
     TF_NEED_MPI=0 \
     ./configure && \
     bazel build \
-        --config=mkl \
+        # --config=mkl \
         --config=opt \
         --copt=-march="native" \
         # --copt=-march="skylake-avx512" \
@@ -143,6 +143,7 @@ RUN apk update && \
     #     //tensorflow/tools/pip_package:build_pip_package && \
     ./bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkgs && \
     cp /tmp/tensorflow_pkgs/tensorflow-${TENSORFLOW_VERSION}-cp36-cp36m-linux_x86_64.whl /root && \
+    cd /root && \
     pip3 install --no-cache-dir \
         /root/tensorflow-${TENSORFLOW_VERSION}-cp36-cp36m-linux_x86_64.whl && \
         python3 -c 'import tensorflow' && \
