@@ -1,4 +1,7 @@
-# Based on https://github.com/frol/docker-alpine-python-machinelearning
+# Include pre-built MKL image from Ubuntu 18.04
+# Command: docker build --squash --rm=true --no-cache=true -t python-dl:devel-mkl --file=Dockerfile.devel-mkl .
+FROM python-dl:devel-mkl as build_image
+
 FROM guitarmind/python-nginx
 MAINTAINER markpeng@exosite.com
 
@@ -8,10 +11,6 @@ ENV JAVA_HOME=/usr/lib/jvm/java-1.8-openjdk \
     # Change this if your machine doesn't have that much memory and CPUs
     LOCAL_RESOURCES=10240,6,1.0
     # LOCAL_RESOURCES=2048,4,1.0
-
-# Include pre-built MKL image from Ubuntu 18.04
-ARG TF_SERVING_BUILD_IMAGE=tensorflow/serving:${TENSORFLOW_VERSION}-devel-mkl
-FROM ${TF_SERVING_BUILD_IMAGE} as build_image
 
 # Install MKL libraries
 COPY --from=build_image /usr/local/lib/libiomp5.so /usr/local/lib
@@ -82,11 +81,7 @@ RUN apk update && \
         && \
 
     # Minimum required packages
-    pip install Cython \
-        numpy \
-        pandas \
-        scipy \
-        && \
+    pip install six numpy wheel setuptools mock future>=0.17.1 && \
 
     # Bazel download and install
     cd /tmp && \
@@ -150,7 +145,7 @@ RUN apk update && \
     cp /tmp/tensorflow_pkgs/tensorflow-${TENSORFLOW_VERSION}-cp36-cp36m-linux_x86_64.whl /root && \
     pip3 install --no-cache-dir \
         /root/tensorflow-${TENSORFLOW_VERSION}-cp36-cp36m-linux_x86_64.whl && \
-        python3 -c 'import tensorflow'
+        python3 -c 'import tensorflow' && \
 
     # Cleanup
     rm -rf /var/cache/apk/* && \
