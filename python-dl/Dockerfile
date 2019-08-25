@@ -1,7 +1,7 @@
-# Include pre-built tensorflow image
+# Include pre-built tensorflow image from Ubuntu 18.04
 # Command: docker build --rm=true --no-cache=true -t python-dl:devel-tensorflow --file=Dockerfile.devel-tensorflow .
-# FROM guitarmind/python-dl:devel-tensorflow as build_image
-FROM python-dl:devel-tensorflow as build_image
+# FROM guitarmind/python-dl:ubuntu-devel-tensorflow as build_image
+FROM python-dl:ubuntu-devel-tensorflow as build_image
 
 # Based on https://github.com/frol/docker-alpine-python-machinelearning
 FROM guitarmind/python-nginx
@@ -13,6 +13,13 @@ ENV JAVA_HOME=/usr/lib/jvm/java-1.8-openjdk \
 
 # Copy tensorflow wheel
 COPY --from=build_image /root/tensorflow-${TENSORFLOW_VERSION}-cp36-cp36m-linux_x86_64.whl /tmp/
+
+# Install MKL libraries
+COPY --from=build_image /usr/local/lib/libiomp5.so /usr/local/lib
+COPY --from=build_image /usr/local/lib/libmklml_gnu.so /usr/local/lib
+COPY --from=build_image /usr/local/lib/libmklml_intel.so /usr/local/lib
+ENV LIBRARY_PATH="/usr/local/lib:$LIBRARY_PATH" \
+    LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
 
 RUN apk update && \
     apk add --no-cache \
@@ -30,13 +37,17 @@ RUN apk update && \
     ln -s locale.h /usr/include/xlocale.h \
         && \
 
+    pip --no-cache-dir install --upgrade \
+        pip \
+        setuptools && \
+
     # Minimum required packages
-    pip install Cython \
-        # https://github.com/tensorflow/tensorflow/issues/30427
-        numpy==1.16.4 \
-        pandas \
-        scipy \
-        && \
+    # pip install Cython \
+    #     # https://github.com/tensorflow/tensorflow/issues/30427
+    #     numpy==1.16.4 \
+    #     pandas \
+    #     scipy \
+    #     && \
 
     # Install tensorflow and keras
     cd /tmp && \
@@ -50,20 +61,20 @@ RUN apk update && \
         python3 -c 'import tensorflow as tf; print(tf.__version__)' && \
 
     # Dependency packages
-    pip install scikit-learn \
-        matplotlib \
-        statsmodels \
-        PyWavelets \
-        # Need LLVM >= 7.0
-        librosa \
-        && \
+    # pip install scikit-learn \
+    #     matplotlib \
+    #     statsmodels \
+    #     PyWavelets \
+    #     # Need LLVM >= 7.0
+    #     librosa \
+    #     && \
 
     # Model hosting related packages
-    pip install flask \
-        gevent \
-        gunicorn \
-        requests \
-        && \
+    # pip install flask \
+    #     gevent \
+    #     gunicorn \
+    #     requests \
+    #     && \
 
     # Cleanup
     rm -rf /var/cache/apk/* && \

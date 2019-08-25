@@ -132,6 +132,8 @@ RUN apk update && \
     TF_NEED_MPI=0 \
     ./configure && \
     bazel build \
+        # No able to compile with MKL yet
+        --config=mkl \
         --config=opt \
         --copt=-march="skylake-avx512" \
         # Another option to exclicitly indicate instructions
