@@ -1,5 +1,6 @@
 # Include pre-built tensorflow image
 # Command: docker build --rm=true --no-cache=true -t python-dl:devel-tensorflow --file=Dockerfile.devel-tensorflow .
+# FROM guitarmind/python-dl:devel-tensorflow as build_image
 FROM python-dl:devel-tensorflow as build_image
 
 # Based on https://github.com/frol/docker-alpine-python-machinelearning
@@ -31,15 +32,21 @@ RUN apk update && \
 
     # Minimum required packages
     pip install Cython \
-        numpy \
+        # https://github.com/tensorflow/tensorflow/issues/30427
+        numpy==1.16.4 \
         pandas \
         scipy \
         && \
 
-    # Install tensorflow
+    # Install tensorflow and keras
     cd /tmp && \
+    apk add --no-cache \
+        --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing/ \
+        hdf5 \
+        hdf5-dev && \
     pip3 install --no-cache-dir \
-        /root/tensorflow-${TENSORFLOW_VERSION}-cp36-cp36m-linux_x86_64.whl && \
+        /tmp/tensorflow-${TENSORFLOW_VERSION}-cp36-cp36m-linux_x86_64.whl && \
+        pip3 install keras==2.2.4 && \
         python3 -c 'import tensorflow as tf; print(tf.__version__)' && \
 
     # Dependency packages
@@ -47,6 +54,7 @@ RUN apk update && \
         matplotlib \
         statsmodels \
         PyWavelets \
+        # Need LLVM >= 7.0
         librosa \
         && \
 

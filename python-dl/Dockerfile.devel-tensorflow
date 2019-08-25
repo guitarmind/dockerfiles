@@ -1,6 +1,7 @@
 # Include pre-built MKL image from Ubuntu 18.04
 # Command: docker build --squash --rm=true --no-cache=true -t python-dl:devel-mkl --file=Dockerfile.devel-mkl .
-FROM python-dl:devel-mkl as build_image
+FROM guitarmind/python-dl:devel-mkl as build_image
+# FROM python-dl:devel-mkl as build_image
 
 FROM guitarmind/python-nginx
 MAINTAINER markpeng@exosite.com
@@ -84,7 +85,7 @@ RUN apk update && \
     pip install \
         six \
         # https://github.com/tensorflow/tensorflow/issues/30427
-        numpy<1.17 \
+        numpy==1.16.4 \
         wheel \
         setuptools \
         mock \

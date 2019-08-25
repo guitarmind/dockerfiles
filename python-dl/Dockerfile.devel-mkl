@@ -1,4 +1,5 @@
 # Based on: https://github.com/tensorflow/serving/blob/master/tensorflow_serving/tools/docker/Dockerfile.devel-mkl
+# Only used for generating Intel MKL libraries
 
 # Copyright 2018 Google LLC
 #
