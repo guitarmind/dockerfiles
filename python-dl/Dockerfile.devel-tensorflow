@@ -81,7 +81,14 @@ RUN apk update && \
         && \
 
     # Minimum required packages
-    pip install six numpy wheel setuptools mock future>=0.17.1 && \
+    pip install \
+        six \
+        # https://github.com/tensorflow/tensorflow/issues/30427
+        numpy<1.17 \
+        wheel \
+        setuptools \
+        mock \
+        future>=0.17.1 && \
 
     # Bazel download and install
     cd /tmp && \

@@ -1,231 +1,71 @@
+# Include pre-built tensorflow image
+# Command: docker build --rm=true --no-cache=true -t python-dl:devel-tensorflow --file=Dockerfile.devel-tensorflow .
+FROM python-dl:devel-tensorflow as build_image
+
 # Based on https://github.com/frol/docker-alpine-python-machinelearning
-# FROM guitarmind/python-nginx
-# FROM guitarmind/python-ml
-# FROM python-nginx
-# FROM python-ml
-FROM python-dl-bazel
-# FROM python-dl-tensorflow
+FROM guitarmind/python-nginx
 MAINTAINER markpeng@exosite.com
 
 ENV JAVA_HOME=/usr/lib/jvm/java-1.8-openjdk \
-    # GCC_VERSION=4.8.5 \
-    # GCC_VERSION=6.1.1 \
     BAZEL_VERSION=0.15.0 \
-    TENSORFLOW_VERSION=1.12.0 \
-    LOCAL_RESOURCES=10240,6,1.0
-    # LOCAL_RESOURCES=2048,4,1.0
+    TENSORFLOW_VERSION=1.12.0
 
-# RUN \
+# Copy tensorflow wheel
+COPY --from=build_image /root/tensorflow-${TENSORFLOW_VERSION}-cp36-cp36m-linux_x86_64.whl /tmp/
+
 RUN apk update && \
     apk add --no-cache \
         --virtual=.build-dependencies \
-        g++ \
-        gfortran file binutils \
-        # musl \
-        musl-dev \
-        python3-dev cython openblas-dev \
+        g++ gfortran file binutils \
+        musl-dev python3-dev cython openblas-dev \
         build-base freetype-dev libpng-dev \
         libffi-dev openssl-dev \
         llvm-dev \
-        bash zip \
-        openjdk8 \
-        patch \
-        libexecinfo-dev \
-        libc6-compat \
-        linux-headers \
-        # GCC
-        # dejagnu \
-        # isl-dev \
-        # gmp-dev \
-        # mpc1-dev \
-        # mpfr-dev \
-        # texinfo \
-        # zlib-dev \
         && \
 
-    apk add libstdc++ openblas \
+    apk add --no-cache libstdc++ openblas \
         && \
 
     ln -s locale.h /usr/include/xlocale.h \
         && \
 
-    # llvm - https://github.com/ziglang/docker-zig/blob/master/Dockerfile
-    # WORKDIR /deps
-    # RUN wget http://releases.llvm.org/8.0.0/llvm-8.0.0.src.tar.xz
-    # RUN tar xf llvm-8.0.0.src.tar.xz
-    # RUN mkdir -p /deps/llvm-8.0.0.src/build
-    # WORKDIR /deps/llvm-8.0.0.src/build
-    # RUN cmake .. -DCMAKE_INSTALL_PREFIX=/deps/local -DCMAKE_PREFIX_PATH=/deps/local -DCMAKE_BUILD_TYPE=Release -DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD="AVR;RISCV" -DLLVM_ENABLE_LIBXML2=OFF -DLLVM_ENABLE_TERMINFO=OFF
-    # RUN make $MAKE_JOBS install
+    # Minimum required packages
+    pip install Cython \
+        numpy \
+        pandas \
+        scipy \
+        && \
 
-    # Bazel download and install
-    # cd /tmp && \
-    # wget https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/bazel-${BAZEL_VERSION}-dist.zip && \
-    # mkdir bazel-${BAZEL_VERSION} && \
-    # unzip -qd bazel-${BAZEL_VERSION} bazel-${BAZEL_VERSION}-dist.zip && \
-    # cd /tmp/bazel-${BAZEL_VERSION} && \
-    # sed -i -e 's/-classpath/-J-Xmx8192m -J-Xms128m -classpath/g' scripts/bootstrap/compile.sh && \
-    # bash compile.sh && \
-    # cp -p output/bazel /usr/bin/ && \
-
-    # GNU libc (aka glibc)
-    # cd /tmp && \
-    # ALPINE_GLIBC_BASE_URL="https://github.com/sgerrand/alpine-pkg-glibc/releases/download" && \
-    # ALPINE_GLIBC_PACKAGE_VERSION="2.30-r0" && \
-    # ALPINE_GLIBC_BASE_PACKAGE_FILENAME="glibc-$ALPINE_GLIBC_PACKAGE_VERSION.apk" && \
-    # ALPINE_GLIBC_BIN_PACKAGE_FILENAME="glibc-bin-$ALPINE_GLIBC_PACKAGE_VERSION.apk" && \
-    # ALPINE_GLIBC_I18N_PACKAGE_FILENAME="glibc-i18n-$ALPINE_GLIBC_PACKAGE_VERSION.apk" && \
-    # echo \
-    #     "-----BEGIN PUBLIC KEY-----\
-    #     MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApZ2u1KJKUu/fW4A25y9m\
-    #     y70AGEa/J3Wi5ibNVGNn1gT1r0VfgeWd0pUybS4UmcHdiNzxJPgoWQhV2SSW1JYu\
-    #     tOqKZF5QSN6X937PTUpNBjUvLtTQ1ve1fp39uf/lEXPpFpOPL88LKnDBgbh7wkCp\
-    #     m2KzLVGChf83MS0ShL6G9EQIAUxLm99VpgRjwqTQ/KfzGtpke1wqws4au0Ab4qPY\
-    #     KXvMLSPLUp7cfulWvhmZSegr5AdhNw5KNizPqCJT8ZrGvgHypXyiFvvAH5YRtSsc\
-    #     Zvo9GI2e2MaZyo9/lvb+LbLEJZKEQckqRj4P26gmASrZEPStwc+yqy1ShHLA0j6m\
-    #     1QIDAQAB\
-    #     -----END PUBLIC KEY-----" | sed 's/   */\n/g' > "/etc/apk/keys/sgerrand.rsa.pub" && \
-    # wget \
-    #     "$ALPINE_GLIBC_BASE_URL/$ALPINE_GLIBC_PACKAGE_VERSION/$ALPINE_GLIBC_BASE_PACKAGE_FILENAME" \
-    #     "$ALPINE_GLIBC_BASE_URL/$ALPINE_GLIBC_PACKAGE_VERSION/$ALPINE_GLIBC_BIN_PACKAGE_FILENAME" \
-    #     "$ALPINE_GLIBC_BASE_URL/$ALPINE_GLIBC_PACKAGE_VERSION/$ALPINE_GLIBC_I18N_PACKAGE_FILENAME" && \
-    # apk add --no-cache \
-    #     "$ALPINE_GLIBC_BASE_PACKAGE_FILENAME" \
-    #     "$ALPINE_GLIBC_BIN_PACKAGE_FILENAME" \
-    #     "$ALPINE_GLIBC_I18N_PACKAGE_FILENAME" && \
-    # rm "/etc/apk/keys/sgerrand.rsa.pub" && \
-    # # ls -la /usr/glibc-compat/lib && \
-    # export LD_LIBRARY_PATH=/usr/glibc-compat/lib:$LD_LIBRARY_PATH && \
-    # # ls -la /usr/glibc-compat && \
-    # # ls -la /usr/glibc-compat/sbin && \
-    # # /usr/glibc-compat/sbin/ldconfig -p && \
-    # # ldconfig && \
-    # # /usr/glibc-compat/bin/localedef --force --inputfile POSIX --charmap UTF-8 "$LANG" || true && \
-    # # echo "export LANG=$LANG" > /etc/profile.d/locale.sh && \
-    # # apk del glibc-i18n && \
-
-    # Install right GCC version
-    # cd /tmp && \
-    # wget https://ftp.gnu.org/gnu/gcc/gcc-${GCC_VERSION}/gcc-${GCC_VERSION}.tar.gz && \
-    # tar -xzf gcc-${GCC_VERSION}.tar.gz && \
-    # cd /tmp/gcc-${GCC_VERSION} && \
-    # # ls -la && \
-    # # echo -e " \
-    # # #ifdef __GNUC__ \n\
-    # # __inline \n\
-    # # #endif \n\
-    # # static unsigned int hash (const char *, unsigned int); \n\
-    # # #ifdef __GNUC__ \n\
-    # # __inline \n\
-    # # #ifdef __GNUC_STDC_INLINE__ \n\
-    # # __attribute__ ((__gnu_inline__)) \n\
-    # # #endif \n\
-    # # #endif \n\
-    # # const char * libc_name_p (const char *, unsigned int); \n\ $(cat gcc/cp/cfns.gperf)" >> gcc/cp/cfns.gperf && \
-    # sed -i '1s/^/\n\n#ifdef __GNUC__\n__inline\n#endif\nstatic unsigned int hash (const char *, unsigned int);\n#ifdef __GNUC__\n__inline\n#ifdef __GNUC_STDC_INLINE__\n__attribute__ ((__gnu_inline__))\n#endif\n#endif\nconst char * libc_name_p (const char *, unsigned int); \n\n/' gcc/cp/cfns.gperf && \
-    # sed -i '1s/^/\n\n#ifdef __GNUC__\n__inline\n#endif\nstatic unsigned int hash (const char *, unsigned int);\n#ifdef __GNUC__\n__inline\n#ifdef __GNUC_STDC_INLINE__\n__attribute__ ((__gnu_inline__))\n#endif\n#endif\nconst char * libc_name_p (const char *, unsigned int); \n\n/' gcc/cp/cfns.h && \
-    # # sed -i '$ a \\n\n#ifdef __GNUC__\n__inline\n#endif\nstatic unsigned int hash (const char *, unsigned int);\n#ifdef __GNUC__\n__inline\n#ifdef __GNUC_STDC_INLINE__\n__attribute__ ((__gnu_inline__))\n#endif\n#endif\nconst char * libc_name_p (const char *, unsigned int); \n' gcc/cp/cfns.gperf && \
-    # # sed -i '$ a \\n\n#ifdef __GNUC__\n__inline\n#endif\nstatic unsigned int hash (const char *, unsigned int);\n#ifdef __GNUC__\n__inline\n#ifdef __GNUC_STDC_INLINE__\n__attribute__ ((__gnu_inline__))\n#endif\n#endif\nconst char * libc_name_p (const char *, unsigned int); \n' gcc/cp/cfns.h && \
-    # # >> gcc/cp/cfns.{gperf,h} && \
-    # head gcc/cp/cfns.gperf && \
-    # head gcc/cp/cfns.h && \
-    # # tail -n 50 gcc/cp/cfns.gperf && \
-    # # tail -n 50 gcc/cp/cfns.h && \
-    # ./configure \
-    #     --prefix=/usr/local \
-    #     --build=$(uname -m)-alpine-linux-musl \
-    #     --host=$(uname -m)-alpine-linux-musl \
-    #     --target=$(uname -m)-alpine-linux-musl \
-    #     --with-pkgversion="Alpine ${GCC_VERSION}" \
-    #     --enable-checking=release \
-    #     --disable-fixed-point \
-    #     --disable-libmpx \
-    #     --disable-libmudflap \
-    #     --disable-libsanitizer \
-    #     --disable-libssp \
-    #     --disable-libstdcxx-pch \
-    #     --disable-multilib \
-    #     --disable-nls \
-    #     --disable-symvers \
-    #     --disable-werror \
-    #     --enable-__cxa_atexit \
-    #     --enable-default-pie \
-    #     --enable-languages=c,c++ \
-    #     --enable-shared \
-    #     --enable-threads \
-    #     --enable-tls \
-    #     --with-linker-hash-style=gnu \
-    #     --with-system-zlib && \
-    #     # --with-system-zlib \
-    #     # --disable-werror && \
-    # make -j $(nproc) && \
-    # make -j $(nproc) install-strip && \
-    # gcc -v && \
-
-    # Tensorflow with Intel MKL-DNN for AWS EC2 M5 instnace with Xeon Skylake SP processor (support AVX-512)
+    # Install tensorflow
     cd /tmp && \
-    apk --no-cache add \
-        --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing/ \
-        hdf5 && \
-    apk --no-cache add --virtual .build-edge-deps \
-        --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing/ \
-        hdf5-dev && \
-    pip3 install h5py && \
-    pip3 install --no-cache-dir wheel && \
-    pip3 install keras_applications==1.0.6 --no-deps && \
-    pip3 install keras_preprocessing==1.0.5 --no-deps && \
-    pip3 install h5py==2.8.0 && \
-    wget -O tensorflow-${TENSORFLOW_VERSION}.tar.gz https://github.com/tensorflow/tensorflow/archive/v${TENSORFLOW_VERSION}.tar.gz && \
-    tar xzf tensorflow-${TENSORFLOW_VERSION}.tar.gz && \
-    cd /tmp/tensorflow-${TENSORFLOW_VERSION} && \
-    # : musl-libc does not have "secure_getenv" function && \
-    # sed -i -e '/JEMALLOC_HAVE_SECURE_GETENV/d' third_party/jemalloc.BUILD && \
-    sed -i -e '/define TF_GENERATE_BACKTRACE/d' tensorflow/core/platform/default/stacktrace.h && \
-    sed -i -e '/define TF_GENERATE_STACKTRACE/d' tensorflow/core/platform/stacktrace_handler.cc && \
-    TF_NEED_JEMALLOC=1 \
-    TF_NEED_IGNITE=0 \
-    TF_NEED_GCP=0 \
-    TF_NEED_HDFS=0 \
-    TF_NEED_S3=0 \
-    TF_ENABLE_XLA=0 \
-    TF_NEED_GDR=0 \
-    TF_NEED_VERBS=0 \
-    TF_NEED_OPENCL=0 \
-    TF_NEED_CUDA=0 \
-    TF_NEED_MPI=0 \
-    ./configure && \
-    bazel build \
-        # --config=mkl \
-        --config=opt \
-        --copt=-march="native" \
-        # --copt=-march="skylake-avx512" \
-        --cxxopt="-D_GLIBCXX_USE_CXX11_ABI=0" \
-        --local_resources=${LOCAL_RESOURCES} \
-        --verbose_failures \
-        //tensorflow/tools/pip_package:build_pip_package && \
-    # bazel build --config=mkl \
-    #     --config=opt \
-    #     --copt=-mavx --copt=-mavx2 --copt=-mfma --copt=-mavx512f --copt=-mavx512pf --copt=-mavx512cd --copt=-mavx512er \
-    #     # --copt=-march="native" \
-    #     # --copt=-march="skylake-avx512" \
-    #     --cxxopt="-D_GLIBCXX_USE_CXX11_ABI=0" \
-    #     --local_resources=${LOCAL_RESOURCES} \
-    #     --verbose_failures \
-    #     //tensorflow/tools/pip_package:build_pip_package && \
-    ./bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkgs && \
+    pip3 install --no-cache-dir \
+        /root/tensorflow-${TENSORFLOW_VERSION}-cp36-cp36m-linux_x86_64.whl && \
+        python3 -c 'import tensorflow as tf; print(tf.__version__)' && \
+
+    # Dependency packages
+    pip install scikit-learn \
+        matplotlib \
+        statsmodels \
+        PyWavelets \
+        librosa \
+        && \
+
+    # Model hosting related packages
+    pip install flask \
+        gevent \
+        gunicorn \
+        requests \
+        && \
 
     # Cleanup
     rm -rf /var/cache/apk/* && \
     rm -rf /tmp/* && \
 
-    rm -f /usr/bin/bazel && \
-    # rm -r /root/.cache && \
-    # rm "/root/.wget-hsts" && \
-    # find /usr/lib/python3.*/ -name 'tests' -exec rm -r '{}' + && \
-    # find /usr/lib/python3.*/site-packages/ -name '*.so' -print -exec sh -c 'file "{}" | grep -q "not stripped" && strip -s "{}"' \; \
-    #     && \
+    rm -r /root/.cache && \
+    find /usr/lib/python3.*/ -name 'tests' -exec rm -r '{}' + && \
+    find /usr/lib/python3.*/site-packages/ -name '*.so' -print -exec sh -c 'file "{}" | grep -q "not stripped" && strip -s "{}"' \; \
+        && \
 
     rm /usr/include/xlocale.h \
         && \
-    apk del .build-edge-deps && \
     apk del .build-dependencies
