@@ -124,35 +124,26 @@ RUN apk update && \
     TF_NEED_MPI=0 \
     ./configure && \
     bazel build \
-        # --config=mkl \
         --config=opt \
-        --copt=-march="native" \
-        # --copt=-march="skylake-avx512" \
+        --copt=-march="skylake-avx512" \
+        # Another option to exclicitly indicate instructions
+        # --copt=-mavx --copt=-mavx2 --copt=-mfma --copt=-mavx512f --copt=-mavx512pf --copt=-mavx512cd --copt=-mavx512er \
         --cxxopt="-D_GLIBCXX_USE_CXX11_ABI=0" \
         --local_resources=${LOCAL_RESOURCES} \
         --verbose_failures \
         //tensorflow/tools/pip_package:build_pip_package && \
-    # bazel build --config=mkl \
-    #     --config=opt \
-    #     --copt=-mavx --copt=-mavx2 --copt=-mfma --copt=-mavx512f --copt=-mavx512pf --copt=-mavx512cd --copt=-mavx512er \
-    #     # --copt=-march="native" \
-    #     # --copt=-march="skylake-avx512" \
-    #     --cxxopt="-D_GLIBCXX_USE_CXX11_ABI=0" \
-    #     --local_resources=${LOCAL_RESOURCES} \
-    #     --verbose_failures \
-    #     //tensorflow/tools/pip_package:build_pip_package && \
     ./bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkgs && \
     cp /tmp/tensorflow_pkgs/tensorflow-${TENSORFLOW_VERSION}-cp36-cp36m-linux_x86_64.whl /root && \
+    # Clean up Bazel cache when done
+    bazel clean --expunge --color=yes && \
     cd /root && \
     pip3 install --no-cache-dir \
         /root/tensorflow-${TENSORFLOW_VERSION}-cp36-cp36m-linux_x86_64.whl && \
-        python3 -c 'import tensorflow' && \
+        python3 -c 'import tensorflow as tf; print(tf.__version__)' && \
 
     # Cleanup
     rm -rf /var/cache/apk/* && \
     rm -rf /tmp/* && \
-    # Clean up Bazel cache when done
-    bazel clean --expunge --color=yes && \
     rm -f /usr/bin/bazel && \
 
     rm -r /root/.cache && \
