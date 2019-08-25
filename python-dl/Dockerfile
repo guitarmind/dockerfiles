@@ -15,9 +15,13 @@ ENV JAVA_HOME=/usr/lib/jvm/java-1.8-openjdk \
 COPY --from=build_image /root/tensorflow-${TENSORFLOW_VERSION}-cp36-cp36m-linux_x86_64.whl /tmp/
 
 # Install MKL libraries
-COPY --from=build_image /usr/local/lib/libiomp5.so /usr/local/lib
-COPY --from=build_image /usr/local/lib/libmklml_gnu.so /usr/local/lib
-COPY --from=build_image /usr/local/lib/libmklml_intel.so /usr/local/lib
+# COPY --from=build_image /usr/local/lib/libiomp5.so /usr/local/lib
+# COPY --from=build_image /usr/local/lib/libmklml_gnu.so /usr/local/lib
+# COPY --from=build_image /usr/local/lib/libmklml_intel.so /usr/local/lib
+COPY --from=build_image /usr/local/lib/python3.6/dist-packages/_solib_k8/_U@mkl_Ulinux_S_S_Cmkl_Ulibs_Ulinux___Uexternal_Smkl_Ulinux_Slib/libiomp5.so /usr/local/lib
+# COPY --from=build_image /usr/local/lib/python3.6/dist-packages/_solib_k8/_U@mkl_Ulinux_S_S_Cmkl_Ulibs_Ulinux___Uexternal_Smkl_Ulinux_Slib/libmklml_gnu.so /usr/local/lib
+COPY --from=build_image /usr/local/lib/python3.6/dist-packages/_solib_k8/_U@mkl_Ulinux_S_S_Cmkl_Ulibs_Ulinux___Uexternal_Smkl_Ulinux_Slib/libmklml_intel.so /usr/local/lib
+
 ENV LIBRARY_PATH="/usr/local/lib:$LIBRARY_PATH" \
     LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
 
@@ -28,6 +32,7 @@ RUN apk update && \
         musl-dev python3-dev cython openblas-dev \
         build-base freetype-dev libpng-dev \
         libffi-dev openssl-dev \
+        libc6-compat \
         llvm-dev \
         && \
 
@@ -58,7 +63,7 @@ RUN apk update && \
     pip3 install --no-cache-dir \
         /tmp/tensorflow-${TENSORFLOW_VERSION}-cp36-cp36m-linux_x86_64.whl && \
         pip3 install keras==2.2.4 && \
-        python3 -c 'import tensorflow as tf; print(tf.__version__)' && \
+        python3 -c 'import tensorflow as tf; print("Tensorflow version: {}".format(tf.__version__)); print("Is MKL enabled?{}".format(tf.pywrap_tensorflow.IsMklEnabled()))' && \
 
     # Dependency packages
     # pip install scikit-learn \

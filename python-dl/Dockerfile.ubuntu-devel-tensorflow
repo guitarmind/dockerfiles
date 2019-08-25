@@ -98,6 +98,8 @@ RUN apt-get update && \
         //tensorflow/tools/pip_package:build_pip_package && \
     ./bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkgs && \
     cp /tmp/tensorflow_pkgs/tensorflow-${TENSORFLOW_VERSION}-cp36-cp36m-linux_x86_64.whl /root && \
+    # Copy MKL libraries
+    cp /root/.cache/bazel/_bazel_root/*/external/mkl_linux/lib/* /usr/local/lib && \
     # Clean up Bazel cache when done
     bazel clean --expunge --color=yes && \
     cd /root && \
@@ -106,14 +108,10 @@ RUN apt-get update && \
         python3 -c 'import tensorflow as tf; print("Tensorflow version: {}".format(tf.__version__)); print("Is MKL enabled?{}".format(tf.pywrap_tensorflow.IsMklEnabled()))' && \
 
     # Cleanup
-    rm -rf /var/cache/apt/* && \
-    rm -rf /tmp/* && \
-    rm -f /usr/bin/bazel && \
+    # rm -rf /var/cache/apt/* && \
+    # rm -rf /tmp/* && \
+    # rm -f /usr/bin/bazel && \
 
-    rm -r /root/.cache && \
-    # find /usr/lib/python3.*/ -name 'tests' -exec rm -r '{}' + && \
-    # find /usr/lib/python3.*/site-packages/ -name '*.so' -print -exec sh -c 'file "{}" | grep -q "not stripped" && strip -s "{}"' \; \
-    #     && \
-
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    # rm -r /root/.cache && \
+    # apt-get clean && \
+    # rm -rf /var/lib/apt/lists/*
