@@ -34,6 +34,10 @@ RUN apk update && \
         mpfr-dev \
         texinfo \
         zlib-dev \
+        # glibc
+        libbsd \
+        libbsd-dev \
+        rsync \
         && \
 
     apk add --no-cache libstdc++ openblas \
@@ -46,9 +50,49 @@ RUN apk update && \
     wget -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub && \
     wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.30-r0/glibc-2.30-r0.apk && \
     apk add glibc-2.30-r0.apk && \
+    export LD_LIBRARY_PATH=/usr/glibc-compat/lib:$LD_LIBRARY_PATH && \
+    # /usr/glibc-compat/bin/localedef -i en_US -f UTF-8 en_US.UTF-8 && \
+    # /usr/glibc-compat/sbin/ldconfig /lib /usr/glibc/usr/lib && \
+    ls -la /usr/glibc-compat/lib && \
 
-    ln -s locale.h /usr/include/xlocale.h \
-        && \
+    # ln -s locale.h /usr/include/xlocale.h \
+    #     && \
+
+    # GNU libc (aka glibc)
+    # cd /tmp && \
+    # ALPINE_GLIBC_BASE_URL="https://github.com/sgerrand/alpine-pkg-glibc/releases/download" && \
+    # ALPINE_GLIBC_PACKAGE_VERSION="2.30-r0" && \
+    # ALPINE_GLIBC_BASE_PACKAGE_FILENAME="glibc-$ALPINE_GLIBC_PACKAGE_VERSION.apk" && \
+    # ALPINE_GLIBC_BIN_PACKAGE_FILENAME="glibc-bin-$ALPINE_GLIBC_PACKAGE_VERSION.apk" && \
+    # ALPINE_GLIBC_I18N_PACKAGE_FILENAME="glibc-i18n-$ALPINE_GLIBC_PACKAGE_VERSION.apk" && \
+    # echo \
+    #     "-----BEGIN PUBLIC KEY-----\
+    #     MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApZ2u1KJKUu/fW4A25y9m\
+    #     y70AGEa/J3Wi5ibNVGNn1gT1r0VfgeWd0pUybS4UmcHdiNzxJPgoWQhV2SSW1JYu\
+    #     tOqKZF5QSN6X937PTUpNBjUvLtTQ1ve1fp39uf/lEXPpFpOPL88LKnDBgbh7wkCp\
+    #     m2KzLVGChf83MS0ShL6G9EQIAUxLm99VpgRjwqTQ/KfzGtpke1wqws4au0Ab4qPY\
+    #     KXvMLSPLUp7cfulWvhmZSegr5AdhNw5KNizPqCJT8ZrGvgHypXyiFvvAH5YRtSsc\
+    #     Zvo9GI2e2MaZyo9/lvb+LbLEJZKEQckqRj4P26gmASrZEPStwc+yqy1ShHLA0j6m\
+    #     1QIDAQAB\
+    #     -----END PUBLIC KEY-----" | sed 's/   */\n/g' > "/etc/apk/keys/sgerrand.rsa.pub" && \
+    # wget \
+    #     "$ALPINE_GLIBC_BASE_URL/$ALPINE_GLIBC_PACKAGE_VERSION/$ALPINE_GLIBC_BASE_PACKAGE_FILENAME" \
+    #     "$ALPINE_GLIBC_BASE_URL/$ALPINE_GLIBC_PACKAGE_VERSION/$ALPINE_GLIBC_BIN_PACKAGE_FILENAME" \
+    #     "$ALPINE_GLIBC_BASE_URL/$ALPINE_GLIBC_PACKAGE_VERSION/$ALPINE_GLIBC_I18N_PACKAGE_FILENAME" && \
+    # apk add --no-cache \
+    #     "$ALPINE_GLIBC_BASE_PACKAGE_FILENAME" \
+    #     "$ALPINE_GLIBC_BIN_PACKAGE_FILENAME" \
+    #     "$ALPINE_GLIBC_I18N_PACKAGE_FILENAME" && \
+    # rm "/etc/apk/keys/sgerrand.rsa.pub" && \
+    # # ls -la /usr/glibc-compat/lib && \
+    # export LD_LIBRARY_PATH=/usr/glibc-compat/lib:$LD_LIBRARY_PATH && \
+    # # ls -la /usr/glibc-compat && \
+    # # ls -la /usr/glibc-compat/sbin && \
+    # # /usr/glibc-compat/sbin/ldconfig -p && \
+    # # ldconfig && \
+    # # /usr/glibc-compat/bin/localedef --force --inputfile POSIX --charmap UTF-8 "$LANG" || true && \
+    # # echo "export LANG=$LANG" > /etc/profile.d/locale.sh && \
+    # # apk del glibc-i18n && \
 
     # Minimum required packages
     pip install \
@@ -102,7 +146,25 @@ RUN apk update && \
         --with-system-zlib && \
     make -j $(nproc) && \
     make -j $(nproc) install-strip && \
+    rsync -r /usr/local/ /usr/ && \
+    ln -sf /usr/bin/gcc /usr/bin/cc && \
     gcc -v && \
+
+    apk add --no-cache \
+        autoconf \
+        automake \
+        binutils \
+        cmake \
+        file \
+        git \
+        gmp \
+        isl \
+        libc-dev \
+        libtool \
+        mpc1 \
+        mpfr3 \
+        pkgconf \
+        && \
 
     # Tensorflow with Intel MKL-DNN for AWS EC2 M5 instnace with Xeon Skylake SP processor (support AVX-512)
     cd /tmp && \
@@ -122,6 +184,9 @@ RUN apk update && \
     cd /tmp/tensorflow-${TENSORFLOW_VERSION} && \
     sed -i -e '/define TF_GENERATE_BACKTRACE/d' tensorflow/core/platform/default/stacktrace.h && \
     sed -i -e '/define TF_GENERATE_STACKTRACE/d' tensorflow/core/platform/stacktrace_handler.cc && \
+    sed -i -e 's/uint /uint32_t /g' tensorflow/core/kernels/mkl_input_conversion_op.cc && \
+    sed -i -e 's/uint /uint32_t /g' tensorflow/core/kernels/mkl_tfconv_op.h && \
+    # sed -i -e 's/uint /uint32_t /g' external/protobuf_archive/src/google/protobuf/stubs/port.h && \
     TF_NEED_JEMALLOC=1 \
     TF_NEED_IGNITE=0 \
     TF_NEED_GCP=0 \
@@ -133,10 +198,15 @@ RUN apk update && \
     TF_NEED_OPENCL=0 \
     TF_NEED_CUDA=0 \
     TF_NEED_MPI=0 \
+    TF_NEED_KAFKA=0 \
+    TF_NEED_AWS=0 \
+    TF_NEED_OPENCL_SYCL=0 \
+    TF_DOWNLOAD_CLANG=0 \
+    TF_SET_ANDROID_WORKSPACE=0 \
     ./configure && \
     bazel build \
         # No able to compile with MKL yet
-        # --config=mkl \
+        --config=mkl \
         --config=opt \
         --copt=-march="skylake-avx512" \
         # Another option to exclicitly indicate instructions
@@ -148,23 +218,23 @@ RUN apk update && \
     ./bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkgs && \
     cp /tmp/tensorflow_pkgs/tensorflow-${TENSORFLOW_VERSION}-cp36-cp36m-linux_x86_64.whl /root && \
     # Copy MKL libraries
-    cp /root/.cache/bazel/_bazel_root/*/external/mkl_linux/lib/* /usr/local/lib && \
+    # cp /root/.cache/bazel/_bazel_root/*/external/mkl_linux/lib/* /usr/local/lib && \
     # Clean up Bazel cache when done
-    bazel clean --expunge --color=yes && \
-    cd /root && \
-    pip3 install --no-cache-dir \
-        /root/tensorflow-${TENSORFLOW_VERSION}-cp36-cp36m-linux_x86_64.whl && \
-        python3 -c 'import tensorflow as tf; print("Tensorflow version: {}".format(tf.__version__)); print("Is MKL enabled?{}".format(tf.pywrap_tensorflow.IsMklEnabled()))' && \
+    # bazel clean --expunge --color=yes && \
+    # cd /root && \
+    # pip3 install --no-cache-dir \
+    #     /root/tensorflow-${TENSORFLOW_VERSION}-cp36-cp36m-linux_x86_64.whl && \
+    #     python3 -c 'import tensorflow as tf; print("Tensorflow version: {}".format(tf.__version__)); print("Is MKL enabled?{}".format(tf.pywrap_tensorflow.IsMklEnabled()))' && \
 
     # Cleanup
-    rm -rf /var/cache/apk/* && \
-    rm -rf /tmp/* && \
-    rm -f /usr/bin/bazel && \
+    # rm -rf /var/cache/apk/* && \
+    # rm -rf /tmp/* && \
+    # rm -f /usr/bin/bazel && \
 
-    rm -r /root/.cache && \
-    find /usr/lib/python3.*/ -name 'tests' -exec rm -r '{}' + && \
-    find /usr/lib/python3.*/site-packages/ -name '*.so' -print -exec sh -c 'file "{}" | grep -q "not stripped" && strip -s "{}"' \; \
-        && \
+    # rm -r /root/.cache && \
+    # find /usr/lib/python3.*/ -name 'tests' -exec rm -r '{}' + && \
+    # find /usr/lib/python3.*/site-packages/ -name '*.so' -print -exec sh -c 'file "{}" | grep -q "not stripped" && strip -s "{}"' \; \
+    #     && \
 
     rm /usr/include/xlocale.h \
         && \
