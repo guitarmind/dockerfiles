@@ -31,6 +31,7 @@ RUN apk update && \
         statsmodels \
         PyWavelets \
         librosa \
+        psutil \
         && \
 
     # Model hosting related packages
