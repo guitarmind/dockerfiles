@@ -6,6 +6,8 @@
 # pytorch       latest (pip)
 # tensorflow    latest (pip)
 # keras         latest (pip)
+# mxnet         latest (pip)
+# gluonts       latest (pip)
 # opencv        4.0.1  (git)
 # ==================================================================
 
@@ -58,7 +60,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         setuptools \
         && \
     $PIP_INSTALL \
-        numpy \
+        numpy==1.14.* \
         scipy \
         pandas \
         cloudpickle \
@@ -106,11 +108,20 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 
     $PIP_INSTALL \
         future \
-        numpy \
         protobuf \
         enum34 \
         pyyaml \
         typing \
+        && \
+
+# ==================================================================
+# mxnet
+# ------------------------------------------------------------------
+
+    # CUDA 10.0 (CUDA/cuDNN and MKL-DNN enabled)
+    $PIP_INSTALL \
+        "mxnet-cu100mkl>=1.3.1,<1.5.*" \
+        gluonts \
         && \
 
 # ==================================================================
@@ -184,7 +195,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         PyWavelets \
         statsmodels \
         plotly \
-        librosa \
+        librosa==0.6.3 \
         tqdm \
         && \
 
