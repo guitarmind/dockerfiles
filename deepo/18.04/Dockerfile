@@ -138,7 +138,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 
     $PIP_INSTALL \
         h5py \
-        keras \
+        keras==2.2.4 \
         && \
 
 # ==================================================================
