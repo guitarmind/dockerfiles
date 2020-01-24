@@ -119,28 +119,27 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 # ------------------------------------------------------------------
 
     # CUDA 10.0 (CUDA/cuDNN and MKL-DNN enabled)
-    # $PIP_INSTALL \
-    #     "mxnet-cu100mkl>=1.3.1,<1.5.*" \
-    #     gluonts \
-    #     && \
+    $PIP_INSTALL \
+        "mxnet-cu100mkl>=1.3.1,<1.5.*" \
+        gluonts \
+        && \
 
 # ==================================================================
 # tensorflow
 # ------------------------------------------------------------------
 
     $PIP_INSTALL \
-        h5py \
-        tensorflow==2.0.0 \
+        https://github.com/evdcush/TensorFlow-wheels/releases/download/tf-1.12.0-gpu-10.0/tensorflow-1.12.0-cp36-cp36m-linux_x86_64.whl \
         && \
 
 # ==================================================================
 # keras
 # ------------------------------------------------------------------
 
-    # $PIP_INSTALL \
-    #     h5py \
-    #     keras==2.2.4 \
-    #     && \
+    $PIP_INSTALL \
+        h5py \
+        keras==2.2.4 \
+        && \
 
 # ==================================================================
 # opencv
