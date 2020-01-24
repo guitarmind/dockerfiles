@@ -130,7 +130,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 
     $PIP_INSTALL \
         h5py \
-        tensorflow==2.0.0 \
+        tensorflow-gpu==2.0.0 \
         && \
 
 # ==================================================================
