@@ -198,6 +198,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         plotly \
         librosa==0.6.3 \
         tqdm \
+        transformers \
         && \
 
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
