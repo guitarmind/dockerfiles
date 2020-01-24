@@ -199,6 +199,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         librosa==0.6.3 \
         tqdm \
         transformers \
+        langdetect \
         && \
 
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
