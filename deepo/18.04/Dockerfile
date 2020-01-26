@@ -198,7 +198,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         plotly \
         librosa==0.6.3 \
         tqdm \
-        transformers \
+        git+https://github.com/huggingface/transformers#master \
         langdetect \
         && \
 
