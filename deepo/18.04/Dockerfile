@@ -199,6 +199,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         librosa==0.6.3 \
         tqdm \
         git+https://github.com/huggingface/transformers#master \
+        tensorflow-determinism \
         langdetect \
         && \
 
