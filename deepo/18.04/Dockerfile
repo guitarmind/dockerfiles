@@ -60,7 +60,8 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         setuptools \
         && \
     $PIP_INSTALL \
-        numpy==1.14.* \
+        # numpy==1.14.* \
+        numpy==1.17.* \
         scipy \
         pandas \
         cloudpickle \
@@ -201,6 +202,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         git+https://github.com/huggingface/transformers#master \
         tensorflow-determinism \
         langdetect \
+        beautifulsoup4 \
         && \
 
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
