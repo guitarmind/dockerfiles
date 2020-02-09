@@ -106,6 +106,8 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     # $PIP_INSTALL \
     #     https://download.pytorch.org/whl/cu101/torchvision-0.3.0-cp36-cp36m-linux_x86_64.whl \
     #     && \
+    $PIP_INSTALL \
+        torch==1.1.0
 
     $PIP_INSTALL \
         future \
