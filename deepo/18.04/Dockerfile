@@ -11,7 +11,7 @@
 # opencv        4.0.1  (git)
 # ==================================================================
 
-FROM nvidia/cuda:10.0-cudnn7-devel-ubuntu18.04
+FROM nvidia/cuda:11.0-cudnn7-devel-ubuntu18.04
 RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     PIP_INSTALL="python -m pip --no-cache-dir install --upgrade" && \
     GIT_CLONE="git clone --depth 10" && \
@@ -101,10 +101,10 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 
     # Python 3.6, CUDA 10.0
     $PIP_INSTALL \
-        https://download.pytorch.org/whl/cu100/torch-1.1.0-cp36-cp36m-linux_x86_64.whl \
+        https://download.pytorch.org/whl/cu101/torch-1.1.0-cp36-cp36m-linux_x86_64.whl \
         && \
     $PIP_INSTALL \
-        https://download.pytorch.org/whl/cu100/torchvision-0.3.0-cp36-cp36m-linux_x86_64.whl \
+        https://download.pytorch.org/whl/cu101/torchvision-0.3.0-cp36-cp36m-linux_x86_64.whl \
         && \
 
     $PIP_INSTALL \
@@ -131,7 +131,9 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 
     $PIP_INSTALL \
         h5py \
-        tensorflow-gpu==2.0.0 \
+        tensorflow-gpu==2.1.0-rc0 \
+        tensorflow-determinism \
+        tensorflow-addons \
         && \
 
 # ==================================================================
