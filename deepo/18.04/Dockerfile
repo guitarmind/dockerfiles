@@ -245,6 +245,12 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     python setup.py install && \
     cd .. && \
 
+    # Apex
+    $GIT_CLONE --recursive https://github.com/NVIDIA/apex ~/apex && \
+    cd ~/apex && \
+    $PIP_INSTALL -v --no-cache-dir --global-option="--cpp_ext" --global-option="--cuda_ext" ./ && \
+    cd .. && \
+
 # ==================================================================
 # config & cleanup
 # ------------------------------------------------------------------
