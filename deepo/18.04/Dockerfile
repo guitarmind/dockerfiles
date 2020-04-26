@@ -107,7 +107,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     #     https://download.pytorch.org/whl/cu101/torchvision-0.3.0-cp36-cp36m-linux_x86_64.whl \
     #     && \
     $PIP_INSTALL \
-        torch==1.1.0 \
+        torch==1.4.0 \
         && \
 
     $PIP_INSTALL \
@@ -204,7 +204,8 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         plotly \
         librosa==0.6.3 \
         tqdm \
-        git+https://github.com/huggingface/transformers#master \
+        # git+https://github.com/huggingface/transformers#master \
+        transformers==2.7.0 \
         tensorflow-determinism \
         langdetect \
         beautifulsoup4 \
