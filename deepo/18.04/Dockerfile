@@ -138,7 +138,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         tensorflow-gpu==2.1.0-rc0 \
         tensorflow-determinism \
         tensorflow-addons \
-        tensorboard \
+        tensorboard==2.0.0 \
         && \
 
 # ==================================================================
@@ -258,7 +258,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     wget -O tensorrt.deb https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/nvidia-machine-learning-repo-ubuntu1804_1.0.0-1_amd64.deb && \
     dpkg -i tensorrt.deb && \
     apt-get update && \
-    $PIP_INSTALL \
+    DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
         libnvinfer6=$TENSORRT_VERSION \
         libnvonnxparsers6=$TENSORRT_VERSION \
         libnvparsers6=$TENSORRT_VERSION \
@@ -268,8 +268,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         libnvparsers-dev=$TENSORRT_VERSION \
         libnvinfer-plugin-dev=$TENSORRT_VERSION \
         python3-libnvinfer=$TENSORRT_VERSION \
-        python3-libnvinfer-dev=$TENSORRT_VERSION \
-        uff-converter-tf=$TENSORRT_VERSION && \
+        python3-libnvinfer-dev=$TENSORRT_VERSION && \
     # Note: need to unhold for new update later
     apt-mark hold \
         libnvinfer6 \
@@ -281,10 +280,14 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         libnvparsers-dev \
         libnvinfer-plugin-dev \
         python3-libnvinfer \
-        python3-libnvinfer-dev \
-        uff-converter-tf && \
+        python3-libnvinfer-dev && \
     dpkg -l | grep TensorRT && \
-    rm tensorrt.deb && \
+    wget -O 7fa2af80.pub https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/7fa2af80.pub && \
+    apt-key add 7fa2af80.pub && \
+    apt-get update && \
+    # TODO: figure out how to install uff-converter-tf
+    $PIP_INSTALL tensorrt && \
+    rm tensorrt.deb 7fa2af80.pub && \
 
 # ==================================================================
 # config & cleanup
