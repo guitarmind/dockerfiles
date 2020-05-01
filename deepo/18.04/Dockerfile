@@ -137,6 +137,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         tensorflow-gpu==2.1.0-rc0 \
         tensorflow-determinism \
         tensorflow-addons \
+        tensorboard \
         && \
 
 # ==================================================================
