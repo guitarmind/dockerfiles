@@ -15,6 +15,7 @@ FROM nvidia/cuda:10.1-cudnn7-devel-ubuntu18.04
 RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     PIP_INSTALL="python -m pip --no-cache-dir install --upgrade" && \
     GIT_CLONE="git clone --depth 10" && \
+    TENSORRT_VERSION="6.0.1-1+cuda10.1" && \
 
     rm -rf /var/lib/apt/lists/* \
            /etc/apt/sources.list.d/cuda.list \
@@ -251,6 +252,39 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     cd ~/apex && \
     $PIP_INSTALL -v --no-cache-dir --global-option="--cpp_ext" --global-option="--cuda_ext" ./ && \
     cd .. && \
+
+    # TensorRT
+    # Based on https://docs.nvidia.com/deeplearning/sdk/tensorrt-install-guide/index.html
+    wget -O tensorrt.deb https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/nvidia-machine-learning-repo-ubuntu1804_1.0.0-1_amd64.deb && \
+    dpkg -i tensorrt.deb && \
+    apt-get update && \
+    $PIP_INSTALL \
+        libnvinfer6=$TENSORRT_VERSION \
+        libnvonnxparsers6=$TENSORRT_VERSION \
+        libnvparsers6=$TENSORRT_VERSION \
+        libnvinfer-plugin6=$TENSORRT_VERSION \
+        libnvinfer-dev=$TENSORRT_VERSION \
+        libnvonnxparsers-dev=$TENSORRT_VERSION \
+        libnvparsers-dev=$TENSORRT_VERSION \
+        libnvinfer-plugin-dev=$TENSORRT_VERSION \
+        python3-libnvinfer=$TENSORRT_VERSION \
+        python3-libnvinfer-dev=$TENSORRT_VERSION \
+        uff-converter-tf=$TENSORRT_VERSION && \
+    # Note: need to unhold for new update later
+    apt-mark hold \
+        libnvinfer6 \
+        libnvonnxparsers6 \
+        libnvparsers6 \
+        libnvinfer-plugin6 \
+        libnvinfer-dev \
+        libnvonnxparsers-dev \
+        libnvparsers-dev \
+        libnvinfer-plugin-dev \
+        python3-libnvinfer \
+        python3-libnvinfer-dev \
+        uff-converter-tf && \
+    dpkg -l | grep TensorRT && \
+    rm tensorrt.deb && \
 
 # ==================================================================
 # config & cleanup
