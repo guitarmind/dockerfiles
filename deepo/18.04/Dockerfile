@@ -205,8 +205,8 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         plotly \
         librosa==0.6.3 \
         tqdm \
-        # git+https://github.com/huggingface/transformers#master \
-        transformers==2.7.0 \
+        git+https://github.com/huggingface/transformers#master \
+        # transformers==2.7.0 \
         tensorflow-determinism \
         langdetect \
         beautifulsoup4 \
