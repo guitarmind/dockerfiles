@@ -211,6 +211,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         tensorflow-determinism \
         langdetect \
         beautifulsoup4 \
+        shap \
         && \
 
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
