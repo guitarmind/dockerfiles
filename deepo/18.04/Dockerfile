@@ -212,6 +212,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         langdetect \
         beautifulsoup4 \
         shap \
+        yellowbrick \
         && \
 
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
