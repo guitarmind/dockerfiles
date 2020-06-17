@@ -64,7 +64,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         # numpy==1.14.* \
         numpy==1.17.* \
         scipy \
-        pandas \
+        pandas==0.25.3 \
         cloudpickle \
         scikit-learn \
         matplotlib \
