@@ -108,7 +108,8 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     #     https://download.pytorch.org/whl/cu101/torchvision-0.3.0-cp36-cp36m-linux_x86_64.whl \
     #     && \
     $PIP_INSTALL \
-        torch==1.4.0 \
+        torch==1.5.1 \
+        torchvision \
         && \
 
     $PIP_INSTALL \
@@ -213,6 +214,9 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         beautifulsoup4 \
         shap \
         yellowbrick \
+        pillow \
+        PyYAML>=5.3 \
+        git+https://github.com/cocodataset/cocoapi.git#subdirectory=PythonAPI
         && \
 
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
