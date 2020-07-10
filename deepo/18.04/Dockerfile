@@ -294,7 +294,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     apt-key add 7fa2af80.pub && \
     apt-get update && \
     # TODO: figure out how to install uff-converter-tf
-    $PIP_INSTALL tensorrt && \
+    # $PIP_INSTALL tensorrt && \
     rm tensorrt.deb 7fa2af80.pub && \
 
 # ==================================================================
