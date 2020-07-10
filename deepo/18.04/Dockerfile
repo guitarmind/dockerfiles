@@ -216,7 +216,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         yellowbrick \
         pillow \
         PyYAML>=5.3 \
-        git+https://github.com/cocodataset/cocoapi.git#subdirectory=PythonAPI
+        git+https://github.com/cocodataset/cocoapi.git#subdirectory=PythonAPI \
         && \
 
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
