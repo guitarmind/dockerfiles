@@ -75,11 +75,11 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 # boost
 # ------------------------------------------------------------------
 
-    wget -O ~/boost.tar.gz https://dl.bintray.com/boostorg/release/1.65.1/source/boost_1_65_1.tar.gz && \
-    tar -zxf ~/boost.tar.gz -C ~ && \
-    cd ~/boost_* && \
-    ./bootstrap.sh --with-python=python3.7 && \
-    ./b2 install --prefix=/usr/local && \
+    # wget -O ~/boost.tar.gz https://dl.bintray.com/boostorg/release/1.65.1/source/boost_1_65_1.tar.gz && \
+    # tar -zxf ~/boost.tar.gz -C ~ && \
+    # cd ~/boost_* && \
+    # ./bootstrap.sh --with-python=python3.7 && \
+    # ./b2 install --prefix=/usr/local && \
 
 # ==================================================================
 # jupyter
@@ -256,6 +256,8 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     # Apex
     $GIT_CLONE --recursive https://github.com/NVIDIA/apex ~/apex && \
     cd ~/apex && \
+    # Workaround for https://github.com/NVIDIA/apex/issues/802#issuecomment-618699214
+    git checkout f3a960f80244cf9e80558ab30f7f7e8cbf03c0a0 && \
     $PIP_INSTALL -v --no-cache-dir --global-option="--cpp_ext" --global-option="--cuda_ext" ./ && \
     cd .. && \
 
