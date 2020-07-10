@@ -1,7 +1,7 @@
 # ==================================================================
 # module list
 # ------------------------------------------------------------------
-# python        3.6    (apt)
+# python        3.7    (apt)
 # jupyter       latest (pip)
 # pytorch       latest (pip)
 # tensorflow    latest (pip)
@@ -48,15 +48,15 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     add-apt-repository ppa:deadsnakes/ppa && \
     apt-get update --fix-missing && \
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
-        python3.6 \
-        python3.6-dev \
+        python3.7 \
+        python3.7-dev \
         python3-distutils-extra \
         && \
     wget -O ~/get-pip.py \
         https://bootstrap.pypa.io/get-pip.py && \
-    python3.6 ~/get-pip.py && \
-    ln -s /usr/bin/python3.6 /usr/local/bin/python3 && \
-    ln -s /usr/bin/python3.6 /usr/local/bin/python && \
+    python3.7 ~/get-pip.py && \
+    ln -s /usr/bin/python3.7 /usr/local/bin/python3 && \
+    ln -s /usr/bin/python3.7 /usr/local/bin/python && \
     $PIP_INSTALL \
         setuptools \
         && \
@@ -78,7 +78,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     wget -O ~/boost.tar.gz https://dl.bintray.com/boostorg/release/1.65.1/source/boost_1_65_1.tar.gz && \
     tar -zxf ~/boost.tar.gz -C ~ && \
     cd ~/boost_* && \
-    ./bootstrap.sh --with-python=python3.6 && \
+    ./bootstrap.sh --with-python=python3.7 && \
     ./b2 install --prefix=/usr/local && \
 
 # ==================================================================
