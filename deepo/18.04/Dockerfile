@@ -115,6 +115,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         # torch==1.5.1 \
         torchvision \
         timm \
+        albumentations \
         && \
 
     $PIP_INSTALL \
