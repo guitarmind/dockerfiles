@@ -257,6 +257,8 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     $GIT_CLONE --recursive https://github.com/NVIDIA/apex ~/apex && \
     cd ~/apex && \
     # Workaround for https://github.com/NVIDIA/apex/issues/802#issuecomment-618699214
+    git checkout master && \
+    git pull origin master && \
     git checkout f3a960f80244cf9e80558ab30f7f7e8cbf03c0a0 && \
     $PIP_INSTALL -v --no-cache-dir --global-option="--cpp_ext" --global-option="--cuda_ext" ./ && \
     cd .. && \
