@@ -103,18 +103,6 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 # pytorch
 # ------------------------------------------------------------------
 
-    git clone --recursive https://github.com/NVIDIA/apex ~/apex && \
-    cd ~/apex && \
-    # Workaround for https://github.com/NVIDIA/apex/issues/802#issuecomment-618699214
-    git checkout f3a960f80244cf9e80558ab30f7f7e8cbf03c0a0 && \
-    $PIP_INSTALL -v --no-cache-dir --global-option="--cpp_ext" --global-option="--cuda_ext" ./ && \
-    cd .. && \
-
-
-# ==================================================================
-# pytorch
-# ------------------------------------------------------------------
-
     # Python 3.6, CUDA 10.1
     # $PIP_INSTALL \
     #     https://download.pytorch.org/whl/cu101/torch-1.1.0-cp36-cp36m-linux_x86_64.whl \
@@ -125,6 +113,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     $PIP_INSTALL \
         torch==1.5.1 \
         torchvision \
+        timm \
         && \
 
     $PIP_INSTALL \
@@ -134,6 +123,17 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         pyyaml \
         typing \
         && \
+
+# ==================================================================
+# APEX
+# ------------------------------------------------------------------
+
+    git clone --recursive https://github.com/NVIDIA/apex ~/apex && \
+    cd ~/apex && \
+    # Workaround for https://github.com/NVIDIA/apex/issues/802#issuecomment-618699214
+    git checkout f3a960f80244cf9e80558ab30f7f7e8cbf03c0a0 && \
+    $PIP_INSTALL -v --no-cache-dir --global-option="--cpp_ext" --global-option="--cuda_ext" ./ && \
+    cd .. && \
 
 # ==================================================================
 # mxnet
