@@ -80,7 +80,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     # cd ~/boost_* && \
     # ./bootstrap.sh --with-python=python3.7 && \
     # ./b2 install --prefix=/usr/local && \
-    $PIP_INSTALL \
+    DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
         libboost-python-dev \
         && \
 
@@ -301,8 +301,8 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     apt-key add 7fa2af80.pub && \
     apt-get update && \
     # TODO: figure out how to install uff-converter-tf
-    apt-get install tensorrt && \
-    apt-get install uff-converter-tf && \
+    # apt-get install tensorrt && \
+    # apt-get install uff-converter-tf && \
     rm tensorrt.deb 7fa2af80.pub && \
 
 # ==================================================================
