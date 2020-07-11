@@ -80,6 +80,9 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     # cd ~/boost_* && \
     # ./bootstrap.sh --with-python=python3.7 && \
     # ./b2 install --prefix=/usr/local && \
+    $PIP_INSTALL \
+        libboost-python-dev \
+        && \
 
 # ==================================================================
 # jupyter
@@ -95,6 +98,18 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     jupyter nbextension enable code_prettify/code_prettify && \
     jupyter nbextension enable collapsible_headings/main && \
     jupyter nbextension enable toggle_all_line_numbers/main && \
+
+# ==================================================================
+# pytorch
+# ------------------------------------------------------------------
+
+    git clone --recursive https://github.com/NVIDIA/apex ~/apex && \
+    cd ~/apex && \
+    # Workaround for https://github.com/NVIDIA/apex/issues/802#issuecomment-618699214
+    git checkout f3a960f80244cf9e80558ab30f7f7e8cbf03c0a0 && \
+    $PIP_INSTALL -v --no-cache-dir --global-option="--cpp_ext" --global-option="--cuda_ext" ./ && \
+    cd .. && \
+
 
 # ==================================================================
 # pytorch
@@ -253,16 +268,6 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     python setup.py install && \
     cd .. && \
 
-    # Apex
-    $GIT_CLONE --recursive https://github.com/NVIDIA/apex ~/apex && \
-    cd ~/apex && \
-    # Workaround for https://github.com/NVIDIA/apex/issues/802#issuecomment-618699214
-    git checkout master && \
-    git pull origin master && \
-    git checkout f3a960f80244cf9e80558ab30f7f7e8cbf03c0a0 && \
-    $PIP_INSTALL -v --no-cache-dir --global-option="--cpp_ext" --global-option="--cuda_ext" ./ && \
-    cd .. && \
-
     # TensorRT
     # Based on https://docs.nvidia.com/deeplearning/sdk/tensorrt-install-guide/index.html
     wget -O tensorrt.deb https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/nvidia-machine-learning-repo-ubuntu1804_1.0.0-1_amd64.deb && \
@@ -296,7 +301,8 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     apt-key add 7fa2af80.pub && \
     apt-get update && \
     # TODO: figure out how to install uff-converter-tf
-    # $PIP_INSTALL tensorrt && \
+    apt-get install tensorrt && \
+    apt-get install uff-converter-tf && \
     rm tensorrt.deb 7fa2af80.pub && \
 
 # ==================================================================
