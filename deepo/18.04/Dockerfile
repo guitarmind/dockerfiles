@@ -113,9 +113,13 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     $PIP_INSTALL \
         torch==1.4.0 \
         # torch==1.5.1 \
-        torchvision \
+        torchvision==0.5.0 \
         timm \
         albumentations \
+        effdet \
+        omegaconf \
+        ensemble-boxes \
+        pycocotools \
         && \
 
     $PIP_INSTALL \
