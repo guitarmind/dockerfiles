@@ -115,7 +115,6 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         # torch==1.5.1 \
         torchvision==0.5.0 \
         timm \
-        albumentations \
         effdet \
         omegaconf \
         ensemble-boxes \
@@ -254,6 +253,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         pillow \
         PyYAML>=5.3 \
         git+https://github.com/cocodataset/cocoapi.git#subdirectory=PythonAPI \
+        albumentations \
         && \
 
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
