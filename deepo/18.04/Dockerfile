@@ -144,7 +144,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 # ==================================================================
 # darknet (YOLOv3, YOLOv4)
 # ------------------------------------------------------------------
-    git clone git@github.com:AlexeyAB/darknet.git ~/darknet && \
+    git clone https://github.com/AlexeyAB/darknet.git ~/darknet && \
     cd ~/darknet && \
     sed -i s/GPU=0/GPU=1/g Makefile && \
     sed -i s/CUDNN=0/CUDNN=1/g Makefile && \
