@@ -13,7 +13,7 @@
 
 FROM nvidia/cuda:10.1-cudnn7-devel-ubuntu18.04
 RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
-    PIP_INSTALL="python -m pip --no-cache-dir install --upgrade" && \
+    PIP_INSTALL="python -m pip --no-cache-dir install --upgrade --default-timeout=100" && \
     GIT_CLONE="git clone --depth 10" && \
     TENSORRT_VERSION="6.0.1-1+cuda10.1" && \
 
