@@ -339,4 +339,4 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     apt-get autoremove && \
     rm -rf /var/lib/apt/lists/* /tmp/* ~/*
 
-EXPOSE 8888 6006
+EXPOSE 8888 6006 8090
