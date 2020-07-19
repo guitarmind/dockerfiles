@@ -315,6 +315,8 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 # ==================================================================
 # darknet (YOLOv3, YOLOv4)
 # ------------------------------------------------------------------
+    ln -s /usr/local/cuda/lib64/stubs/libcuda.so /usr/local/cuda/lib64/stubs/libcuda.so.1 && \
+    LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs/:$LD_LIBRARY_PATH && \
     git clone https://github.com/AlexeyAB/darknet.git ~/darknet && \
     cd ~/darknet && \
     sed -i s/GPU=0/GPU=1/g Makefile && \
