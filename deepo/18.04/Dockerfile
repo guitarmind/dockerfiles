@@ -220,7 +220,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         psutil \
         seaborn \
         bayesian-optimization \
-        numba \
+        numba==0.48 \
         pyarrow==0.11 \
         joblib \
         PyWavelets \
@@ -232,6 +232,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         # transformers==2.7.0 \
         tensorflow-determinism \
         langdetect \
+        soupsieve==2.0.1 \
         beautifulsoup4 \
         shap \
         yellowbrick \
