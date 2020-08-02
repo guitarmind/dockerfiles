@@ -225,6 +225,10 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     cd ~/opencv/build && \
     make -j"$(nproc)" install && \
     ln -s /usr/local/include/opencv4/opencv2 /usr/local/include/opencv2 && \
+    LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH && \
+    bash -c 'echo "/usr/local/lib" > /etc/ld.so.conf.d/opencv.conf' && \
+    ldconfig && \
+    pkg-config --modversion opencv && \
     pkg-config --libs opencv && \
 
 # ==================================================================
