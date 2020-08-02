@@ -320,6 +320,8 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs/:$LD_LIBRARY_PATH && \
     git clone https://github.com/AlexeyAB/darknet.git ~/darknet && \
     cd ~/darknet && \
+    # cmake
+    # sh ./build.sh && \
     sed -i s/GPU=0/GPU=1/g Makefile && \
     sed -i s/CUDNN=0/CUDNN=1/g Makefile && \
     sed -i s/CUDNN_HALF=0/CUDNN_HALF=1/g Makefile && \
@@ -327,7 +329,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     sed -i s/AVX=0/AVX=1/g Makefile && \
     sed -i s/OPENMP=0/OPENMP=1/g Makefile && \
     sed -i s/LIBSO=0/LIBSO=1/g Makefile && \
-    sh ./build.sh && \
+    make -j 2 && \
     cp ./darknet /usr/local/bin/ && \
     cd .. && \
 
