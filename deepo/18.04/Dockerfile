@@ -8,7 +8,7 @@
 # keras         latest (pip)
 # mxnet         latest (pip)
 # gluonts       latest (pip)
-# opencv        4.0.1  (git)
+# opencv        4.3.0  (git)
 # ==================================================================
 
 FROM nvidia/cuda:10.1-cudnn7-devel-ubuntu18.04
@@ -188,7 +188,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         protobuf-compiler \
         && \
 
-    $GIT_CLONE --branch 4.0.1 https://github.com/opencv/opencv ~/opencv && \
+    $GIT_CLONE --branch 4.3.0 https://github.com/opencv/opencv ~/opencv && \
     mkdir -p ~/opencv/build && cd ~/opencv/build && \
     cmake -D CMAKE_BUILD_TYPE=RELEASE \
           -D CMAKE_INSTALL_PREFIX=/usr/local \
