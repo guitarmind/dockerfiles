@@ -91,6 +91,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 
     $PIP_INSTALL \
         jupyter \
+        notebook==5.7.9 \
         tornado==5.1.1 \
         yapf \
         jupyter_contrib_nbextensions \
@@ -224,6 +225,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     cd ~/opencv/build && \
     make -j"$(nproc)" install && \
     ln -s /usr/local/include/opencv4/opencv2 /usr/local/include/opencv2 && \
+    pkg-config --libs opencv && \
 
 # ==================================================================
 # markpeng
