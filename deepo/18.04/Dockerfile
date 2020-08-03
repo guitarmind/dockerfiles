@@ -121,6 +121,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         omegaconf \
         ensemble-boxes \
         pycocotools \
+        'scikit-optimize[plots]' \
         && \
 
     $PIP_INSTALL \
