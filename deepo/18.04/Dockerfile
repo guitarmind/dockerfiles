@@ -188,8 +188,6 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         libprotobuf-dev \
         libsnappy-dev \
         protobuf-compiler \
-        pkg-config \
-        apt-file \
         && \
 
     $GIT_CLONE --branch 4.3.0 https://github.com/opencv/opencv ~/opencv && \
@@ -198,39 +196,12 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
           -D CMAKE_INSTALL_PREFIX=/usr/local \
           -D WITH_IPP=OFF \
           -D WITH_CUDA=OFF \
-          -D WITH_CUBLAS=1 \
           -D WITH_OPENCL=OFF \
           -D BUILD_TESTS=OFF \
           -D BUILD_PERF_TESTS=OFF \
           .. && \
-    # With CUDA
-    # cmake -D CMAKE_BUILD_TYPE=RELEASE \
-    #       -D CMAKE_INSTALL_PREFIX=/usr/local \
-    #       -D WITH_IPP=OFF \
-    #       -D WITH_CUDA=ON \
-    #       -D ENABLE_FAST_MATH=1 \
-    #       -D CUDA_FAST_MATH=1 \
-    #       -D CUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda-10.1/ \
-    #       -D WITH_CUBLAS=1 \
-    #       -D WITH_OPENCL=OFF \
-    #       -D BUILD_TESTS=OFF \
-    #       -D BUILD_PERF_TESTS=OFF \
-    #       -D OPENCV_EXTRA_MODULES_PATH=../../opencv_contrib/modules \
-    #       -D WITH_GSTREAMER=ON \
-    #       .. && \
-    cd ~/opencv/ && \
-    # https://github.com/opencv/opencv/issues/14856
-    # char* str = PyString_AsString(obj);
-    # sed -i s/char* str = PyString_AsString(obj);/const char* str = PyString_AsString(obj);/g Makefile && \
-    python ./modules/python/src2/gen2.py ./build/modules/python_bindings_generator ./build/modules/python_bindings_generator/headers.txt && \
-    cd ~/opencv/build && \
     make -j"$(nproc)" install && \
     ln -s /usr/local/include/opencv4/opencv2 /usr/local/include/opencv2 && \
-    LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH && \
-    bash -c 'echo "/usr/local/lib" > /etc/ld.so.conf.d/opencv.conf' && \
-    ldconfig && \
-    pkg-config --modversion opencv && \
-    pkg-config --libs opencv && \
 
 # ==================================================================
 # markpeng
@@ -347,11 +318,8 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 # ==================================================================
 # darknet (YOLOv3, YOLOv4)
 # ------------------------------------------------------------------
-    apt-get update --fix-missing && \
-    DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
-        libopencv-dev && \
     ln -s /usr/local/cuda/lib64/stubs/libcuda.so /usr/local/cuda/lib64/stubs/libcuda.so.1 && \
-    LD_LIBRARY_PATH=/usr/local/lib:/usr/local/cuda/lib64/stubs/:$LD_LIBRARY_PATH && \
+    LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs/:$LD_LIBRARY_PATH && \
     git clone https://github.com/AlexeyAB/darknet.git ~/darknet && \
     cd ~/darknet && \
     # cmake
@@ -366,10 +334,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     # sed -i s/LIBSO=0/LIBSO=1/g Makefile && \
     # make -j 2 && \
     cp ./darknet /usr/local/bin/ && \
-    bash -c 'echo "/usr/local/lib" > /etc/ld.so.conf.d/opencv.conf' && \
-    ldconfig && \
-    pkg-config --modversion opencv && \
-    mv libdark.so libdarknet.so && \
+    cp libdark.so libdarknet.so && \
     chmod a+x libdarknet.so && \
     cd .. && \
 
