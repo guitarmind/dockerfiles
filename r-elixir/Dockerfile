@@ -2,9 +2,14 @@ FROM guitarmind/r-base
 MAINTAINER markpeng@exosite.com
 
 RUN apt-get update && apt-get install -y unzip git htop openssh-server libcurl4-openssl-dev \
-    libssl-dev libxml2-dev curl openssl libkrb5-dev libssl1.0.0 libwxbase3.0-0 libwxgtk3.0-0 pigz
+    libssl-dev libxml2-dev curl openssl gnupg2 libgit2-dev wget && \
+    wget http://ftp.us.debian.org/debian/pool/main/o/openssl1.0/libssl1.0.2_1.0.2u-1~deb9u1_amd64.deb && \
+    dpkg -i libssl1.0.2_1.0.2u-1~deb9u1_amd64.deb && \
+    rm libssl1.0.2_1.0.2u-1~deb9u1_amd64.deb
 
-# install required R dependencies and setup R packages
+    # libkrb5-dev libssl1.1 libwxbase3.0 libwxgtk3.0 pigz \
+
+# Install required R dependencies and setup R packages
 RUN echo "r <- getOption('repos'); r['CRAN'] <- 'http://cran.us.r-project.org'; options(repos = r);" > ~/.Rprofile && \
     Rscript -e "install.packages('bit64')" && \
     Rscript -e "install.packages('Rserve')" && \
@@ -13,7 +18,9 @@ RUN echo "r <- getOption('repos'); r['CRAN'] <- 'http://cran.us.r-project.org'; 
     Rscript -e "install.packages('fpp')" && \
     Rscript -e "install.packages('httr')" && \
     Rscript -e "install.packages('RCurl')" && \
-    Rscript -e "install.packages('devtools')" && \
+    Rscript -e "install.packages('git2r')" && \
+    Rscript -e "install.packages('usethis')" && \
+    Rscript -e "install.packages('devtools', dependencies=TRUE)" && \
     Rscript -e "install.packages('jsonlite')" && \
     Rscript -e "devtools::install_version('rjson', version = '0.2.15')" && \
     Rscript -e "install.packages('TSA')" && \
@@ -22,14 +29,14 @@ RUN echo "r <- getOption('repos'); r['CRAN'] <- 'http://cran.us.r-project.org'; 
     Rscript -e "install.packages('tidyverse')" && \
     Rscript -e "install.packages('fasttime')"
 
-# install erlang/elixir dependencies
+# Install erlang/elixir dependencies
 ENV OTP_VERSION="19.3.6"
 
-RUN echo "deb https://packages.erlang-solutions.com/debian jessie contrib" >> /etc/apt/sources.list && \
+RUN echo "deb https://packages.erlang-solutions.com/debian stretch contrib" >> /etc/apt/sources.list && \
     wget https://packages.erlang-solutions.com/debian/erlang_solutions.asc && apt-key add erlang_solutions.asc && \
     apt-get update && apt-get install -y esl-erlang=1:$OTP_VERSION
 
-# elixir expects utf8.
+# Elixir expects utf8.
 ENV ELIXIR_VERSION="v1.4.5" \
     LANG=C.UTF-8
 
