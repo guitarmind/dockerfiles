@@ -7,8 +7,6 @@ RUN apt-get update && apt-get install -y unzip git htop openssh-server libcurl4-
     dpkg -i libssl1.0.2_1.0.2u-1~deb9u1_amd64.deb && \
     rm libssl1.0.2_1.0.2u-1~deb9u1_amd64.deb
 
-    # libkrb5-dev libssl1.1 libwxbase3.0 libwxgtk3.0 pigz \
-
 # Install required R dependencies and setup R packages
 RUN echo "r <- getOption('repos'); r['CRAN'] <- 'http://cran.us.r-project.org'; options(repos = r);" > ~/.Rprofile && \
     Rscript -e "install.packages('bit64')" && \
