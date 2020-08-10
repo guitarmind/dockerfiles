@@ -10,7 +10,8 @@ RUN apt-get update && apt-get install -y unzip git htop openssh-server libcurl4-
 # Install required R dependencies and setup R packages
 RUN echo "r <- getOption('repos'); r['CRAN'] <- 'http://cran.us.r-project.org'; options(repos = r);" > ~/.Rprofile && \
     Rscript -e "install.packages('bit64')" && \
-    Rscript -e "install.packages('Rserve')" && \
+    # Rscript -e "install.packages('Rserve')" && \
+    Rscript -e "install.packages('https://github.com/guitarmind/Rserve-1.7/releases/download/linux/Rserve_1.7-5.tar.gz', repos = NULL)" && \
     Rscript -e "install.packages('zoo')" && \
     Rscript -e "install.packages('xts')" && \
     Rscript -e "install.packages('fpp')" && \
