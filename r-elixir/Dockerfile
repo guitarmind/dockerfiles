@@ -10,7 +10,6 @@ RUN apt-get update && apt-get install -y unzip git htop openssh-server libcurl4-
 # Install required R dependencies and setup R packages
 RUN echo "r <- getOption('repos'); r['CRAN'] <- 'http://cran.us.r-project.org'; options(repos = r);" > ~/.Rprofile && \
     Rscript -e "install.packages('bit64')" && \
-    # Rscript -e "install.packages('Rserve')" && \
     Rscript -e "install.packages('https://github.com/guitarmind/Rserve-1.7/releases/download/linux/Rserve_1.7-5.tar.gz', repos = NULL)" && \
     Rscript -e "install.packages('zoo')" && \
     Rscript -e "install.packages('xts')" && \
@@ -22,7 +21,9 @@ RUN echo "r <- getOption('repos'); r['CRAN'] <- 'http://cran.us.r-project.org'; 
     Rscript -e "install.packages('devtools', dependencies=TRUE)" && \
     Rscript -e "install.packages('jsonlite')" && \
     Rscript -e "devtools::install_version('rjson', version = '0.2.15')" && \
-    Rscript -e "install.packages('TSA')" && \
+    Rscript -e "install.packages('leaps')" && \
+    Rscript -e "install.packages('locfit')" && \
+    Rscript -e "install.packages('https://cran.r-project.org/src/contrib/Archive/TSA/TSA_1.2.tar.gz', repos = NULL)" && \
     Rscript -e "devtools::install_github('twitter/AnomalyDetection')" && \
     Rscript -e "install.packages('data.table')" && \
     Rscript -e "install.packages('tidyverse')" && \
