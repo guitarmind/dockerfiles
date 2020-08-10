@@ -25,7 +25,7 @@ RUN echo "r <- getOption('repos'); r['CRAN'] <- 'http://cran.us.r-project.org'; 
     Rscript -e "install.packages('locfit')" && \
     Rscript -e "install.packages('https://cran.r-project.org/src/contrib/Archive/TSA/TSA_1.2.tar.gz', repos = NULL)" && \
     Rscript -e "devtools::install_github('twitter/AnomalyDetection')" && \
-    Rscript -e "install.packages('data.table')" && \
+    Rscript -e "install.packages('data.table', type = 'source', repos = 'https://Rdatatable.gitlab.io/data.table')" && \
     Rscript -e "install.packages('tidyverse')" && \
     Rscript -e "install.packages('fasttime')"
 
