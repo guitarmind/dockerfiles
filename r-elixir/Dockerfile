@@ -2,7 +2,7 @@ FROM guitarmind/r-base
 MAINTAINER markpeng@exosite.com
 
 RUN apt-get update && apt-get install -y unzip git htop openssh-server libcurl4-openssl-dev \
-    libssl-dev libxml2-dev curl openssl gnupg2 libgit2-dev wget && \
+    libssl-dev libxml2-dev curl openssl gnupg2 libgit2-dev wget pigz && \
     wget http://ftp.us.debian.org/debian/pool/main/o/openssl1.0/libssl1.0.2_1.0.2u-1~deb9u1_amd64.deb && \
     dpkg -i libssl1.0.2_1.0.2u-1~deb9u1_amd64.deb && \
     rm libssl1.0.2_1.0.2u-1~deb9u1_amd64.deb
@@ -10,7 +10,8 @@ RUN apt-get update && apt-get install -y unzip git htop openssh-server libcurl4-
 # Install required R dependencies and setup R packages
 RUN echo "r <- getOption('repos'); r['CRAN'] <- 'http://cran.us.r-project.org'; options(repos = r);" > ~/.Rprofile && \
     Rscript -e "install.packages('bit64')" && \
-    Rscript -e "install.packages('https://github.com/guitarmind/Rserve-1.7/releases/download/linux/Rserve_1.7-5.tar.gz', repos = NULL)" && \
+    Rscript -e "install.packages('https://cran.r-project.org/src/contrib/Archive/Rserve/Rserve_1.7-3.tar.gz', repos = NULL)" && \
+    # Rscript -e "install.packages('https://github.com/guitarmind/Rserve-1.7/releases/download/linux/Rserve_1.7-5.tar.gz', repos = NULL)" && \
     Rscript -e "install.packages('zoo')" && \
     Rscript -e "install.packages('xts')" && \
     Rscript -e "install.packages('fpp')" && \
@@ -22,10 +23,11 @@ RUN echo "r <- getOption('repos'); r['CRAN'] <- 'http://cran.us.r-project.org'; 
     Rscript -e "install.packages('jsonlite')" && \
     Rscript -e "devtools::install_version('rjson', version = '0.2.15')" && \
     Rscript -e "install.packages('leaps')" && \
-    Rscript -e "install.packages('locfit')" && \
-    Rscript -e "install.packages('https://cran.r-project.org/src/contrib/Archive/TSA/TSA_1.2.tar.gz', repos = NULL)" && \
+    Rscript -e "install.packages('https://cran.r-project.org/src/contrib/Archive/locfit/locfit_1.5-9.1.tar.gz', repos = NULL)" && \
+    Rscript -e "install.packages('https://cran.r-project.org/src/contrib/Archive/TSA/TSA_1.01.tar.gz', repos = NULL)" && \
     Rscript -e "devtools::install_github('twitter/AnomalyDetection')" && \
-    Rscript -e "install.packages('data.table', type = 'source', repos = 'https://Rdatatable.gitlab.io/data.table')" && \
+    Rscript -e "devtools::install_version('data.table', version = '1.11.8')" && \
+    # Rscript -e "install.packages('data.table', type = 'source', repos = 'https://Rdatatable.gitlab.io/data.table')" && \
     Rscript -e "install.packages('tidyverse')" && \
     Rscript -e "install.packages('fasttime')"
 

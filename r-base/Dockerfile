@@ -9,8 +9,8 @@ LABEL org.label-schema.license="GPL-2.0" \
 ARG R_VERSION
 ARG BUILD_DATE
 ARG CRAN
-ENV BUILD_DATE ${BUILD_DATE:-2019-04-15}
-ENV R_VERSION=${R_VERSION:-3.5.3} \
+ENV BUILD_DATE ${BUILD_DATE:-2018-03-15}
+ENV R_VERSION=${R_VERSION:-3.4.4} \
     CRAN=${CRAN:-https://cran.rstudio.com} \
     LC_ALL=en_US.UTF-8 \
     LANG=en_US.UTF-8 \
