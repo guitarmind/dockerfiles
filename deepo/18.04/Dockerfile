@@ -36,6 +36,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         git \
         vim \
         pigz \
+        ffmpeg \
         && \
 
 # ==================================================================
@@ -122,6 +123,8 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         ensemble-boxes \
         pycocotools \
         'scikit-optimize[plots]' \
+        catalyst \
+        torchlibrosa \
         && \
 
     $PIP_INSTALL \
@@ -242,6 +245,8 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         PyYAML>=5.3 \
         git+https://github.com/cocodataset/cocoapi.git#subdirectory=PythonAPI \
         albumentations \
+        soundfile \
+        fastprogress \
         && \
 
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
@@ -251,6 +256,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         libboost-dev \
         libboost-system-dev \
         libboost-filesystem-dev \
+        libsndfile1 \
         python-setuptools && \
     mkdir -p /etc/OpenCL/vendors && echo "libnvidia-opencl.so.1" > /etc/OpenCL/vendors/nvidia.icd && \
 
