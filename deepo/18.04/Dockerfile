@@ -340,8 +340,8 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     # sed -i s/LIBSO=0/LIBSO=1/g Makefile && \
     # make -j 2 && \
     cp ./darknet /usr/local/bin/ && \
-    cp libdark.so libdarknet.so && \
-    chmod a+x libdarknet.so && \
+    # cp libdark.so libdarknet.so && \
+    # chmod a+x libdarknet.so && \
     cd .. && \
 
 # ==================================================================
