@@ -125,6 +125,8 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         'scikit-optimize[plots]' \
         catalyst \
         torchlibrosa \
+        efficientnet_pytorch \
+        torch-optimizer \
         && \
 
     $PIP_INSTALL \
@@ -247,6 +249,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         albumentations \
         soundfile \
         fastprogress \
+        pydegensac \
         && \
 
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
