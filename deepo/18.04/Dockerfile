@@ -127,6 +127,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         torchlibrosa \
         efficientnet_pytorch \
         torch-optimizer \
+        pytorch-lightning \
         && \
 
     $PIP_INSTALL \
@@ -164,10 +165,11 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 
     $PIP_INSTALL \
         h5py \
-        tensorflow-gpu==2.1.0-rc0 \
+        tensorflow-gpu==2.2.0-rc4 \
+        # tensorflow-gpu==2.1.0-rc0 \
         tensorflow-determinism \
         tensorflow-addons \
-        tensorboard==2.0.0 \
+        tensorboard==2.2.0 \
         && \
 
 # ==================================================================
