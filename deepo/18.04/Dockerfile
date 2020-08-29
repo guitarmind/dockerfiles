@@ -37,6 +37,9 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         vim \
         pigz \
         ffmpeg \
+        dbus \
+        systemd \
+        tzdata \
         && \
 
 # ==================================================================
@@ -357,5 +360,8 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     apt-get clean && \
     apt-get autoremove && \
     rm -rf /var/lib/apt/lists/* /tmp/* ~/*
+
+ENV TZ=Asia/Taipei
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 EXPOSE 8888 6006 8090
