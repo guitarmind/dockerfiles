@@ -256,6 +256,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         soundfile \
         fastprogress \
         pydegensac \
+        git+https://github.com/zhanghang1989/ResNeSt \
         && \
 
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
