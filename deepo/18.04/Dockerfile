@@ -131,6 +131,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         efficientnet_pytorch \
         torch-optimizer \
         pytorch-lightning \
+        pytorch-pfn-extras \
         && \
 
     $PIP_INSTALL \
