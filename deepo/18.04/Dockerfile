@@ -135,6 +135,10 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         && \
 
     $PIP_INSTALL \
+        torch-lr-finder -v --global-option="apex" \
+        && \
+
+    $PIP_INSTALL \
         future \
         protobuf \
         enum34 \
