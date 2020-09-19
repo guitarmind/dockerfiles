@@ -74,6 +74,8 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         kiwisolver==1.0.1 \
         matplotlib \
         Cython \
+        python3-tk \
+        scikit-image \
         && \
 
 # ==================================================================
@@ -95,6 +97,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 
     $PIP_INSTALL \
         jupyter \
+        nbconvert==5.4.1 \
         notebook==5.7.9 \
         tornado==5.1.1 \
         yapf \
@@ -357,6 +360,26 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     # cp libdark.so libdarknet.so && \
     # chmod a+x libdarknet.so && \
     cd .. && \
+
+# ==================================================================
+# rapidsai
+# ------------------------------------------------------------------
+    # Install Miniconda
+    wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-py37_4.8.3-Linux-x86_64.sh -O ~/miniconda.sh && \
+        /bin/bash ~/miniconda.sh -b -p /opt/conda && \
+        rm ~/miniconda.sh && \
+        ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh && \
+        echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
+        echo "conda activate base" >> ~/.bashrc && \
+        source ~/.bashrc && \
+
+    # cuDF for CUDA 10.1
+    conda install -c rapidsai -c nvidia -c numba -c conda-forge \
+        cudf=0.13 python=3.6 cudatoolkit=10.1 && \
+
+    # cuML for CUDA 10.1
+    conda install -c rapidsai -c nvidia -c conda-forge \
+        -c defaults cuml=0.15 python=3.7 cudatoolkit=10.1 && \
 
 # ==================================================================
 # config & cleanup
