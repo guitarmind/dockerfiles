@@ -135,6 +135,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         torch-optimizer \
         pytorch-lightning \
         pytorch-pfn-extras \
+        pytorch-tabnet \
         && \
 
     $PIP_INSTALL \
@@ -264,6 +265,9 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         fastprogress \
         pydegensac \
         git+https://github.com/zhanghang1989/ResNeSt \
+        google-cloud-storage \
+        gcsfs \
+        efficientnet \
         && \
 
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
@@ -364,7 +368,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 # ==================================================================
 # rapidsai
 # ------------------------------------------------------------------
-    # Install Miniconda
+    # # Install Miniconda
     # wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-py37_4.8.3-Linux-x86_64.sh -O ~/miniconda.sh && \
     #     /bin/bash ~/miniconda.sh -b -p /opt/conda && \
     #     rm ~/miniconda.sh && \
@@ -374,12 +378,56 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     #     source ~/.bashrc && \
 
     # # cuDF for CUDA 10.1
-    # conda install -c rapidsai -c nvidia -c numba -c conda-forge \
-    #     cudf=0.13 python=3.6 cudatoolkit=10.1 && \
+    # CUDF_HOME=$(pwd)/cudf && \
+    # git clone https://github.com/rapidsai/cudf.git $CUDF_HOME && \
+    # cd $CUDF_HOME && \
+    # git submodule update --init --remote --recursive && \
+    # # conda env create --name cudf_dev --file conda/environments/cudf_dev_cuda10.1.yml && \
+    # # conda activate cudf_dev && \
+    # cd $CUDF_HOME/cudf/cpp && \
+    # mkdir build && \
+    # cd build && \
+    # # $CONDA_PREFIX: /root/miniconda3/envs/cudf_dev
+    # # cmake .. -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX && \
+
+    # # Apache Arrow
+    # # sudo apt update
+    # # sudo apt install -y -V ca-certificates lsb-release wget
+    # # if [ $(lsb_release --codename --short) = "stretch" ]; then
+    # #   sudo tee /etc/apt/sources.list.d/backports.list <<APT_LINE
+    # # deb http://deb.debian.org/debian $(lsb_release --codename --short)-backports main
+    # # APT_LINE
+    # # fi
+    # # wget https://apache.bintray.com/arrow/$(lsb_release --id --short | tr 'A-Z' 'a-z')/apache-arrow-archive-keyring-latest-$(lsb_release --codename --short).deb
+    # # sudo apt install -y -V ./apache-arrow-archive-keyring-latest-$(lsb_release --codename --short).deb
+    # # sudo apt update
+    # # sudo apt install -y -V libarrow-dev # For C++
+    # # sudo apt install -y -V libarrow-glib-dev # For GLib (C)
+
+    # cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local && \
+    # make -j6 && \
+    # make install && \
+    # cd $CUDF_HOME/python/cudf && \
+    # python setup.py build_ext --inplace && \
+    # python setup.py install && \
+    # cd ../$CUDF_HOME && \
 
     # # cuML for CUDA 10.1
-    # conda install -c rapidsai -c nvidia -c conda-forge \
-    #     -c defaults cuml=0.15 python=3.7 cudatoolkit=10.1 && \
+    # CUDF_HOME=$(pwd)/cuml && \
+    # git clone git@github.com:rapidsai/cuml.git $CUDF_HOME && \
+    # conda create -n cuml_dev python=3.7 && \
+    # conda env update -n cuml_dev --file=conda/environments/cuml_dev_cuda10.1.yml && \
+    # conda remove --force rapids-build-env rapids-notebook-env rapids-doc-env && \
+    # conda activate cudf_dev && \
+    # ./build.sh && \
+
+    # # # cuDF for CUDA 10.1
+    # # conda install -c rapidsai -c nvidia -c numba -c conda-forge \
+    # #     cudf=0.13 python=3.6 cudatoolkit=10.1 && \
+
+    # # # cuML for CUDA 10.1
+    # # conda install -c rapidsai -c nvidia -c conda-forge \
+    # #     -c defaults cuml=0.15 python=3.7 cudatoolkit=10.1 && \
 
 # ==================================================================
 # Kubeflow
