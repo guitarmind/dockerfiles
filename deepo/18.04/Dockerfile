@@ -164,7 +164,6 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     $PIP_INSTALL \
         future \
         protobuf \
-        enum34 \
         pyyaml \
         typing \
         && \
