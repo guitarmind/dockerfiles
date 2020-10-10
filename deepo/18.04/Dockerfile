@@ -12,6 +12,9 @@
 # ==================================================================
 
 FROM nvidia/cuda:10.1-cudnn7-devel-ubuntu18.04
+
+ENV CUDA_HOME=/usr/local/cuda
+
 RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     PIP_INSTALL="python -m pip --no-cache-dir install --upgrade --default-timeout=100" && \
     GIT_CLONE="git clone --depth 10" && \
@@ -164,7 +167,6 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     $PIP_INSTALL \
         future \
         protobuf \
-        pyyaml \
         && \
 
 # ==================================================================
@@ -399,7 +401,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     apt-get autoremove && \
     rm -rf /var/lib/apt/lists/* /tmp/* ~/*
 
-ENV PYTHONPATH "${PYTHONPATH}:/opt/conda/lib/python3.7/site-packages:/opt/conda/lib/python3.7:/opt/conda/lib"
+ENV PYTHONPATH="${PYTHONPATH}:/opt/conda/lib/python3.7/site-packages:/opt/conda/lib/python3.7:/opt/conda/lib"
 ENV TZ=Asia/Taipei
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
