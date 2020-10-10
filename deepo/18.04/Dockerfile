@@ -40,6 +40,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         dbus \
         systemd \
         tzdata \
+        python-tk \
         && \
 
 # ==================================================================
@@ -74,7 +75,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         kiwisolver==1.0.1 \
         matplotlib \
         Cython \
-        python3-tk \
+        # python3-tk \
         scikit-image \
         iterative-stratification \
         && \
@@ -401,7 +402,6 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     rm -rf /var/lib/apt/lists/* /tmp/* ~/*
 
 ENV PYTHONPATH "${PYTHONPATH}:/opt/conda/lib/python3.7/site-packages:/opt/conda/lib/python3.7:/opt/conda/lib"
-
 ENV TZ=Asia/Taipei
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
