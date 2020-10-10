@@ -44,6 +44,22 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         && \
 
 # ==================================================================
+# rapidsai
+# ------------------------------------------------------------------
+    # Install Miniconda
+    wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-py37_4.8.3-Linux-x86_64.sh -O ~/miniconda.sh && \
+        /bin/bash ~/miniconda.sh -b -p /opt/conda && \
+        rm ~/miniconda.sh && \
+        ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh && \
+        . /opt/conda/etc/profile.d/conda.sh && \
+        conda activate base && \
+
+    # RapidsAI for CUDA 10.1
+    conda install -y -c rapidsai -c nvidia -c conda-forge \
+        -c defaults rapids=0.15 python=3.7 cudatoolkit=10.1 && \
+    conda deactivate && \
+
+# ==================================================================
 # python
 # ------------------------------------------------------------------
 
@@ -92,22 +108,6 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
         libboost-python-dev \
         && \
-
-# ==================================================================
-# rapidsai
-# ------------------------------------------------------------------
-    # Install Miniconda
-    wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-py37_4.8.3-Linux-x86_64.sh -O ~/miniconda.sh && \
-        /bin/bash ~/miniconda.sh -b -p /opt/conda && \
-        rm ~/miniconda.sh && \
-        ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh && \
-        . /opt/conda/etc/profile.d/conda.sh && \
-        conda activate base && \
-
-    # RapidsAI for CUDA 10.1
-    conda install -y -c rapidsai -c nvidia -c conda-forge \
-        -c defaults rapids=0.15 python=3.7 cudatoolkit=10.1 && \
-    conda deactivate && \
 
 # ==================================================================
 # jupyter
