@@ -258,6 +258,10 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     ln -s /opt/cmake/bin/cmake /usr/local/bin/cmake && \
     ln -s /opt/cmake/bin/cmake /usr/bin/cmake && \
     cmake --version && \
+
+    $PIP_INSTALL \
+        librosa==0.6.3 \
+        --ignore-installed llvmlite && \
     
     $PIP_INSTALL \
         pip \
@@ -270,11 +274,9 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         PyWavelets \
         statsmodels \
         plotly \
-        librosa==0.6.3 \
         tqdm \
         git+https://github.com/huggingface/transformers#master \
         # transformers==2.7.0 \
-        tensorflow-determinism \
         langdetect \
         soupsieve==2.0.1 \
         beautifulsoup4 \
