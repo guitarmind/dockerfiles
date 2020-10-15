@@ -123,6 +123,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         nbconvert==5.4.1 \
         notebook==5.7.9 \
         tornado==5.1.1 \
+        yarl==1.4.2 \
         yapf \
         jupyter_contrib_nbextensions \
         jupyter_nbextensions_configurator \
