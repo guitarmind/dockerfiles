@@ -62,7 +62,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     # RapidsAI for CUDA 10.1
     conda install -y -c rapidsai -c nvidia -c conda-forge \
         -c defaults rapids=0.15 python=3.7 cudatoolkit=10.1 && \
-    conda deactivate && \
+    # conda deactivate && \
 
 # ==================================================================
 # python
@@ -73,16 +73,17 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         && \
     add-apt-repository ppa:deadsnakes/ppa && \
     apt-get update --fix-missing && \
-    DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
-        python3.7 \
-        python3.7-dev \
-        python3-distutils-extra \
-        && \
+    # DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
+    #     python3.7 \
+    #     python3.7-dev \
+    #     python3-distutils-extra \
+    #     && \
     wget -O ~/get-pip.py \
         https://bootstrap.pypa.io/get-pip.py && \
-    python3.7 ~/get-pip.py && \
-    ln -s /usr/bin/python3.7 /usr/local/bin/python3 && \
-    ln -s /usr/bin/python3.7 /usr/local/bin/python && \
+    python ~/get-pip.py && \
+    # python3.7 ~/get-pip.py && \
+    # ln -s /usr/bin/python3.7 /usr/local/bin/python3 && \
+    # ln -s /usr/bin/python3.7 /usr/local/bin/python && \
     $PIP_INSTALL \
         setuptools \
         && \
