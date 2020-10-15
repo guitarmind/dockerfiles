@@ -259,9 +259,9 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     ln -s /opt/cmake/bin/cmake /usr/bin/cmake && \
     cmake --version && \
 
-    $PIP_INSTALL \
-        librosa==0.6.3 \
-        --ignore-installed llvmlite && \
+    # $PIP_INSTALL \
+    #     librosa==0.6.3 \
+    #     --ignore-installed llvmlite && \
     
     $PIP_INSTALL \
         pip \
@@ -276,7 +276,6 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         plotly \
         tqdm \
         git+https://github.com/huggingface/transformers#master \
-        # transformers==2.7.0 \
         langdetect \
         soupsieve==2.0.1 \
         beautifulsoup4 \
