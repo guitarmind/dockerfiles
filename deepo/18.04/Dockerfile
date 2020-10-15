@@ -56,6 +56,8 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh && \
         . /opt/conda/etc/profile.d/conda.sh && \
         conda activate base && \
+        echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
+        echo "conda activate base" >> ~/.bashrc && \
 
     # RapidsAI for CUDA 10.1
     conda install -y -c rapidsai -c nvidia -c conda-forge \
