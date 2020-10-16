@@ -62,7 +62,6 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     # RapidsAI for CUDA 10.1
     conda install -y -c rapidsai -c nvidia -c conda-forge \
         -c defaults rapids=0.15 python=3.7 cudatoolkit=10.1 && \
-    # conda deactivate && \
 
 # ==================================================================
 # python
@@ -73,22 +72,13 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         && \
     add-apt-repository ppa:deadsnakes/ppa && \
     apt-get update --fix-missing && \
-    # DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
-    #     python3.7 \
-    #     python3.7-dev \
-    #     python3-distutils-extra \
-    #     && \
     wget -O ~/get-pip.py \
         https://bootstrap.pypa.io/get-pip.py && \
     python ~/get-pip.py && \
-    # python3.7 ~/get-pip.py && \
-    # ln -s /usr/bin/python3.7 /usr/local/bin/python3 && \
-    # ln -s /usr/bin/python3.7 /usr/local/bin/python && \
     $PIP_INSTALL \
         setuptools \
         && \
     $PIP_INSTALL \
-        # numpy==1.14.* \
         numpy==1.17.* \
         scipy \
         pandas==0.25.3 \
@@ -206,15 +196,6 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         tensorflow-addons \
         tensorboard==2.2.0 \
         && \
-
-# ==================================================================
-# keras
-# ------------------------------------------------------------------
-
-    # $PIP_INSTALL \
-    #     h5py \
-    #     keras==2.2.4 \
-    #     && \
 
 # ==================================================================
 # opencv
