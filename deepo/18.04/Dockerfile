@@ -240,41 +240,6 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     ln -s /opt/cmake/bin/cmake /usr/bin/cmake && \
     cmake --version && \
 
-    # $PIP_INSTALL \
-    #     librosa==0.6.3 \
-    #     --ignore-installed llvmlite && \
-    
-    # $PIP_INSTALL \
-    #     pip \
-    #     psutil \
-    #     seaborn \
-    #     bayesian-optimization \
-    #     numba==0.48 \
-    #     pyarrow==0.11 \
-    #     joblib \
-    #     PyWavelets \
-    #     statsmodels \
-    #     plotly \
-    #     tqdm \
-    #     git+https://github.com/huggingface/transformers#master \
-    #     langdetect \
-    #     soupsieve==2.0.1 \
-    #     beautifulsoup4 \
-    #     shap \
-    #     yellowbrick \
-    #     pillow \
-    #     PyYAML>=5.3 \
-    #     git+https://github.com/cocodataset/cocoapi.git#subdirectory=PythonAPI \
-    #     albumentations \
-    #     soundfile \
-    #     fastprogress \
-    #     pydegensac \
-    #     git+https://github.com/zhanghang1989/ResNeSt \
-    #     google-cloud-storage \
-    #     gcsfs \
-    #     efficientnet \
-    #     && \
-
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
         nvidia-opencl-dev opencl-headers \
         git \
@@ -377,6 +342,49 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     $PIP_INSTALL \
         kfp \
         && \
+
+# ==================================================================
+# MISC.
+# ------------------------------------------------------------------
+
+    $PIP_INSTALL \
+        optuna && \
+
+    # $PIP_INSTALL \
+    #     librosa==0.6.3 \
+    #     --ignore-installed llvmlite && \
+
+    # $PIP_INSTALL \
+    #     pip \
+    #     psutil \
+    #     seaborn \
+    #     bayesian-optimization \
+    #     numba==0.48 \
+    #     pyarrow==0.11 \
+    #     joblib \
+    #     PyWavelets \
+    #     statsmodels \
+    #     plotly \
+    #     tqdm \
+    #     git+https://github.com/huggingface/transformers#master \
+    #     langdetect \
+    #     soupsieve==2.0.1 \
+    #     beautifulsoup4 \
+    #     shap \
+    #     yellowbrick \
+    #     pillow \
+    #     PyYAML>=5.3 \
+    #     git+https://github.com/cocodataset/cocoapi.git#subdirectory=PythonAPI \
+    #     albumentations \
+    #     soundfile \
+    #     fastprogress \
+    #     pydegensac \
+    #     git+https://github.com/zhanghang1989/ResNeSt \
+    #     google-cloud-storage \
+    #     gcsfs \
+    #     efficientnet \
+    #     && \
+
 
 # ==================================================================
 # config & cleanup
