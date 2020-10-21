@@ -137,9 +137,9 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     #     && \
     $PIP_INSTALL \
         # torch==1.4.0 \
-        torch==1.5.1 \
+        # torch==1.5.1 \
         # torchvision==0.5.0 \
-        torchvision==0.6.1 \
+        # torchvision==0.6.1 \
         timm \
         effdet \
         omegaconf \
