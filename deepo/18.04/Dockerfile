@@ -136,9 +136,10 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     #     https://download.pytorch.org/whl/cu101/torchvision-0.3.0-cp36-cp36m-linux_x86_64.whl \
     #     && \
     $PIP_INSTALL \
-        torch==1.4.0 \
-        # torch==1.5.1 \
-        torchvision==0.5.0 \
+        # torch==1.4.0 \
+        torch==1.5.1 \
+        # torchvision==0.5.0 \
+        torchvision==0.6.1 \
         timm \
         effdet \
         omegaconf \
@@ -152,6 +153,12 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         pytorch-lightning \
         pytorch-pfn-extras \
         pytorch-tabnet \
+        && \
+
+    $PIP_INSTALL \
+        torch==1.6.0+cu101 \
+        torchvision==0.7.0+cu101 \
+        -f https://download.pytorch.org/whl/torch_stable.html \
         && \
 
     $PIP_INSTALL \
