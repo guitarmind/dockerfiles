@@ -357,6 +357,8 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 
     $PIP_INSTALL \
         geffnet \
+        psutil \
+        seaborn \
         optuna && \
 
     # $PIP_INSTALL \
