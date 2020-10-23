@@ -81,7 +81,8 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     $PIP_INSTALL \
         numpy==1.17.* \
         scipy \
-        pandas==0.25.3 \
+        # pandas==0.25.3 \
+        pandas==1.1.3 \
         cloudpickle \
         scikit-learn \
         kiwisolver==1.0.1 \
@@ -359,6 +360,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         geffnet \
         psutil \
         seaborn \
+        featuretools \
         optuna && \
 
     # $PIP_INSTALL \
