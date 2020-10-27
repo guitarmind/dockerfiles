@@ -154,6 +154,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         pytorch-lightning \
         pytorch-pfn-extras \
         pytorch-tabnet \
+        torch_optimizer \
         && \
 
     $PIP_INSTALL \
@@ -361,6 +362,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         psutil \
         seaborn \
         featuretools \
+        yellowbrick \
         optuna && \
 
     # $PIP_INSTALL \
