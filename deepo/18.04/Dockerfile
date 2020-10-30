@@ -363,6 +363,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         seaborn \
         featuretools \
         yellowbrick \
+        mlflow \
         optuna && \
 
     # $PIP_INSTALL \
