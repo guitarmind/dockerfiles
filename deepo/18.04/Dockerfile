@@ -401,6 +401,9 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     #     efficientnet \
     #     && \
 
+    # To avoid AttributeError: module 'typing' has no attribute '_ClassVar'
+    pip uninstall -y dataclasses && \
+
 
 # ==================================================================
 # config & cleanup
