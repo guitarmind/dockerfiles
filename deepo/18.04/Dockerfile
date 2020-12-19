@@ -44,6 +44,8 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         systemd \
         tzdata \
         python-tk \
+        htop \
+        tmux \
         && \
 
 # ==================================================================
@@ -364,6 +366,12 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         featuretools \
         yellowbrick \
         mlflow \
+        imgaug \
+        plotly \
+        shap \
+        albumentations \
+        git+https://github.com/zhanghang1989/ResNeSt \
+        gym \
         optuna && \
 
     # $PIP_INSTALL \
