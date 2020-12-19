@@ -371,6 +371,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         shap \
         albumentations \
         git+https://github.com/zhanghang1989/ResNeSt \
+        git+https://github.com/dreamquark-ai/tabnet.git \
         gym \
         optuna && \
 
