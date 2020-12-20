@@ -52,18 +52,18 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 # rapidsai
 # ------------------------------------------------------------------
     # Install Miniconda
-    wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-py37_4.8.3-Linux-x86_64.sh -O ~/miniconda.sh && \
-        /bin/bash ~/miniconda.sh -b -p /opt/conda && \
-        rm ~/miniconda.sh && \
-        ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh && \
-        . /opt/conda/etc/profile.d/conda.sh && \
-        conda activate base && \
-        echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
-        echo "conda activate base" >> ~/.bashrc && \
+    # wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-py37_4.8.3-Linux-x86_64.sh -O ~/miniconda.sh && \
+    #     /bin/bash ~/miniconda.sh -b -p /opt/conda && \
+    #     rm ~/miniconda.sh && \
+    #     ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh && \
+    #     . /opt/conda/etc/profile.d/conda.sh && \
+    #     conda activate base && \
+    #     echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
+    #     echo "conda activate base" >> ~/.bashrc && \
 
     # RapidsAI for CUDA 10.1
-    conda install -y -c rapidsai -c nvidia -c conda-forge \
-        -c defaults rapids=0.15 python=3.7 cudatoolkit=10.1 && \
+    # conda install -y -c rapidsai -c nvidia -c conda-forge \
+    #     -c defaults rapids=0.15 python=3.7 cudatoolkit=10.1 && \
 
 # ==================================================================
 # python
@@ -212,31 +212,31 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 # opencv
 # ------------------------------------------------------------------
 
-    conda install -y -c conda-forge opencv && \
-    # DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
-    #     libatlas-base-dev \
-    #     libgflags-dev \
-    #     libgoogle-glog-dev \
-    #     libhdf5-serial-dev \
-    #     libleveldb-dev \
-    #     liblmdb-dev \
-    #     libprotobuf-dev \
-    #     libsnappy-dev \
-    #     protobuf-compiler \
-    #     && \
+    # conda install -y -c conda-forge opencv && \
+    DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
+        libatlas-base-dev \
+        libgflags-dev \
+        libgoogle-glog-dev \
+        libhdf5-serial-dev \
+        libleveldb-dev \
+        liblmdb-dev \
+        libprotobuf-dev \
+        libsnappy-dev \
+        protobuf-compiler \
+        && \
 
-    # $GIT_CLONE --branch 4.3.0 https://github.com/opencv/opencv ~/opencv && \
-    # mkdir -p ~/opencv/build && cd ~/opencv/build && \
-    # cmake -D CMAKE_BUILD_TYPE=RELEASE \
-    #       -D CMAKE_INSTALL_PREFIX=/usr/local \
-    #       -D WITH_IPP=OFF \
-    #       -D WITH_CUDA=OFF \
-    #       -D WITH_OPENCL=OFF \
-    #       -D BUILD_TESTS=OFF \
-    #       -D BUILD_PERF_TESTS=OFF \
-    #       .. && \
-    # make -j"$(nproc)" install && \
-    # ln -s /usr/local/include/opencv4/opencv2 /usr/local/include/opencv2 && \
+    $GIT_CLONE --branch 4.3.0 https://github.com/opencv/opencv ~/opencv && \
+    mkdir -p ~/opencv/build && cd ~/opencv/build && \
+    cmake -D CMAKE_BUILD_TYPE=RELEASE \
+          -D CMAKE_INSTALL_PREFIX=/usr/local \
+          -D WITH_IPP=OFF \
+          -D WITH_CUDA=OFF \
+          -D WITH_OPENCL=OFF \
+          -D BUILD_TESTS=OFF \
+          -D BUILD_PERF_TESTS=OFF \
+          .. && \
+    make -j"$(nproc)" install && \
+    ln -s /usr/local/include/opencv4/opencv2 /usr/local/include/opencv2 && \
 
 # ==================================================================
 # markpeng
