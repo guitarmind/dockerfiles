@@ -69,7 +69,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     conda install -y \
         pytorch==1.7.1 \
         torchvision torchaudio cpuonly -c pytorch && \
-    conda install -y \
+    conda install -c conda-forge -y \
         pytorch-lightning \
         && \
 
