@@ -106,7 +106,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 
     conda install -c conda-forge -y \
         gensim \
-        transformer \
+        transformers \
         optuna \
         yellowbrick \
         plotly \
