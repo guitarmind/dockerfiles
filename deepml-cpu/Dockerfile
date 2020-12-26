@@ -98,7 +98,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
           .. && \
     make -j"$(nproc)" install && \
     ln -s /usr/local/include/opencv4/opencv2 /usr/local/include/opencv2 && \
-    apt-get remove -y build-essential && \
+    DEBIAN_FRONTEND=noninteractive apt-get remove -y build-essential && \
 
 # ==================================================================
 # Additional Packages
@@ -127,8 +127,8 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 # Config & Cleanup
 # ------------------------------------------------------------------
     ldconfig && \
-    apt-get clean && \
-    apt-get autoremove && \
+    apt-get clean -y && \
+    apt-get autoremove -y && \
     rm -rf /tmp/* && \
     rm -rf /var/cache/apk/* && \
     rm -r /root/.cache
