@@ -1,5 +1,9 @@
 # Based on Miniconda Official Debian Dockerfile with Python 3.8
 # https://github.com/ContinuumIO/docker-images/blob/master/miniconda3/debian/Dockerfile
+# 
+# docker build --rm=true --no-cache=true -t markpeng/miniconda -f ./Dockerfile .
+# docker run --rm --name miniconda -it markpeng/miniconda bash
+# 
 
 FROM debian:buster-slim
 
@@ -50,17 +54,16 @@ RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-${CONDA_VERSION}
     find /opt/conda/ -follow -type f -name '*.js.map' -delete && \
     /opt/conda/bin/conda clean -afy && \
 
+    echo "alias ll='ls -la'" >> ~/.bashrc && \
+
     # Conda Configuration
     mkdir -p /root/.conda/ && \
-    echo $'ssl_verify: False \n\
-    default_threads: 4 \n\
+    echo 'ssl_verify: False \ndefault_threads: 4\n\
     ' >> /root/.conda/.condarc \
         && \
 
     # Tmux Setup
-    echo $'set -g prefix C-a \n\
-    bind C-a send-prefix \n\
-    unbind C-b \n\
+    echo 'set -g prefix C-a \nbind C-a send-prefix \nunbind C-b \n\
     ' >> /root/.tmux.conf
 
 
