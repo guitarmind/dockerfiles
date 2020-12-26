@@ -3,12 +3,14 @@
 
 FROM debian:buster-slim
 
-LABEL MAINTAINER="Anaconda, Inc"
+LABEL MAINTAINER="Mark Peng"
 
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
+# Disabling SSL verification
+ENV SSL_NO_VERIFY=1
 
-RUN apt-get update -q && \
-    apt-get install -q -y \
+RUN apt-get update --fix-missing && \
+    apt-get install -y \
         bzip2 \
         ca-certificates \
         git \
@@ -19,6 +21,12 @@ RUN apt-get update -q && \
         mercurial \
         subversion \
         wget \
+        # Extra
+        vim \
+        pigz \
+        tzdata \
+        htop \
+        tmux \
     && apt-get clean
 
 ENV PATH /opt/conda/bin:$PATH
@@ -40,4 +48,20 @@ RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-${CONDA_VERSION}
     echo "conda activate base" >> ~/.bashrc && \
     find /opt/conda/ -follow -type f -name '*.a' -delete && \
     find /opt/conda/ -follow -type f -name '*.js.map' -delete && \
-    /opt/conda/bin/conda clean -afy
+    /opt/conda/bin/conda clean -afy && \
+
+    # Conda Configuration
+    mkdir -p /root/.conda/ && \
+    echo $'ssl_verify: False \n\
+    default_threads: 4 \n\
+    ' >> /root/.conda/.condarc \
+        && \
+
+    # Tmux Setup
+    echo $'set -g prefix C-a \n\
+    bind C-a send-prefix \n\
+    unbind C-b \n\
+    ' >> /root/.tmux.conf
+
+
+WORKDIR /workspace
