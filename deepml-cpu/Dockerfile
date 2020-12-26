@@ -18,23 +18,17 @@ ENV PATH=/opt/conda/bin:$PATH
 RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     PIP_INSTALL="pip --no-cache-dir install --upgrade --default-timeout=100" && \
     GIT_CLONE="git clone --depth 10" && \
-    apt-get update --fix-missing && \
 
 # ==================================================================
 # System Packages & Tools
 # ------------------------------------------------------------------
 
-RUN apt-get update --fix-missing && \
+    apt-get update --fix-missing && \
     apt-get clean && \
 
 # ==================================================================
 # Essesntial Packages
 # ------------------------------------------------------------------
-
-    # OpenCV
-    conda install -y \
-        -c conda-forge opencv \
-        && \
 
     conda install -y \
         psutil \
