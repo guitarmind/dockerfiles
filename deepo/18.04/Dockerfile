@@ -16,7 +16,7 @@ FROM nvidia/cuda:10.1-cudnn7-devel-ubuntu18.04
 ENV CUDA_HOME=/usr/local/cuda
 
 RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
-    PIP_INSTALL="python -m pip --no-cache-dir install --upgrade --default-timeout=100" && \
+    PIP_INSTALL="python3.7 -m pip --no-cache-dir install --upgrade --default-timeout=100" && \
     GIT_CLONE="git clone --depth 10" && \
     TENSORRT_VERSION="6.0.1-1+cuda10.1" && \
 
@@ -46,6 +46,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         python-tk \
         htop \
         tmux \
+        python3-pip \
         && \
 
 # ==================================================================
@@ -117,7 +118,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         nbconvert==5.4.1 \
         notebook==5.7.9 \
         tornado==5.1.1 \
-        yarl==1.4.2 \
+        yarl \
         yapf \
         jupyter_contrib_nbextensions \
         jupyter_nbextensions_configurator \
