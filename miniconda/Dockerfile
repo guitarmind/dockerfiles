@@ -1,8 +1,8 @@
 # Based on Miniconda Official Debian Dockerfile with Python 3.8
 # https://github.com/ContinuumIO/docker-images/blob/master/miniconda3/debian/Dockerfile
 # 
-# docker build --rm=true --no-cache=true -t markpeng/miniconda -f ./Dockerfile .
-# docker run --rm --name miniconda -it markpeng/miniconda bash
+# docker build --rm=true --no-cache=true -t guitarmind/miniconda -f ./Dockerfile .
+# docker run --rm --name miniconda -it guitarmind/miniconda:py-3.8.5 bash
 # 
 
 FROM debian:buster-slim
