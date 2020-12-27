@@ -37,7 +37,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     $GIT_CLONE --branch 4.3.0 https://github.com/opencv/opencv ~/opencv && \
     mkdir -p ~/opencv/build && cd ~/opencv/build && \
     cmake -D CMAKE_BUILD_TYPE=RELEASE \
-          -D CMAKE_INSTALL_PREFIX=/usr/local \
+          -D CMAKE_INSTALL_PREFIX=/opt/conda \
           -D WITH_IPP=OFF \
           -D WITH_CUDA=OFF \
           -D WITH_OPENCL=OFF \
@@ -56,76 +56,77 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 # Essesntial Packages
 # ------------------------------------------------------------------
 
-    # conda install -y \
-        # psutil \
-        # Cython \
-        # numpy \
-        # scipy \
-        # pandas \
-        # scikit-learn \
-        # matplotlib \
-        # seaborn \
-        # && \
+    conda install -y \
+        psutil \
+        Cython \
+        numpy \
+        scipy \
+        pandas \
+        scikit-learn \
+        matplotlib \
+        seaborn \
+        && \
 
     # Jupyter Notebook
-    # conda install -c conda-forge -y \
-    #     jupyter \
-    #     jupyter_contrib_nbextensions \
-    #     jupyter_nbextensions_configurator \
-    #     parso==0.8.1 \
-    #     && \
-    # jupyter contrib nbextension install --user && \
-    # jupyter nbextension enable code_prettify/code_prettify && \
-    # jupyter nbextension enable collapsible_headings/main && \
-    # jupyter nbextension enable toggle_all_line_numbers/main && \
+    conda install -c conda-forge -y \
+        jupyter \
+        jupyter_contrib_nbextensions \
+        jupyter_nbextensions_configurator \
+        parso==0.8.1 \
+        nbconvert==5.6.1 \
+        && \
+    jupyter contrib nbextension install --user && \
+    jupyter nbextension enable code_prettify/code_prettify && \
+    jupyter nbextension enable collapsible_headings/main && \
+    jupyter nbextension enable toggle_all_line_numbers/main && \
 
 # ==================================================================
 # Tensorflow
 # ------------------------------------------------------------------
 
-    # conda install -y \
-    #     tensorflow==2.3.0 \
-    #     && \
+    conda install -y \
+        tensorflow==2.3.0 \
+        && \
 
 # ==================================================================
 # PyTorch
 # ------------------------------------------------------------------
 
-    # conda install -y \
-    #     pytorch==1.7.1 \
-    #     torchvision torchaudio cpuonly -c pytorch && \
-    # conda install -c conda-forge -y \
-    #     pytorch-lightning \
-    #     && \
+    conda install -y \
+        pytorch==1.7.1 \
+        torchvision torchaudio cpuonly -c pytorch && \
+    conda install -c conda-forge -y \
+        pytorch-lightning \
+        && \
 
-    # $PIP_INSTALL \
-    #     torch_optimizer \
-    #     && \
+    $PIP_INSTALL \
+        torch_optimizer \
+        && \
 
 # ==================================================================
 # Additional Packages
 # ------------------------------------------------------------------
 
-    # # conda install -c conda-forge -y \
-    #     gensim \
-    #     transformers \
-    #     optuna \
-    #     yellowbrick \
-    #     plotly \
-    #     shap \
-    #     gym \
-    #     && \
+    conda install -c conda-forge -y \
+        gensim \
+        transformers \
+        optuna \
+        yellowbrick \
+        plotly \
+        shap \
+        gym \
+        && \
 
-    # $PIP_INSTALL \
-    #     zhconv \
-    #     jieba \
-    #     iterative-stratification \
-    #     && \
+    $PIP_INSTALL \
+        zhconv \
+        jieba \
+        iterative-stratification \
+        && \
 
-    # # LightGBM, Xgboost
-    # conda install -c conda-forge -y \
-    #     lightgbm xgboost \
-    #     && \
+    # LightGBM, Xgboost
+    conda install -c conda-forge -y \
+        lightgbm xgboost \
+        && \
 
 # ==================================================================
 # Config & Cleanup
