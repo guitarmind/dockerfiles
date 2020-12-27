@@ -141,7 +141,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     apt-get remove -y binutils && \
     apt-get clean -y && \
     apt-get autoremove -y && \
-    conda clean --all --force-pkgs-dirs -y && \
+    conda clean --all -y && \
     rm -rf /tmp/* && \
     rm -rf /var/cache/apk/*
 
