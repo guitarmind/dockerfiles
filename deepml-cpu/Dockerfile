@@ -30,29 +30,6 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     apt-get clean && \
 
 # ==================================================================
-# OpenCV
-# ------------------------------------------------------------------
-
-    apt-get install -y build-essential cmake && \
-    $GIT_CLONE --branch 4.3.0 https://github.com/opencv/opencv ~/opencv && \
-    mkdir -p ~/opencv/build && cd ~/opencv/build && \
-    cmake -D CMAKE_BUILD_TYPE=RELEASE \
-          -D CMAKE_INSTALL_PREFIX=/opt/conda \
-          -D WITH_IPP=OFF \
-          -D WITH_CUDA=OFF \
-          -D WITH_OPENCL=OFF \
-          -D BUILD_TESTS=OFF \
-          -D BUILD_PERF_TESTS=OFF \
-          -D PYTHON3_LIBRARY=/opt/conda/lib/libpython3.8.so \
-          -D PYTHON3_INCLUDE_DIR=/opt/conda/include/python3.8 \
-          -D PYTHON3_EXECUTABLE=/opt/conda/bin/python \
-          -D PYTHON3_PACKAGES_PATH=/opt/conda/lib/python3.8/site-packages \
-          .. && \
-    make -j"$(nproc)" install && \
-    ln -s /usr/local/include/opencv4/opencv2 /usr/local/include/opencv2 && \
-    apt-get remove -y build-essential cmake && \
-
-# ==================================================================
 # Essesntial Packages
 # ------------------------------------------------------------------
 
@@ -127,6 +104,35 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     conda install -c conda-forge -y \
         lightgbm xgboost \
         && \
+
+# ==================================================================
+# OpenCV
+# ------------------------------------------------------------------
+
+    apt-get install -y \
+        build-essential \
+        cmake && \
+    ln -s /opt/conda/lib/python3.8/site-packages/numpy/core/include/numpy /usr/include/numpy && \
+    $GIT_CLONE --branch 4.3.0 https://github.com/opencv/opencv ~/opencv && \
+    mkdir -p ~/opencv/build && cd ~/opencv/build && \
+    cmake -D CMAKE_BUILD_TYPE=RELEASE \
+          -D CMAKE_INSTALL_PREFIX=/opt/conda \
+          -D WITH_IPP=OFF \
+          -D WITH_CUDA=OFF \
+          -D WITH_OPENCL=OFF \
+          -D BUILD_TESTS=OFF \
+          -D BUILD_PERF_TESTS=OFF \
+          -D BUILD_opencv_python3=ON \
+          -D PYTHON_DEFAULT_EXECUTABLE=/opt/conda/bin/python \
+          -D PYTHON3_NUMPY_INCLUDE_DIRS=/opt/conda/lib/python3.8/site-packages/numpy/core/include \
+          -D PYTHON3_LIBRARIES=/opt/conda/lib/libpython3.8.so \
+          -D PYTHON3_INCLUDE_DIR=/opt/conda/include/python3.8 \
+          -D PYTHON3_EXECUTABLE=/opt/conda/bin/python \
+          -D PYTHON3_PACKAGES_PATH=/opt/conda/lib/python3.8/site-packages \
+          .. && \
+    make -j"$(nproc)" install && \
+    python -c "import cv2; print(cv2.__version__)" && \
+    apt-get remove -y build-essential cmake && \
 
 # ==================================================================
 # Config & Cleanup
