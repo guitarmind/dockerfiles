@@ -26,6 +26,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 
     apt-get update --fix-missing && \
     apt-get install -y \
+        nginx \
         binutils && \
     apt-get clean && \
 
