@@ -1,4 +1,4 @@
-# Based on Miniconda and optmized for CPU
+# Based on Miniconda and optimized for CPU
 # https://github.com/ContinuumIO/docker-images/blob/master/miniconda3/debian/Dockerfile
 # https://conda.io/projects/conda/en/latest/commands.html#conda-vs-pip-vs-virtualenv-commands
 # 
