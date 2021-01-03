@@ -10,15 +10,22 @@ FROM guitarmind/miniconda:py-3.8.5
 
 LABEL MAINTAINER="Mark Peng"
 
-ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
-# Disabling SSL verification
-ENV SSL_NO_VERIFY=1
-ENV PATH=/opt/conda/bin:$PATH
+ENV LANG=C.UTF-8 LC_ALL=C.UTF-8 \
+    # Disabling SSL verification
+    SSL_NO_VERIFY=1 \
+    PATH=/opt/conda/bin:$PATH \
+    PYTHONDONTWRITEBYTECODE=true \
+    TZ=Asia/Taipei
+
+EXPOSE 8888 6006 8090
+
+WORKDIR /workspace
+COPY ./run_tests.sh /workspace/
 
 RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     PIP_INSTALL="pip --no-cache-dir install --upgrade --default-timeout=100" && \
     GIT_CLONE="git clone --depth 10" && \
-    PYTHONDONTWRITEBYTECODE=true && \
+    chmod a+x /workspace/run_tests.sh && \
 
 # ==================================================================
 # System Packages & Tools
@@ -140,20 +147,17 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 # https://jcristharif.com/conda-docker-tips.html
 # ------------------------------------------------------------------
     ldconfig && \
+    ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone && \
+
     find /opt/conda/ -follow -type f -name '*.a' -delete && \
     find /opt/conda/ -follow -type f -name '*.pyc' -delete && \
     find /opt/conda/ -follow -type f -name '*.js.map' -delete && \
     find /opt/conda/lib/python3.*/ -name 'tests' -exec rm -r '{}' + && \
     find /opt/conda/lib/python3.*/site-packages/ -name '*.so' -print -exec sh -c 'file "{}" | grep -q "not stripped" && strip -s "{}"' \; && \
+
     apt-get remove -y binutils && \
     apt-get clean -y && \
     apt-get autoremove -y && \
     conda clean --all -y && \
     rm -rf /tmp/* && \
     rm -rf /var/cache/apk/*
-
-ENV TZ=Asia/Taipei
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
-
-EXPOSE 8888 6006 8090
-WORKDIR /workspace
