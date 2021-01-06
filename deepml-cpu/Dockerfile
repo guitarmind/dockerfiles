@@ -52,19 +52,6 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         seaborn \
         && \
 
-    # Jupyter Notebook
-    conda install -c conda-forge -y \
-        jupyter \
-        jupyter_contrib_nbextensions \
-        jupyter_nbextensions_configurator \
-        parso==0.8.1 \
-        nbconvert==5.6.1 \
-        && \
-    jupyter contrib nbextension install --user && \
-    jupyter nbextension enable code_prettify/code_prettify && \
-    jupyter nbextension enable collapsible_headings/main && \
-    jupyter nbextension enable toggle_all_line_numbers/main && \
-
 # ==================================================================
 # Tensorflow
 # ------------------------------------------------------------------
@@ -103,8 +90,10 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         && \
 
     $PIP_INSTALL \
+        # NLP
         zhconv \
         jieba \
+        ckiptagger \
         iterative-stratification \
         && \
 
@@ -112,6 +101,21 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     conda install -c conda-forge -y \
         lightgbm xgboost \
         && \
+
+    # Jupyter Notebook
+    $PIP_INSTALL \
+        yapf \
+        jupyter \
+        jupyter_contrib_nbextensions \
+        jupyter_nbextensions_configurator \
+        jedi==0.17.2 \
+        parso==0.7.1 \
+        nbconvert==5.6.1 \
+        && \
+    jupyter contrib nbextension install --user && \
+    jupyter nbextension enable code_prettify/code_prettify && \
+    jupyter nbextension enable collapsible_headings/main && \
+    jupyter nbextension enable toggle_all_line_numbers/main && \
 
 # ==================================================================
 # OpenCV
