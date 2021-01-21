@@ -87,6 +87,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         plotly \
         shap \
         gym \
+        flask \        
         && \
 
     $PIP_INSTALL \
