@@ -95,6 +95,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         zhconv \
         jieba \
         ckiptagger \
+        spacy \
         iterative-stratification \
         && \
 
