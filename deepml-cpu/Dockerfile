@@ -34,6 +34,8 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     apt-get update --fix-missing && \
     apt-get install -y \
         nginx \
+        nodejs \
+        procps \
         binutils && \
     apt-get clean && \
 
