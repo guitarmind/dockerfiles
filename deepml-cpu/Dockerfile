@@ -35,6 +35,8 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     apt-get install -y \
         nginx \
         nodejs \
+        npm \
+        gcc \
         procps \
         binutils && \
     apt-get clean && \
