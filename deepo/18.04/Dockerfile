@@ -76,7 +76,8 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     add-apt-repository ppa:deadsnakes/ppa && \
     apt-get update --fix-missing && \
     wget -O ~/get-pip.py \
-        https://bootstrap.pypa.io/get-pip.py && \
+        # https://bootstrap.pypa.io/get-pip.py && \
+        https://bootstrap.pypa.io/pip/2.7/get-pip.py && \
     python ~/get-pip.py && \
     $PIP_INSTALL \
         setuptools \
