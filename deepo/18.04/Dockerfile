@@ -373,6 +373,13 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         albumentations \
         git+https://github.com/zhanghang1989/ResNeSt \
         git+https://github.com/dreamquark-ai/tabnet.git \
+        transformers==4.5.0 \
+        nltk \
+        textblob \
+        # Scpacy
+        scispacy \
+        https://s3-us-west-2.amazonaws.com/ai2-s2-scispacy/releases/v0.4.0/en_core_sci_lg-0.4.0.tar.gz \
+        https://s3-us-west-2.amazonaws.com/ai2-s2-scispacy/releases/v0.4.0/en_core_sci_scibert-0.4.0.tar.gz \
         umap-learn \
         gym \
         optuna && \
