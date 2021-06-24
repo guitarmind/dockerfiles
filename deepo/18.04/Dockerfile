@@ -82,6 +82,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         https://bootstrap.pypa.io/pip/2.7/get-pip.py && \
     python ~/get-pip.py && \
     $PIP_INSTALL \
+        pip \
         setuptools \
         future \
         protobuf \
