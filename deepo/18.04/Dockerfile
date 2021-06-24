@@ -24,23 +24,6 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     apt-get update --fix-missing && \
 
 # ==================================================================
-# CUDA Packages & Tools
-# ------------------------------------------------------------------
-
-    # TensorRT
-    # Based on https://www.tensorflow.org/install/gpu#install_cuda_with_apt
-    wget https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/libnvinfer7_7.1.3-1+cuda11.0_amd64.deb && \
-    apt install ./libnvinfer7_7.1.3-1+cuda11.0_amd64.deb && \
-    apt-get update && \
-    DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
-        libnvinfer7=$TENSORRT_VERSION \
-        libnvinfer-dev=$TENSORRT_VERSION \
-        libnvinfer-plugin7=$TENSORRT_VERSION \
-        && \
-    rm libnvinfer7_7.1.3-1+cuda11.0_amd64.deb && \
-
-
-# ==================================================================
 # System Packages & Tools
 # ------------------------------------------------------------------
 
@@ -64,6 +47,22 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         python3-dev \
         python3-venv \
         && \
+
+# ==================================================================
+# CUDA Packages & Tools
+# ------------------------------------------------------------------
+
+    # TensorRT
+    # Based on https://www.tensorflow.org/install/gpu#install_cuda_with_apt
+    wget https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/libnvinfer7_7.1.3-1+cuda11.0_amd64.deb && \
+    apt install ./libnvinfer7_7.1.3-1+cuda11.0_amd64.deb && \
+    apt-get update && \
+    DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
+        libnvinfer7=$TENSORRT_VERSION \
+        libnvinfer-dev=$TENSORRT_VERSION \
+        libnvinfer-plugin7=$TENSORRT_VERSION \
+        && \
+    rm libnvinfer7_7.1.3-1+cuda11.0_amd64.deb && \
 
 # ==================================================================
 # Essesntial Packages
