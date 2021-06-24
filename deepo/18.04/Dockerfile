@@ -1,24 +1,21 @@
-# ==================================================================
-# module list
-# ------------------------------------------------------------------
-# python        3.7    (apt)
-# jupyter       latest (pip)
-# pytorch       latest (pip)
-# tensorflow    latest (pip)
-# keras         latest (pip)
-# mxnet         latest (pip)
-# gluonts       latest (pip)
-# opencv        4.3.0  (git)
-# ==================================================================
-
-FROM nvidia/cuda:10.1-cudnn7-devel-ubuntu18.04
+FROM nvidia/cuda:11.0.3-cudnn8-devel-ubuntu18.04
 
 ENV CUDA_HOME=/usr/local/cuda
+
+ENV LANG=C.UTF-8 LC_ALL=C.UTF-8 \
+    # Disabling SSL verification
+    SSL_NO_VERIFY=1 \
+    PATH=/opt/conda/bin:$PATH \
+    PYTHONDONTWRITEBYTECODE=true \
+    TZ=Asia/Taipei \
+    PYTHONPATH="${PYTHONPATH}:/opt/conda/lib/python3.7/site-packages:/opt/conda/lib/python3.7:/opt/conda/lib"
+
+EXPOSE 8888 6006 8090
 
 RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     PIP_INSTALL="python3.7 -m pip --no-cache-dir install --upgrade --default-timeout=100" && \
     GIT_CLONE="git clone --depth 10" && \
-    TENSORRT_VERSION="6.0.1-1+cuda10.1" && \
+    TENSORRT_VERSION="7.1.3-1+cuda11.0" && \
 
     rm -rf /var/lib/apt/lists/* \
            /etc/apt/sources.list.d/cuda.list \
@@ -27,7 +24,24 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     apt-get update --fix-missing && \
 
 # ==================================================================
-# tools
+# CUDA Packages & Tools
+# ------------------------------------------------------------------
+
+    # TensorRT
+    # Based on https://www.tensorflow.org/install/gpu#install_cuda_with_apt
+    wget https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/libnvinfer7_7.1.3-1+cuda11.0_amd64.deb && \
+    apt install ./libnvinfer7_7.1.3-1+cuda11.0_amd64.deb && \
+    apt-get update && \
+    DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
+        libnvinfer7=$TENSORRT_VERSION \
+        libnvinfer-dev=$TENSORRT_VERSION \
+        libnvinfer-plugin7=$TENSORRT_VERSION \
+        && \
+    rm libnvinfer7_7.1.3-1+cuda11.0_amd64.deb && \
+
+
+# ==================================================================
+# System Packages & Tools
 # ------------------------------------------------------------------
 
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
@@ -47,27 +61,12 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         htop \
         tmux \
         python3-pip \
+        python3-dev \
+        python3-venv \
         && \
 
 # ==================================================================
-# rapidsai
-# ------------------------------------------------------------------
-    # Install Miniconda
-    # wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-py37_4.8.3-Linux-x86_64.sh -O ~/miniconda.sh && \
-    #     /bin/bash ~/miniconda.sh -b -p /opt/conda && \
-    #     rm ~/miniconda.sh && \
-    #     ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh && \
-    #     . /opt/conda/etc/profile.d/conda.sh && \
-    #     conda activate base && \
-    #     echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
-    #     echo "conda activate base" >> ~/.bashrc && \
-
-    # RapidsAI for CUDA 10.1
-    # conda install -y -c rapidsai -c nvidia -c conda-forge \
-    #     -c defaults rapids=0.15 python=3.7 cudatoolkit=10.1 && \
-
-# ==================================================================
-# python
+# Essesntial Packages
 # ------------------------------------------------------------------
 
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
@@ -81,48 +80,33 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     python ~/get-pip.py && \
     $PIP_INSTALL \
         setuptools \
+        future \
+        protobuf \
         && \
     $PIP_INSTALL \
         numpy==1.17.* \
         scipy \
-        # pandas==0.25.3 \
-        pandas==1.1.3 \
+        pandas==0.25.3 \
+        # pandas==1.1.3 \
         cloudpickle \
         scikit-learn \
-        kiwisolver==1.0.1 \
         matplotlib \
         Cython \
         # python3-tk \
-        scikit-image \
-        iterative-stratification \
         && \
 
 # ==================================================================
-# boost
-# ------------------------------------------------------------------
-
-    # wget -O ~/boost.tar.gz https://dl.bintray.com/boostorg/release/1.65.1/source/boost_1_65_1.tar.gz && \
-    # tar -zxf ~/boost.tar.gz -C ~ && \
-    # cd ~/boost_* && \
-    # ./bootstrap.sh --with-python=python3.7 && \
-    # ./b2 install --prefix=/usr/local && \
-    DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
-        libboost-python-dev \
-        && \
-
-# ==================================================================
-# jupyter
+# Jupyter Notebo
 # ------------------------------------------------------------------
 
     $PIP_INSTALL \
-        jupyter \
-        nbconvert==5.4.1 \
-        notebook==5.7.9 \
-        tornado==5.1.1 \
-        yarl \
         yapf \
+        jupyter \
         jupyter_contrib_nbextensions \
         jupyter_nbextensions_configurator \
+        jedi==0.17.2 \
+        parso==0.7.1 \
+        nbconvert==5.6.1 \
         && \
     jupyter contrib nbextension install --user && \
     jupyter nbextension enable code_prettify/code_prettify && \
@@ -130,21 +114,10 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     jupyter nbextension enable toggle_all_line_numbers/main && \
 
 # ==================================================================
-# pytorch
+# Pytorch
 # ------------------------------------------------------------------
 
-    # Python 3.6, CUDA 10.1
-    # $PIP_INSTALL \
-    #     https://download.pytorch.org/whl/cu101/torch-1.1.0-cp36-cp36m-linux_x86_64.whl \
-    #     && \
-    # $PIP_INSTALL \
-    #     https://download.pytorch.org/whl/cu101/torchvision-0.3.0-cp36-cp36m-linux_x86_64.whl \
-    #     && \
     $PIP_INSTALL \
-        # torch==1.4.0 \
-        # torch==1.5.1 \
-        # torchvision==0.5.0 \
-        # torchvision==0.6.1 \
         timm \
         effdet \
         omegaconf \
@@ -162,13 +135,10 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         && \
 
     $PIP_INSTALL \
-        torch==1.6.0+cu101 \
-        torchvision==0.7.0+cu101 \
+        torch==1.7.1+cu101 \
+        torchvision==0.8.2+cu101 \
+        torchaudio==0.7.0 \
         -f https://download.pytorch.org/whl/torch_stable.html \
-        && \
-
-    $PIP_INSTALL \
-        torch-lr-finder -v --global-option="apex" \
         && \
 
     $PIP_INSTALL \
@@ -177,68 +147,45 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         && \
 
 # ==================================================================
-# APEX
-# ------------------------------------------------------------------
-
-    git clone --recursive https://github.com/NVIDIA/apex ~/apex && \
-    cd ~/apex && \
-    # Workaround for https://github.com/NVIDIA/apex/issues/802#issuecomment-618699214
-    git checkout f3a960f80244cf9e80558ab30f7f7e8cbf03c0a0 && \
-    $PIP_INSTALL -v --no-cache-dir --global-option="--cpp_ext" --global-option="--cuda_ext" ./ && \
-    cd .. && \
-
-# ==================================================================
-# mxnet
-# ------------------------------------------------------------------
-
-    # CUDA 10.0 (CUDA/cuDNN and MKL-DNN enabled)
-    # $PIP_INSTALL \
-    #     "mxnet-cu100mkl>=1.3.1,<1.5.*" \
-    #     gluonts \
-    #     && \
-
-# ==================================================================
-# tensorflow
+# Tensorflow
 # ------------------------------------------------------------------
 
     $PIP_INSTALL \
         h5py \
-        tensorflow-gpu==2.2.0-rc4 \
-        # tensorflow-gpu==2.1.0-rc0 \
+        tensorflow==2.4.0 \
         tensorflow-determinism \
         tensorflow-addons \
-        tensorboard==2.2.0 \
+        tensorboard \
         && \
 
 # ==================================================================
-# opencv
+# OpenCV
 # ------------------------------------------------------------------
 
-    # conda install -y -c conda-forge opencv && \
-    DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
-        libatlas-base-dev \
-        libgflags-dev \
-        libgoogle-glog-dev \
-        libhdf5-serial-dev \
-        libleveldb-dev \
-        liblmdb-dev \
-        libprotobuf-dev \
-        libsnappy-dev \
-        protobuf-compiler \
-        && \
-
+    apt-get install -y \
+        build-essential \
+        cmake && \
+    ln -s /opt/conda/lib/python3.8/site-packages/numpy/core/include/numpy /usr/include/numpy && \
     $GIT_CLONE --branch 4.3.0 https://github.com/opencv/opencv ~/opencv && \
     mkdir -p ~/opencv/build && cd ~/opencv/build && \
     cmake -D CMAKE_BUILD_TYPE=RELEASE \
-          -D CMAKE_INSTALL_PREFIX=/usr/local \
+          -D CMAKE_INSTALL_PREFIX=/opt/conda \
           -D WITH_IPP=OFF \
           -D WITH_CUDA=OFF \
           -D WITH_OPENCL=OFF \
           -D BUILD_TESTS=OFF \
           -D BUILD_PERF_TESTS=OFF \
+          -D BUILD_opencv_python3=ON \
+          -D PYTHON_DEFAULT_EXECUTABLE=/opt/conda/bin/python \
+          -D PYTHON3_NUMPY_INCLUDE_DIRS=/opt/conda/lib/python3.8/site-packages/numpy/core/include \
+          -D PYTHON3_LIBRARIES=/opt/conda/lib/libpython3.8.so \
+          -D PYTHON3_INCLUDE_DIR=/opt/conda/include/python3.8 \
+          -D PYTHON3_EXECUTABLE=/opt/conda/bin/python \
+          -D PYTHON3_PACKAGES_PATH=/opt/conda/lib/python3.8/site-packages \
           .. && \
     make -j"$(nproc)" install && \
-    ln -s /usr/local/include/opencv4/opencv2 /usr/local/include/opencv2 && \
+    python -c "import cv2; print(cv2.__version__)" && \
+    apt-get remove -y build-essential cmake && \
 
 # ==================================================================
 # markpeng
@@ -289,45 +236,8 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     python setup.py install && \
     cd .. && \
 
-    # TensorRT
-    # Based on https://docs.nvidia.com/deeplearning/sdk/tensorrt-install-guide/index.html
-    wget -O tensorrt.deb https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/nvidia-machine-learning-repo-ubuntu1804_1.0.0-1_amd64.deb && \
-    dpkg -i tensorrt.deb && \
-    apt-get update && \
-    DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
-        libnvinfer6=$TENSORRT_VERSION \
-        libnvonnxparsers6=$TENSORRT_VERSION \
-        libnvparsers6=$TENSORRT_VERSION \
-        libnvinfer-plugin6=$TENSORRT_VERSION \
-        libnvinfer-dev=$TENSORRT_VERSION \
-        libnvonnxparsers-dev=$TENSORRT_VERSION \
-        libnvparsers-dev=$TENSORRT_VERSION \
-        libnvinfer-plugin-dev=$TENSORRT_VERSION \
-        python3-libnvinfer=$TENSORRT_VERSION \
-        python3-libnvinfer-dev=$TENSORRT_VERSION && \
-    # Note: need to unhold for new update later
-    apt-mark hold \
-        libnvinfer6 \
-        libnvonnxparsers6 \
-        libnvparsers6 \
-        libnvinfer-plugin6 \
-        libnvinfer-dev \
-        libnvonnxparsers-dev \
-        libnvparsers-dev \
-        libnvinfer-plugin-dev \
-        python3-libnvinfer \
-        python3-libnvinfer-dev && \
-    dpkg -l | grep TensorRT && \
-    wget -O 7fa2af80.pub https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/7fa2af80.pub && \
-    apt-key add 7fa2af80.pub && \
-    apt-get update && \
-    # TODO: figure out how to install uff-converter-tf
-    # apt-get install tensorrt && \
-    # apt-get install uff-converter-tf && \
-    rm tensorrt.deb 7fa2af80.pub && \
-
 # ==================================================================
-# darknet (YOLOv3, YOLOv4)
+# Darknet (YOLOv3, YOLOv4)
 # ------------------------------------------------------------------
     ln -s /usr/local/cuda/lib64/stubs/libcuda.so /usr/local/cuda/lib64/stubs/libcuda.so.1 && \
     LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs/:$LD_LIBRARY_PATH && \
@@ -350,14 +260,6 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     cd .. && \
 
 # ==================================================================
-# Kubeflow
-# ------------------------------------------------------------------
-
-    $PIP_INSTALL \
-        kfp \
-        && \
-
-# ==================================================================
 # MISC.
 # ------------------------------------------------------------------
 
@@ -378,63 +280,34 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         nltk \
         textblob \
         # Scpacy
+        spacy \
         scispacy \
-        https://s3-us-west-2.amazonaws.com/ai2-s2-scispacy/releases/v0.4.0/en_core_sci_lg-0.4.0.tar.gz \
-        https://s3-us-west-2.amazonaws.com/ai2-s2-scispacy/releases/v0.4.0/en_core_sci_scibert-0.4.0.tar.gz \
         umap-learn \
         gym \
+        scikit-image \
+        iterative-stratification \
+        kiwisolver==1.0.1 \
         optuna && \
-
-    # $PIP_INSTALL \
-    #     librosa==0.6.3 \
-    #     --ignore-installed llvmlite && \
-
-    # $PIP_INSTALL \
-    #     pip \
-    #     psutil \
-    #     seaborn \
-    #     bayesian-optimization \
-    #     numba==0.48 \
-    #     pyarrow==0.11 \
-    #     joblib \
-    #     PyWavelets \
-    #     statsmodels \
-    #     plotly \
-    #     tqdm \
-    #     git+https://github.com/huggingface/transformers#master \
-    #     langdetect \
-    #     soupsieve==2.0.1 \
-    #     beautifulsoup4 \
-    #     shap \
-    #     yellowbrick \
-    #     pillow \
-    #     PyYAML>=5.3 \
-    #     git+https://github.com/cocodataset/cocoapi.git#subdirectory=PythonAPI \
-    #     albumentations \
-    #     soundfile \
-    #     fastprogress \
-    #     pydegensac \
-    #     git+https://github.com/zhanghang1989/ResNeSt \
-    #     google-cloud-storage \
-    #     gcsfs \
-    #     efficientnet \
-    #     && \
 
     # To avoid AttributeError: module 'typing' has no attribute '_ClassVar'
     pip uninstall -y dataclasses && \
 
-
 # ==================================================================
-# config & cleanup
+# Config & Cleanup
+# https://jcristharif.com/conda-docker-tips.html
 # ------------------------------------------------------------------
-
     ldconfig && \
-    apt-get clean && \
-    apt-get autoremove && \
-    rm -rf /var/lib/apt/lists/* /tmp/* ~/*
+    ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone && \
 
-ENV PYTHONPATH="${PYTHONPATH}:/opt/conda/lib/python3.7/site-packages:/opt/conda/lib/python3.7:/opt/conda/lib"
-ENV TZ=Asia/Taipei
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+    find /opt/conda/ -follow -type f -name '*.a' -delete && \
+    find /opt/conda/ -follow -type f -name '*.pyc' -delete && \
+    find /opt/conda/ -follow -type f -name '*.js.map' -delete && \
+    find /opt/conda/lib/python3.*/ -name 'tests' -exec rm -r '{}' + && \
+    find /opt/conda/lib/python3.*/site-packages/ -name '*.so' -print -exec sh -c 'file "{}" | grep -q "not stripped" && strip -s "{}"' \; && \
 
-EXPOSE 8888 6006 8090
+    apt-get remove -y binutils && \
+    apt-get clean -y && \
+    apt-get autoremove -y && \
+    conda clean --all -y && \
+    rm -rf /tmp/* && \
+    rm -rf /var/cache/apk/*
