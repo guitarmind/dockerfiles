@@ -13,7 +13,7 @@ ENV LANG=C.UTF-8 LC_ALL=C.UTF-8 \
 EXPOSE 8888 6006 8090
 
 RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
-    PIP_INSTALL="python3.7 -m pip --no-cache-dir install --upgrade --default-timeout=100" && \
+    PIP_INSTALL="python3.6 -m pip --no-cache-dir install --upgrade --default-timeout=100" && \
     GIT_CLONE="git clone --depth 10" && \
     TENSORRT_VERSION="7.1.3-1+cuda11.0" && \
 
@@ -43,10 +43,11 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         python-tk \
         htop \
         tmux \
-        python3.7 \
+        python3.6 \
         python3-pip \
         python3-dev \
         python3-venv \
+        python3-setuptools \
         && \
 
 # ==================================================================
@@ -56,7 +57,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     # TensorRT
     # Based on https://www.tensorflow.org/install/gpu#install_cuda_with_apt
     wget http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/nvidia-machine-learning-repo-ubuntu1804_1.0.0-1_amd64.deb && \
-    sudo apt install ./nvidia-machine-learning-repo-ubuntu1804_1.0.0-1_amd64.deb && \
+    apt install ./nvidia-machine-learning-repo-ubuntu1804_1.0.0-1_amd64.deb && \
     apt-get update && \
     wget https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/libnvinfer7_7.1.3-1+cuda11.0_amd64.deb && \
     apt install ./libnvinfer7_7.1.3-1+cuda11.0_amd64.deb && \
@@ -75,31 +76,30 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
         software-properties-common \
         && \
-    add-apt-repository ppa:deadsnakes/ppa && \
+    add-apt-repository ppa:deadsnakes/ppa -y && \
     apt-get update --fix-missing && \
     wget -O ~/get-pip.py \
-        # https://bootstrap.pypa.io/get-pip.py && \
         https://bootstrap.pypa.io/pip/2.7/get-pip.py && \
     python ~/get-pip.py && \
     $PIP_INSTALL \
         setuptools \
         future \
         protobuf \
+        psutil \
         && \
     $PIP_INSTALL \
-        numpy==1.17.* \
+        numpy \
         scipy \
         pandas==0.25.3 \
-        # pandas==1.1.3 \
         cloudpickle \
         scikit-learn \
         matplotlib \
+        seaborn \
         Cython \
-        # python3-tk \
         && \
 
 # ==================================================================
-# Jupyter Notebo
+# Jupyter Notebook
 # ------------------------------------------------------------------
 
     $PIP_INSTALL \
@@ -121,23 +121,6 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 # ------------------------------------------------------------------
 
     $PIP_INSTALL \
-        timm \
-        effdet \
-        omegaconf \
-        ensemble-boxes \
-        pycocotools \
-        'scikit-optimize[plots]' \
-        catalyst \
-        torchlibrosa \
-        efficientnet_pytorch \
-        torch-optimizer \
-        pytorch-lightning \
-        pytorch-pfn-extras \
-        pytorch-tabnet \
-        torch_optimizer \
-        && \
-
-    $PIP_INSTALL \
         torch==1.7.1+cu101 \
         torchvision==0.8.2+cu101 \
         torchaudio==0.7.0 \
@@ -145,8 +128,13 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         && \
 
     $PIP_INSTALL \
-        future \
-        protobuf \
+        torchlibrosa \
+        efficientnet_pytorch \
+        torch-optimizer \
+        pytorch-lightning \
+        pytorch-pfn-extras \
+        pytorch-tabnet \
+        torch_optimizer \
         && \
 
 # ==================================================================
@@ -191,7 +179,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     apt-get remove -y build-essential cmake && \
 
 # ==================================================================
-# markpeng
+# Xgboost & LightGBM
 # ------------------------------------------------------------------
 
     # Upgrade CMake
@@ -215,18 +203,6 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         python-setuptools && \
     mkdir -p /etc/OpenCL/vendors && echo "libnvidia-opencl.so.1" > /etc/OpenCL/vendors/nvidia.icd && \
 
-    # LightGBM
-    $GIT_CLONE --recursive https://github.com/Microsoft/LightGBM ~/LightGBM && \
-    cd ~/LightGBM && \
-    mkdir build && \
-    cd build && \
-    cmake -DUSE_GPU=1 .. && \
-    make -j$(nproc) && \
-    cd .. && \
-    cd python-package/ && \
-    python setup.py install --precompile && \
-    cd .. && \
-
     # Xgboost
     $GIT_CLONE --recursive https://github.com/dmlc/xgboost ~/xgboost && \
     cd ~/xgboost && \
@@ -237,6 +213,18 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     cd .. && \
     cd python-package/ && \
     python setup.py install && \
+    cd .. && \
+
+    # LightGBM
+    $GIT_CLONE --recursive https://github.com/Microsoft/LightGBM ~/LightGBM && \
+    cd ~/LightGBM && \
+    mkdir build && \
+    cd build && \
+    cmake -DUSE_GPU=1 .. && \
+    make -j$(nproc) && \
+    cd .. && \
+    cd python-package/ && \
+    python setup.py install --precompile && \
     cd .. && \
 
 # ==================================================================
@@ -267,9 +255,13 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 # ------------------------------------------------------------------
 
     $PIP_INSTALL \
+        timm \
+        effdet \
+        omegaconf \
+        ensemble-boxes \
+        pycocotools \
+        'scikit-optimize[plots]' \
         geffnet \
-        psutil \
-        seaborn \
         featuretools \
         yellowbrick \
         mlflow \
