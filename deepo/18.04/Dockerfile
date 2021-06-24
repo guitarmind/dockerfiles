@@ -7,8 +7,7 @@ ENV LANG=C.UTF-8 LC_ALL=C.UTF-8 \
     SSL_NO_VERIFY=1 \
     PATH=/opt/conda/bin:$PATH \
     PYTHONDONTWRITEBYTECODE=true \
-    TZ=Asia/Taipei \
-    PYTHONPATH="${PYTHONPATH}:/opt/conda/lib/python3.7/site-packages:/opt/conda/lib/python3.7:/opt/conda/lib"
+    TZ=Asia/Taipei
 
 EXPOSE 8888 6006 8090
 
