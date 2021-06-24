@@ -43,6 +43,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         python-tk \
         htop \
         tmux \
+        python3.7 \
         python3-pip \
         python3-dev \
         python3-venv \
@@ -54,6 +55,9 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 
     # TensorRT
     # Based on https://www.tensorflow.org/install/gpu#install_cuda_with_apt
+    wget http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/nvidia-machine-learning-repo-ubuntu1804_1.0.0-1_amd64.deb && \
+    sudo apt install ./nvidia-machine-learning-repo-ubuntu1804_1.0.0-1_amd64.deb && \
+    apt-get update && \
     wget https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/libnvinfer7_7.1.3-1+cuda11.0_amd64.deb && \
     apt install ./libnvinfer7_7.1.3-1+cuda11.0_amd64.deb && \
     apt-get update && \
