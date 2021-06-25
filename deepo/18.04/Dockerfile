@@ -1,12 +1,13 @@
-FROM nvidia/cuda:11.0.3-cudnn8-devel-ubuntu18.04
+FROM nvidia/cuda:11.0-cudnn8-devel-ubuntu18.04
 
 ENV CUDA_HOME=/usr/local/cuda
 
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8 \
     # Disabling SSL verification
     SSL_NO_VERIFY=1 \
-    PATH=/opt/conda/bin:$PATH \
     PYTHONDONTWRITEBYTECODE=true \
+    PATH=/usr/local/cuda-11.0/bin:$PATH \
+    LD_LIBRARY_PATH=/usr/local/cuda-11.0/lib64:$LD_LIBRARY_PATH \
     TZ=Asia/Taipei
 
 EXPOSE 8888 6006 8090
@@ -42,6 +43,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         python-tk \
         htop \
         tmux \
+        unzip \
         python3.6 \
         python3-pip \
         python3-dev \
@@ -86,6 +88,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         future \
         protobuf \
         psutil \
+        wheel \
         && \
     $PIP_INSTALL \
         numpy \
@@ -156,76 +159,89 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     apt-get install -y \
         build-essential \
         cmake && \
-    ln -s /opt/conda/lib/python3.8/site-packages/numpy/core/include/numpy /usr/include/numpy && \
-    $GIT_CLONE --branch 4.3.0 https://github.com/opencv/opencv ~/opencv && \
+    $GIT_CLONE --branch 4.4.0 https://github.com/opencv/opencv ~/opencv && \
     mkdir -p ~/opencv/build && cd ~/opencv/build && \
+    wget -O opencv_contrib.zip https://github.com/opencv/opencv_contrib/archive/refs/tags/4.4.0.zip && \
+    unzip opencv_contrib.zip && \
     cmake -D CMAKE_BUILD_TYPE=RELEASE \
-          -D CMAKE_INSTALL_PREFIX=/opt/conda \
+          -D CMAKE_INSTALL_PREFIX=/usr/local \
+          -D OPENCV_EXTRA_MODULES_PATH=~/opencv/build/opencv_contrib-4.4.0/modules \
           -D WITH_IPP=OFF \
-          -D WITH_CUDA=OFF \
+          -D WITH_CUDA=ON \
+          -D OPENCV_DNN_CUDA=ON \
           -D WITH_OPENCL=OFF \
           -D BUILD_TESTS=OFF \
           -D BUILD_PERF_TESTS=OFF \
           -D BUILD_opencv_python3=ON \
-          -D PYTHON_DEFAULT_EXECUTABLE=/opt/conda/bin/python \
-          -D PYTHON3_NUMPY_INCLUDE_DIRS=/opt/conda/lib/python3.8/site-packages/numpy/core/include \
-          -D PYTHON3_LIBRARIES=/opt/conda/lib/libpython3.8.so \
-          -D PYTHON3_INCLUDE_DIR=/opt/conda/include/python3.8 \
-          -D PYTHON3_EXECUTABLE=/opt/conda/bin/python \
-          -D PYTHON3_PACKAGES_PATH=/opt/conda/lib/python3.8/site-packages \
+          -D PYTHON_DEFAULT_EXECUTABLE=/usr/bin/python \
+          -D PYTHON3_NUMPY_INCLUDE_DIRS=/usr/local/lib/python3.6/dist-packages/numpy/core/include \
+          -D PYTHON3_LIBRARIES=/usr/lib/python3.6/config-3.6m-x86_64-linux-gnu/libpython3.6.so \
+          -D PYTHON3_INCLUDE_DIR=/usr/include/python3.6 \
+          -D PYTHON3_EXECUTABLE=/usr/bin/python3.6 \
+          -D PYTHON3_PACKAGES_PATH=/usr/local/lib/python3.6/dist-packages \
           .. && \
     make -j"$(nproc)" install && \
-    python -c "import cv2; print(cv2.__version__)" && \
-    apt-get remove -y build-essential cmake && \
+    python3 -c "import cv2; print(cv2.__version__)" && \
+    ln -s /usr/local/include/opencv4/opencv2 /usr/local/include/opencv2 && \
 
 # ==================================================================
 # Xgboost & LightGBM
 # ------------------------------------------------------------------
 
+    # apt-get install -y \
+    #     gcc-6 \
+    #     g++-6 \
+    #     && \
+
     # Upgrade CMake
     apt-get remove -y --purge --auto-remove cmake && \
     mkdir /opt/cmake && \
     cd /opt/cmake && \
-    wget https://github.com/Kitware/CMake/releases/download/v3.14.3/cmake-3.14.3-Linux-x86_64.sh && \
-    sh ./cmake-3.14.3-Linux-x86_64.sh --prefix=/opt/cmake --skip-license && \
+    wget https://github.com/Kitware/CMake/releases/download/v3.18.6/cmake-3.18.6-Linux-x86_64.sh && \
+    sh ./cmake-3.18.6-Linux-x86_64.sh --prefix=/opt/cmake --skip-license && \
     ln -s /opt/cmake/bin/cmake /usr/local/bin/cmake && \
     ln -s /opt/cmake/bin/cmake /usr/bin/cmake && \
     cmake --version && \
 
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
         nvidia-opencl-dev opencl-headers \
-        git \
-        build-essential \
         libboost-dev \
         libboost-system-dev \
         libboost-filesystem-dev \
         libsndfile1 \
-        python-setuptools && \
+        # python-setuptools && \
     mkdir -p /etc/OpenCL/vendors && echo "libnvidia-opencl.so.1" > /etc/OpenCL/vendors/nvidia.icd && \
 
     # Xgboost
-    $GIT_CLONE --recursive https://github.com/dmlc/xgboost ~/xgboost && \
+    $GIT_CLONE --branch v1.3.3 --recursive https://github.com/dmlc/xgboost ~/xgboost && \
     cd ~/xgboost && \
     mkdir build && \
     cd build && \
-    cmake .. -DUSE_CUDA=ON && \
+    cmake .. -DUSE_CUDA=ON \
+        -DCMAKE_CUDA_COMPILER:PATH=/usr/local/cuda-11.0/bin/nvcc && \
     make -j$(nproc) && \
     cd .. && \
     cd python-package/ && \
-    python setup.py install && \
+    python3 setup.py install --use-cuda --use-nccl && \
+    python3 -c "import xgboost as xgb; print(xgb.__version__)" && \
     cd .. && \
 
     # LightGBM
-    $GIT_CLONE --recursive https://github.com/Microsoft/LightGBM ~/LightGBM && \
+    $GIT_CLONE --branch v3.2.1 --recursive https://github.com/Microsoft/LightGBM ~/LightGBM && \
     cd ~/LightGBM && \
     mkdir build && \
     cd build && \
-    cmake -DUSE_GPU=1 .. && \
+    cmake -DUSE_GPU=1 \
+        -DOpenCL_LIBRARY=/usr/local/cuda/lib64/libOpenCL.so \
+        -DOpenCL_INCLUDE_DIR=/usr/local/cuda/include/ .. && \
     make -j$(nproc) && \
     cd .. && \
     cd python-package/ && \
-    python setup.py install --precompile && \
+    python3 setup.py install --precompile && \
+    python3 -c "import lightgbm as lgb; print(lgb.__version__)" && \
     cd .. && \
+
+    rm -rf /opt/cmake /usr/local/bin/cmake /usr/bin/cmake && \
 
 # ==================================================================
 # Darknet (YOLOv3, YOLOv4)
@@ -234,20 +250,11 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs/:$LD_LIBRARY_PATH && \
     git clone https://github.com/AlexeyAB/darknet.git ~/darknet && \
     cd ~/darknet && \
-    # cmake
-    sh ./build.sh && \
-    # make
-    # sed -i s/GPU=0/GPU=1/g Makefile && \
-    # sed -i s/CUDNN=0/CUDNN=1/g Makefile && \
-    # sed -i s/CUDNN_HALF=0/CUDNN_HALF=1/g Makefile && \
-    # sed -i s/OPENCV=0/OPENCV=1/g Makefile && \
-    # sed -i s/AVX=0/AVX=1/g Makefile && \
-    # sed -i s/OPENMP=0/OPENMP=1/g Makefile && \
-    # sed -i s/LIBSO=0/LIBSO=1/g Makefile && \
-    # make -j 2 && \
+    mkdir build_release && \
+    cd build_release && \
+    cmake .. -DCMAKE_PREFIX_PATH=~/opencv/build  && \
+    cmake --build . --target install --parallel $(nproc) && \
     cp ./darknet /usr/local/bin/ && \
-    # cp libdark.so libdarknet.so && \
-    # chmod a+x libdarknet.so && \
     cd .. && \
 
 # ==================================================================
@@ -271,7 +278,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         albumentations \
         git+https://github.com/zhanghang1989/ResNeSt \
         git+https://github.com/dreamquark-ai/tabnet.git \
-        transformers==4.5.0 \
+        transformers \
         nltk \
         textblob \
         # Scpacy
@@ -294,15 +301,14 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     ldconfig && \
     ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone && \
 
-    find /opt/conda/ -follow -type f -name '*.a' -delete && \
-    find /opt/conda/ -follow -type f -name '*.pyc' -delete && \
-    find /opt/conda/ -follow -type f -name '*.js.map' -delete && \
-    find /opt/conda/lib/python3.*/ -name 'tests' -exec rm -r '{}' + && \
-    find /opt/conda/lib/python3.*/site-packages/ -name '*.so' -print -exec sh -c 'file "{}" | grep -q "not stripped" && strip -s "{}"' \; && \
+    find /usr/local/lib/python3.*/ -follow -type f -name '*.a' -delete && \
+    find /usr/local/lib/python3.*/ -follow -type f -name '*.pyc' -delete && \
+    find /usr/local/lib/python3.*/ -follow -type f -name '*.js.map' -delete && \
+    find /usr/local/lib/python3.*/ -name 'tests' -exec rm -r '{}' + && \
+    find /usr/local/lib/python3.*/site-packages/ -name '*.so' -print -exec sh -c 'file "{}" | grep -q "not stripped" && strip -s "{}"' \; && \
 
-    apt-get remove -y binutils && \
+    apt-get remove -y build-essential cmake && \
     apt-get clean -y && \
     apt-get autoremove -y && \
-    conda clean --all -y && \
     rm -rf /tmp/* && \
     rm -rf /var/cache/apk/*
