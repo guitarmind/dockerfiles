@@ -123,7 +123,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     $PIP_INSTALL \
         torch==1.7.1+cu101 \
         torchvision==0.8.2+cu101 \
-        torchaudio==0.7.0 \
+        torchaudio==0.7.2 \
         -f https://download.pytorch.org/whl/torch_stable.html \
         && \
 
