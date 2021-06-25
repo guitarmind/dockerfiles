@@ -149,7 +149,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         tensorflow==2.4.0 \
         tensorflow-determinism \
         tensorflow-addons \
-        tensorboard \
+        tensorboard=2.4.1 \
         && \
 
 # ==================================================================
