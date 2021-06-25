@@ -188,11 +188,6 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 # Xgboost & LightGBM
 # ------------------------------------------------------------------
 
-    # apt-get install -y \
-    #     gcc-6 \
-    #     g++-6 \
-    #     && \
-
     # Upgrade CMake
     apt-get remove -y --purge --auto-remove cmake && \
     mkdir /opt/cmake && \
@@ -208,8 +203,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         libboost-dev \
         libboost-system-dev \
         libboost-filesystem-dev \
-        libsndfile1 \
-        # python-setuptools && \
+        libsndfile1 && \
     mkdir -p /etc/OpenCL/vendors && echo "libnvidia-opencl.so.1" > /etc/OpenCL/vendors/nvidia.icd && \
 
     # Xgboost
@@ -281,7 +275,6 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         transformers \
         nltk \
         textblob \
-        # Scpacy
         spacy \
         scispacy \
         umap-learn \
