@@ -292,7 +292,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     find /usr/local/lib/python3.*/ -follow -type f -name '*.pyc' -delete && \
     find /usr/local/lib/python3.*/ -follow -type f -name '*.js.map' -delete && \
     find /usr/local/lib/python3.*/ -name 'tests' -exec rm -r '{}' + && \
-    find /usr/local/lib/python3.*/site-packages/ -name '*.so' -print -exec sh -c 'file "{}" | grep -q "not stripped" && strip -s "{}"' \; && \
+    find /usr/local/lib/python3.*/dist-packages/ -name '*.so' -print -exec sh -c 'file "{}" | grep -q "not stripped" && strip -s "{}"' \; && \
 
     apt-get remove -y build-essential cmake && \
     rm -rf /opt/cmake /usr/local/bin/cmake /usr/bin/cmake && \
