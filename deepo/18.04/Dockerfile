@@ -133,7 +133,6 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     $PIP_INSTALL \
         torchlibrosa \
         efficientnet_pytorch \
-        torch-optimizer \
         pytorch-lightning \
         pytorch-pfn-extras \
         pytorch-tabnet \
@@ -235,8 +234,6 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     python3 -c "import lightgbm as lgb; print(lgb.__version__)" && \
     cd .. && \
 
-    rm -rf /opt/cmake /usr/local/bin/cmake /usr/bin/cmake && \
-
 # ==================================================================
 # Darknet (YOLOv3, YOLOv4)
 # ------------------------------------------------------------------
@@ -258,14 +255,13 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     $PIP_INSTALL \
         timm \
         effdet \
+        geffnet \
         omegaconf \
         ensemble-boxes \
         pycocotools \
         'scikit-optimize[plots]' \
-        geffnet \
         featuretools \
         yellowbrick \
-        mlflow \
         imgaug \
         plotly \
         shap \
@@ -274,15 +270,13 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         git+https://github.com/dreamquark-ai/tabnet.git \
         transformers \
         nltk \
-        textblob \
         spacy \
         scispacy \
         umap-learn \
-        gym \
         scikit-image \
         iterative-stratification \
-        kiwisolver==1.0.1 \
-        optuna && \
+        optuna \
+        && \
 
     # To avoid AttributeError: module 'typing' has no attribute '_ClassVar'
     pip uninstall -y dataclasses && \
@@ -301,6 +295,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     find /usr/local/lib/python3.*/site-packages/ -name '*.so' -print -exec sh -c 'file "{}" | grep -q "not stripped" && strip -s "{}"' \; && \
 
     apt-get remove -y build-essential cmake && \
+    rm -rf /opt/cmake /usr/local/bin/cmake /usr/bin/cmake && \
     apt-get clean -y && \
     apt-get autoremove -y && \
     rm -rf /tmp/* && \
