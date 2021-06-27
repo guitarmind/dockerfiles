@@ -279,7 +279,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         && \
 
     # To avoid AttributeError: module 'typing' has no attribute '_ClassVar'
-    pip uninstall -y dataclasses && \
+    # pip uninstall -y dataclasses && \
 
 # ==================================================================
 # Config & Cleanup
