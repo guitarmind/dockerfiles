@@ -79,8 +79,10 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         && \
     add-apt-repository ppa:deadsnakes/ppa -y && \
     apt-get update --fix-missing && \
+    update-alternatives --install /usr/bin/python python /usr/bin/python2.7 20 && \
+    update-alternatives --install /usr/bin/python python /usr/bin/python3.6 10 && \
     wget -O ~/get-pip.py \
-        https://bootstrap.pypa.io/pip/2.7/get-pip.py && \
+        https://bootstrap.pypa.io/get-pip.py && \
     python ~/get-pip.py && \
     $PIP_INSTALL \
         pip \
@@ -180,7 +182,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
           -D PYTHON3_PACKAGES_PATH=/usr/local/lib/python3.6/dist-packages \
           .. && \
     make -j"$(nproc)" install && \
-    python3 -c "import cv2; print(cv2.__version__)" && \
+    python -c "import cv2; print(cv2.__version__)" && \
     ln -s /usr/local/include/opencv4/opencv2 /usr/local/include/opencv2 && \
 
 # ==================================================================
@@ -215,8 +217,8 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     make -j$(nproc) && \
     cd .. && \
     cd python-package/ && \
-    python3 setup.py install --use-cuda --use-nccl && \
-    python3 -c "import xgboost as xgb; print(xgb.__version__)" && \
+    python setup.py install --use-cuda --use-nccl && \
+    python -c "import xgboost as xgb; print(xgb.__version__)" && \
     cd .. && \
 
     # LightGBM
@@ -230,8 +232,8 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     make -j$(nproc) && \
     cd .. && \
     cd python-package/ && \
-    python3 setup.py install --precompile && \
-    python3 -c "import lightgbm as lgb; print(lgb.__version__)" && \
+    python setup.py install --precompile && \
+    python -c "import lightgbm as lgb; print(lgb.__version__)" && \
     cd .. && \
 
 # ==================================================================
