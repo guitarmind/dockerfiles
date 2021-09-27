@@ -137,6 +137,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         pytorch-pfn-extras \
         pytorch-tabnet \
         torch_optimizer \
+        torchsummary \
         && \
 
 # ==================================================================
