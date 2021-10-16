@@ -13,7 +13,7 @@ ENV LANG=C.UTF-8 LC_ALL=C.UTF-8 \
 EXPOSE 8888 6006 8090
 
 RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
-    PIP_INSTALL="python3.6 -m pip --no-cache-dir install --upgrade --default-timeout=100" && \
+    PIP_INSTALL="python3.7 -m pip --no-cache-dir install --upgrade --default-timeout=100" && \
     GIT_CLONE="git clone --depth 10" && \
     TENSORRT_VERSION="7.1.3-1+cuda11.0" && \
 
@@ -44,7 +44,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         htop \
         tmux \
         unzip \
-        python3.6 \
+        python3.7 \
         python3-pip \
         python3-dev \
         python3-venv \
@@ -174,11 +174,11 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
           -D BUILD_PERF_TESTS=OFF \
           -D BUILD_opencv_python3=ON \
           -D PYTHON_DEFAULT_EXECUTABLE=/usr/bin/python \
-          -D PYTHON3_NUMPY_INCLUDE_DIRS=/usr/local/lib/python3.6/dist-packages/numpy/core/include \
-          -D PYTHON3_LIBRARIES=/usr/lib/python3.6/config-3.6m-x86_64-linux-gnu/libpython3.6.so \
-          -D PYTHON3_INCLUDE_DIR=/usr/include/python3.6 \
-          -D PYTHON3_EXECUTABLE=/usr/bin/python3.6 \
-          -D PYTHON3_PACKAGES_PATH=/usr/local/lib/python3.6/dist-packages \
+          -D PYTHON3_NUMPY_INCLUDE_DIRS=/usr/local/lib/python3.7/dist-packages/numpy/core/include \
+          -D PYTHON3_LIBRARIES=/usr/lib/python3.7/config-3.7m-x86_64-linux-gnu/libpython3.7.so \
+          -D PYTHON3_INCLUDE_DIR=/usr/include/python3.7 \
+          -D PYTHON3_EXECUTABLE=/usr/bin/python3.7 \
+          -D PYTHON3_PACKAGES_PATH=/usr/local/lib/python3.7/dist-packages \
           .. && \
     make -j"$(nproc)" install && \
     python3 -c "import cv2; print(cv2.__version__)" && \
