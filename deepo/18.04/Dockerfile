@@ -46,7 +46,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         unzip \
         python3.7 \
         python3-pip \
-        python3-dev \
+        python3.7-dev \
         python3-venv \
         python3-setuptools \
         && \
