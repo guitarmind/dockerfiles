@@ -181,7 +181,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
           -D PYTHON3_PACKAGES_PATH=/usr/local/lib/python3.7/dist-packages \
           .. && \
     make -j"$(nproc)" install && \
-    python3 -c "import cv2; print(cv2.__version__)" && \
+    python3.7 -c "import cv2; print(cv2.__version__)" && \
     ln -s /usr/local/include/opencv4/opencv2 /usr/local/include/opencv2 && \
 
 # ==================================================================
