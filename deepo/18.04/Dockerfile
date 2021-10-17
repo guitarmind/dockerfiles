@@ -51,6 +51,10 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         python3-setuptools \
         && \
 
+    # Change default python3 to 3.7 version
+    rm /usr/bin/python3 && \
+        ln -s /usr/bin/python3.7 /usr/bin/python3 && \
+
 # ==================================================================
 # CUDA Packages & Tools
 # ------------------------------------------------------------------
