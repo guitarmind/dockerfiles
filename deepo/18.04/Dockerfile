@@ -282,6 +282,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         scikit-image \
         iterative-stratification \
         optuna \
+        torchinfo \
         && \
 
     # To avoid AttributeError: module 'typing' has no attribute '_ClassVar'
