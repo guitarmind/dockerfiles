@@ -128,20 +128,20 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 # ------------------------------------------------------------------
 
     $PIP_INSTALL \
-        torch==1.7.1+cu110 \
-        torchvision==0.8.2+cu110 \
-        torchaudio==0.7.2 \
+        torch==1.9.1+cu111 \
+        torchvision==0.10.1+cu111 \
+        torchaudio==0.9.1 \
         -f https://download.pytorch.org/whl/torch_stable.html \
         && \
 
     $PIP_INSTALL \
         torchlibrosa \
         efficientnet_pytorch \
-        pytorch-lightning \
+        pytorch-lightning==1.4.4 \
         pytorch-pfn-extras \
         pytorch-tabnet \
         torch_optimizer \
-        torchsummary \
+        torchinfo \
         && \
 
 # ==================================================================
@@ -283,6 +283,8 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         iterative-stratification \
         optuna \
         torchinfo \
+        statsmodels==0.12.0 \
+        tsfresh \
         && \
 
     # To avoid AttributeError: module 'typing' has no attribute '_ClassVar'
