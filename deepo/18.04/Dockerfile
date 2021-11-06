@@ -15,7 +15,7 @@ EXPOSE 8888 6006 8090
 RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     PIP_INSTALL="python3.7 -m pip --no-cache-dir install --upgrade --default-timeout=100" && \
     GIT_CLONE="git clone --depth 10" && \
-    TENSORRT_VERSION="7.1.3-1+cuda11.1" && \
+    TENSORRT_VERSION="7.2.3-1+cuda11.1" && \
 
     rm -rf /var/lib/apt/lists/* \
            /etc/apt/sources.list.d/cuda.list \
@@ -64,15 +64,15 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     wget http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/nvidia-machine-learning-repo-ubuntu1804_1.0.0-1_amd64.deb && \
     apt install ./nvidia-machine-learning-repo-ubuntu1804_1.0.0-1_amd64.deb && \
     apt-get update && \
-    wget https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/libnvinfer7_7.1.3-1+cuda11.1_amd64.deb && \
-    apt install ./libnvinfer7_7.1.3-1+cuda11.1_amd64.deb && \
+    wget https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/libnvinfer7_7.2.3-1+cuda11.1_amd64.deb && \
+    apt install ./libnvinfer7_7.2.3-1+cuda11.1_amd64.deb && \
     apt-get update && \
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
         libnvinfer7=$TENSORRT_VERSION \
         libnvinfer-dev=$TENSORRT_VERSION \
         libnvinfer-plugin7=$TENSORRT_VERSION \
         && \
-    rm libnvinfer7_7.1.3-1+cuda11.1_amd64.deb && \
+    rm libnvinfer7_7.2.3-1+cuda11.1_amd64.deb && \
 
 # ==================================================================
 # Essesntial Packages
