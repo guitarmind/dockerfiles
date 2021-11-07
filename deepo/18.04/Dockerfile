@@ -54,6 +54,8 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     # Change default python3 to 3.7 version
     rm /usr/bin/python3 && \
         ln -s /usr/bin/python3.7 /usr/bin/python3 && \
+    cd /usr/lib/python3/dist-packages/ && \
+    cp apt_pkg.cpython-36m-x86_64-linux-gnu.so apt_pkg.so && \
 
 # ==================================================================
 # CUDA Packages & Tools
