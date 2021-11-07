@@ -117,6 +117,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         matplotlib \
         seaborn \
         && \
+    python3.7 -m pip install --upgrade pip && \
 
 # ==================================================================
 # Jupyter Notebook
@@ -150,7 +151,6 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     $PIP_INSTALL \
         torchlibrosa \
         pytorch-lightning==1.4.4 \
-        pytorch-pfn-extras \
         torch_optimizer \
         torchinfo \
         && \
@@ -159,12 +159,13 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 # Tensorflow
 # ------------------------------------------------------------------
 
-    pip3 install \
+    $PIP_INSTALL \
         h5py \
         tensorflow==2.5.0 \
         tensorflow-determinism \
         tensorflow-addons \
         tensorboard==2.5.0 \
+        python3 -c "import tensorflow as tf; print(tf.__version__)" && \
         && \
 
 # ==================================================================
