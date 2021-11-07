@@ -49,11 +49,19 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         python3.7-dev \
         python3-venv \
         python3-setuptools \
+        python-pybind11 \
+        libblas-dev \
+        liblapack-dev \
+        libjpeg-dev \
+        zlib1g-dev \
+        libffi-dev \
         && \
 
     # Change default python3 to 3.7 version
     rm /usr/bin/python3 && \
         ln -s /usr/bin/python3.7 /usr/bin/python3 && \
+    ln -s /usr/lib/python3/dist-packages/gi/_gi.cpython-{36m,37m}-x86_64-linux-gnu.so && \
+    apt-get install python3-apt --reinstall && \
     cd /usr/lib/python3/dist-packages/ && \
     cp apt_pkg.cpython-36m-x86_64-linux-gnu.so apt_pkg.so && \
 
@@ -97,6 +105,10 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         wheel \
         && \
     $PIP_INSTALL \
+        llvmlite \
+        pythran \
+        pybind11 \
+        Cython \
         numpy \
         scipy \
         pandas==0.25.3 \
@@ -104,7 +116,6 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         scikit-learn \
         matplotlib \
         seaborn \
-        Cython \
         && \
 
 # ==================================================================
@@ -138,10 +149,8 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 
     $PIP_INSTALL \
         torchlibrosa \
-        efficientnet_pytorch \
         pytorch-lightning==1.4.4 \
         pytorch-pfn-extras \
-        pytorch-tabnet \
         torch_optimizer \
         torchinfo \
         && \
@@ -150,96 +159,96 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 # Tensorflow
 # ------------------------------------------------------------------
 
-    $PIP_INSTALL \
+    pip3 install \
         h5py \
-        tensorflow==2.4.0 \
+        tensorflow==2.5.0 \
         tensorflow-determinism \
         tensorflow-addons \
-        tensorboard==2.4.1 \
+        tensorboard==2.5.0 \
         && \
 
 # ==================================================================
 # OpenCV
 # ------------------------------------------------------------------
 
-    # apt-get install -y \
-    #     build-essential \
-    #     cmake && \
-    # $GIT_CLONE --branch 4.4.0 https://github.com/opencv/opencv ~/opencv && \
-    # mkdir -p ~/opencv/build && cd ~/opencv/build && \
-    # wget -O opencv_contrib.zip https://github.com/opencv/opencv_contrib/archive/refs/tags/4.4.0.zip && \
-    # unzip opencv_contrib.zip && \
-    # cmake -D CMAKE_BUILD_TYPE=RELEASE \
-    #       -D CMAKE_INSTALL_PREFIX=/usr/local \
-    #       -D OPENCV_EXTRA_MODULES_PATH=~/opencv/build/opencv_contrib-4.4.0/modules \
-    #       -D WITH_IPP=OFF \
-    #       -D WITH_CUDA=ON \
-    #       -D OPENCV_DNN_CUDA=ON \
-    #       -D WITH_OPENCL=OFF \
-    #       -D BUILD_TESTS=OFF \
-    #       -D BUILD_PERF_TESTS=OFF \
-    #       -D BUILD_opencv_python3=ON \
-    #       -D PYTHON_DEFAULT_EXECUTABLE=/usr/bin/python \
-    #       -D PYTHON3_NUMPY_INCLUDE_DIRS=/usr/local/lib/python3.7/dist-packages/numpy/core/include \
-    #       -D PYTHON3_LIBRARIES=/usr/lib/python3.7/config-3.7m-x86_64-linux-gnu/libpython3.7.so \
-    #       -D PYTHON3_INCLUDE_DIR=/usr/include/python3.7 \
-    #       -D PYTHON3_EXECUTABLE=/usr/bin/python3.7 \
-    #       -D PYTHON3_PACKAGES_PATH=/usr/local/lib/python3.7/dist-packages \
-    #       .. && \
-    # make -j"$(nproc)" install && \
-    # python3.7 -c "import cv2; print(cv2.__version__)" && \
-    # ln -s /usr/local/include/opencv4/opencv2 /usr/local/include/opencv2 && \
+    apt-get install -y \
+        build-essential \
+        cmake && \
+    $GIT_CLONE --branch 4.4.0 https://github.com/opencv/opencv ~/opencv && \
+    mkdir -p ~/opencv/build && cd ~/opencv/build && \
+    wget -O opencv_contrib.zip https://github.com/opencv/opencv_contrib/archive/refs/tags/4.4.0.zip && \
+    unzip opencv_contrib.zip && \
+    cmake -D CMAKE_BUILD_TYPE=RELEASE \
+          -D CMAKE_INSTALL_PREFIX=/usr/local \
+          -D OPENCV_EXTRA_MODULES_PATH=~/opencv/build/opencv_contrib-4.4.0/modules \
+          -D WITH_IPP=OFF \
+          -D WITH_CUDA=ON \
+          -D OPENCV_DNN_CUDA=ON \
+          -D WITH_OPENCL=OFF \
+          -D BUILD_TESTS=OFF \
+          -D BUILD_PERF_TESTS=OFF \
+          -D BUILD_opencv_python3=ON \
+          -D PYTHON_DEFAULT_EXECUTABLE=/usr/bin/python \
+          -D PYTHON3_NUMPY_INCLUDE_DIRS=/usr/local/lib/python3.7/dist-packages/numpy/core/include \
+          -D PYTHON3_LIBRARIES=/usr/lib/python3.7/config-3.7m-x86_64-linux-gnu/libpython3.7.so \
+          -D PYTHON3_INCLUDE_DIR=/usr/include/python3.7 \
+          -D PYTHON3_EXECUTABLE=/usr/bin/python3.7 \
+          -D PYTHON3_PACKAGES_PATH=/usr/local/lib/python3.7/dist-packages \
+          .. && \
+    make -j"$(nproc)" install && \
+    python3 -c "import cv2; print(cv2.__version__)" && \
+    ln -s /usr/local/include/opencv4/opencv2 /usr/local/include/opencv2 && \
 
 # ==================================================================
 # Xgboost & LightGBM
 # ------------------------------------------------------------------
 
     # Upgrade CMake
-    # apt-get remove -y --purge --auto-remove cmake && \
-    # mkdir /opt/cmake && \
-    # cd /opt/cmake && \
-    # wget https://github.com/Kitware/CMake/releases/download/v3.18.6/cmake-3.18.6-Linux-x86_64.sh && \
-    # sh ./cmake-3.18.6-Linux-x86_64.sh --prefix=/opt/cmake --skip-license && \
-    # ln -s /opt/cmake/bin/cmake /usr/local/bin/cmake && \
-    # ln -s /opt/cmake/bin/cmake /usr/bin/cmake && \
-    # cmake --version && \
+    apt-get remove -y --purge --auto-remove cmake && \
+    mkdir /opt/cmake && \
+    cd /opt/cmake && \
+    wget https://github.com/Kitware/CMake/releases/download/v3.18.6/cmake-3.18.6-Linux-x86_64.sh && \
+    sh ./cmake-3.18.6-Linux-x86_64.sh --prefix=/opt/cmake --skip-license && \
+    ln -s /opt/cmake/bin/cmake /usr/local/bin/cmake && \
+    ln -s /opt/cmake/bin/cmake /usr/bin/cmake && \
+    cmake --version && \
 
-    # DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
-    #     nvidia-opencl-dev opencl-headers \
-    #     libboost-dev \
-    #     libboost-system-dev \
-    #     libboost-filesystem-dev \
-    #     libsndfile1 && \
-    # mkdir -p /etc/OpenCL/vendors && echo "libnvidia-opencl.so.1" > /etc/OpenCL/vendors/nvidia.icd && \
+    DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
+        nvidia-opencl-dev opencl-headers \
+        libboost-dev \
+        libboost-system-dev \
+        libboost-filesystem-dev \
+        libsndfile1 && \
+    mkdir -p /etc/OpenCL/vendors && echo "libnvidia-opencl.so.1" > /etc/OpenCL/vendors/nvidia.icd && \
 
     # Xgboost
-    # $GIT_CLONE --branch v1.3.3 --recursive https://github.com/dmlc/xgboost ~/xgboost && \
-    # cd ~/xgboost && \
-    # mkdir build && \
-    # cd build && \
-    # cmake .. -DUSE_CUDA=ON \
-    #     -DCMAKE_CUDA_COMPILER:PATH=/usr/local/cuda-11.1/bin/nvcc && \
-    # make -j$(nproc) && \
-    # cd .. && \
-    # cd python-package/ && \
-    # python3.7 setup.py install --use-cuda --use-nccl && \
-    # python3.7 -c "import xgboost as xgb; print(xgb.__version__)" && \
-    # cd .. && \
+    $GIT_CLONE --branch v1.3.3 --recursive https://github.com/dmlc/xgboost ~/xgboost && \
+    cd ~/xgboost && \
+    mkdir build && \
+    cd build && \
+    cmake .. -DUSE_CUDA=ON \
+        -DCMAKE_CUDA_COMPILER:PATH=/usr/local/cuda-11.1/bin/nvcc && \
+    make -j$(nproc) && \
+    cd .. && \
+    cd python-package/ && \
+    python3 setup.py install --use-cuda --use-nccl && \
+    python3 -c "import xgboost as xgb; print(xgb.__version__)" && \
+    cd .. && \
 
     # LightGBM
-    # $GIT_CLONE --branch v3.2.1 --recursive https://github.com/Microsoft/LightGBM ~/LightGBM && \
-    # cd ~/LightGBM && \
-    # mkdir build && \
-    # cd build && \
-    # cmake -DUSE_GPU=1 \
-    #     -DOpenCL_LIBRARY=/usr/local/cuda/lib64/libOpenCL.so \
-    #     -DOpenCL_INCLUDE_DIR=/usr/local/cuda/include/ .. && \
-    # make -j$(nproc) && \
-    # cd .. && \
-    # cd python-package/ && \
-    # python3.7 setup.py install --precompile && \
-    # python3.7 -c "import lightgbm as lgb; print(lgb.__version__)" && \
-    # cd .. && \
+    $GIT_CLONE --branch v3.2.1 --recursive https://github.com/Microsoft/LightGBM ~/LightGBM && \
+    cd ~/LightGBM && \
+    mkdir build && \
+    cd build && \
+    cmake -DUSE_GPU=1 \
+        -DOpenCL_LIBRARY=/usr/local/cuda/lib64/libOpenCL.so \
+        -DOpenCL_INCLUDE_DIR=/usr/local/cuda/include/ .. && \
+    make -j$(nproc) && \
+    cd .. && \
+    cd python-package/ && \
+    python3 setup.py install --precompile && \
+    python3 -c "import lightgbm as lgb; print(lgb.__version__)" && \
+    cd .. && \
 
 # ==================================================================
 # Darknet (YOLOv3, YOLOv4)
@@ -261,36 +270,25 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 
     $PIP_INSTALL \
         timm \
-        effdet \
-        geffnet \
         omegaconf \
         ensemble-boxes \
         pycocotools \
-        'scikit-optimize[plots]' \
         featuretools \
         yellowbrick \
         imgaug \
         plotly \
         shap \
         albumentations \
-        git+https://github.com/zhanghang1989/ResNeSt \
-        git+https://github.com/dreamquark-ai/tabnet.git \
-        git+https://github.com/timeseriesAI/tsai.git \
         transformers \
         nltk \
         spacy \
-        scispacy \
         umap-learn \
         scikit-image \
         iterative-stratification \
         optuna \
-        torchinfo \
         statsmodels==0.12.0 \
         tsfresh \
         && \
-
-    # To avoid AttributeError: module 'typing' has no attribute '_ClassVar'
-    # pip uninstall -y dataclasses && \
 
 # ==================================================================
 # Config & Cleanup
