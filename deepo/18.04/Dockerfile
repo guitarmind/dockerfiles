@@ -61,7 +61,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     rm /usr/bin/python3 && \
         ln -s /usr/bin/python3.7 /usr/bin/python3 && \
     ln -s /usr/lib/python3/dist-packages/gi/_gi.cpython-{36m,37m}-x86_64-linux-gnu.so && \
-    apt-get install python3-apt --reinstall && \
+    apt-get install -y python3-apt --reinstall && \
     cd /usr/lib/python3/dist-packages/ && \
     cp apt_pkg.cpython-36m-x86_64-linux-gnu.so apt_pkg.so && \
 
@@ -75,7 +75,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     apt install ./nvidia-machine-learning-repo-ubuntu1804_1.0.0-1_amd64.deb && \
     apt-get update && \
     wget https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/libnvinfer7_7.2.3-1+cuda11.1_amd64.deb && \
-    apt install ./libnvinfer7_7.2.3-1+cuda11.1_amd64.deb && \
+    apt install -y ./libnvinfer7_7.2.3-1+cuda11.1_amd64.deb && \
     apt-get update && \
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
         libnvinfer7=$TENSORRT_VERSION \
@@ -96,6 +96,8 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     wget -O ~/get-pip.py \
         https://bootstrap.pypa.io/pip/2.7/get-pip.py && \
     python ~/get-pip.py && \
+    python -m pip install --upgrade pip && \
+    python3.7 -m pip install --upgrade pip && \
     $PIP_INSTALL \
         pip \
         setuptools \
@@ -117,7 +119,6 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         matplotlib \
         seaborn \
         && \
-    python3.7 -m pip install --upgrade pip && \
 
 # ==================================================================
 # Jupyter Notebook
