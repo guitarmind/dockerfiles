@@ -55,6 +55,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         libjpeg-dev \
         zlib1g-dev \
         libffi-dev \
+        python3-gi \
         && \
 
     # Change default python3 to 3.7 version
