@@ -65,7 +65,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     cd /usr/lib/python3/dist-packages/ && \
     cp apt_pkg.cpython-36m-x86_64-linux-gnu.so apt_pkg.so && \
     cd /usr/lib/python3/dist-packages/gi && \
-    ln -s _gi.cpython-{36m,37m}-x86_64-linux-gnu.so && \
+    ln -s _gi.cpython-36m-x86_64-linux-gnu.so _gi.cpython-37m-x86_64-linux-gnu.so && \
 
 # ==================================================================
 # CUDA Packages & Tools
@@ -73,6 +73,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 
     # TensorRT
     # Based on https://www.tensorflow.org/install/gpu#install_cuda_with_apt
+    cd /root/ &&
     wget http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/nvidia-machine-learning-repo-ubuntu1804_1.0.0-1_amd64.deb && \
     apt install ./nvidia-machine-learning-repo-ubuntu1804_1.0.0-1_amd64.deb && \
     apt-get update && \
