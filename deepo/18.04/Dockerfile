@@ -73,7 +73,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 
     # TensorRT
     # Based on https://www.tensorflow.org/install/gpu#install_cuda_with_apt
-    cd /root/ &&
+    cd /root/ && \
     wget http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/nvidia-machine-learning-repo-ubuntu1804_1.0.0-1_amd64.deb && \
     apt install ./nvidia-machine-learning-repo-ubuntu1804_1.0.0-1_amd64.deb && \
     apt-get update && \
