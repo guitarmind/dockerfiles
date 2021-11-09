@@ -169,6 +169,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         tensorflow-determinism \
         tensorflow-addons \
         tensorboard==2.5.0 \
+        && \
         python3 -c "import tensorflow as tf; print(tf.__version__)" \
         && \
 
