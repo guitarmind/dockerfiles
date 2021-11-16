@@ -165,10 +165,10 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 
     $PIP_INSTALL \
         h5py \
-        tensorflow==2.5.0 \
+        tensorflow==2.4.0 \
         tensorflow-determinism \
         tensorflow-addons \
-        tensorboard==2.5.0 \
+        tensorboard \
         && \
         python3 -c "import tensorflow as tf; print(tf.__version__)" \
         && \
