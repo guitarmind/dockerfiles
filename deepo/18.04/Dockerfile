@@ -172,6 +172,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         && \
         python3 -c "import tensorflow as tf; print(tf.__version__)" \
         && \
+    ln -s /usr/local/cuda-11.1/targets/x86_64-linux/lib/libcusolver.so.11 /usr/local/cuda-11.1/targets/x86_64-linux/lib/libcusolver.so.10 && \
 
 # ==================================================================
 # OpenCV
