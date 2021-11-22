@@ -140,7 +140,9 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     jupyter nbextension enable code_prettify/code_prettify && \
     jupyter nbextension enable collapsible_headings/main && \
     jupyter nbextension enable toggle_all_line_numbers/main && \
-    jupyterlab && \
+
+    python3.7 -m pip --no-cache-dir install --default-timeout=100 --no-deps \
+        jupyterlab && \
 
 # ==================================================================
 # Pytorch
