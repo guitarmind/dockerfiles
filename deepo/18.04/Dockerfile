@@ -141,7 +141,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     jupyter nbextension enable collapsible_headings/main && \
     jupyter nbextension enable toggle_all_line_numbers/main && \
 
-    python3.7 -m pip --no-cache-dir install --default-timeout=100 --no-deps \
+    python3.7 -m pip --no-cache-dir install --default-timeout=100 \
         jupyterlab && \
 
 # ==================================================================
