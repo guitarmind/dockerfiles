@@ -298,6 +298,9 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         optuna \
         statsmodels==0.12.0 \
         tsfresh \
+        piq \
+        dtw-python \
+        grad-cam \
         && \
 
 # ==================================================================
