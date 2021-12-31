@@ -308,7 +308,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         unbind C-b\n\
         set-option -g prefix C-a\n\
         bind-key C-a send-prefix\n\
-        " > /root/.tmux.conf
+        " > /root/.tmux.conf && \
 
 # ==================================================================
 # Config & Cleanup
