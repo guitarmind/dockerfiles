@@ -157,7 +157,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 
     $PIP_INSTALL \
         torchlibrosa \
-        pytorch-lightning==1.4.4 \
+        pytorch-lightning==1.4.8 \
         torch_optimizer \
         torchinfo \
         && \
@@ -301,7 +301,14 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         piq \
         dtw-python \
         grad-cam \
+        lpips \
         && \
+
+    echo -e "\
+        unbind C-b\n\
+        set-option -g prefix C-a\n\
+        bind-key C-a send-prefix\n\
+        " > /root/.tmux.conf
 
 # ==================================================================
 # Config & Cleanup
