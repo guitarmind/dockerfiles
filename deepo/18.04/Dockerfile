@@ -304,11 +304,16 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         lpips \
         && \
 
-    echo -e "\
-        unbind C-b\n\
-        set-option -g prefix C-a\n\
-        bind-key C-a send-prefix\n\
-        " > /root/.tmux.conf && \
+    cd /root/ && \
+    wget https://download.pytorch.org/models/alexnet-owt-7be5be79.pth && \
+    cp alexnet-owt-7be5be79.pth /root/.cache/torch/hub/checkpoints/alexnet-owt-7be5be79.pth && \
+    rm alexnet-owt-7be5be79.pth && \
+
+    echo "\
+unbind C-b\n\
+set-option -g prefix C-a\n\
+bind-key C-a send-prefix\n\
+" > /root/.tmux.conf && \
 
 # ==================================================================
 # Config & Cleanup
