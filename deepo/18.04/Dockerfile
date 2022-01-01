@@ -306,6 +306,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 
     cd /root/ && \
     wget https://download.pytorch.org/models/alexnet-owt-7be5be79.pth && \
+    mkdir -p /root/.cache/torch/hub/checkpoints $$ \
     cp alexnet-owt-7be5be79.pth /root/.cache/torch/hub/checkpoints/alexnet-owt-7be5be79.pth && \
     rm alexnet-owt-7be5be79.pth && \
 
