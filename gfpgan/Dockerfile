@@ -10,9 +10,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends --fix-missing \
     # c++
     g++ \
     # others
-    wget unzip &&
+    wget unzip git && \
 
-    git clone https://github.com/TencentARC/GFPGAN.git &&
+    git clone https://github.com/TencentARC/GFPGAN.git && \
     cd GFPGAN && \
 
     # Ninja
