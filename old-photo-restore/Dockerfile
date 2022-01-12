@@ -26,6 +26,7 @@ RUN apt update && DEBIAN_FRONTEND=noninteractive apt install \
   wget https://facevc.blob.core.windows.net/zhanbo/old_photo/pretrain/Face_Enhancement/checkpoints.zip && \
   unzip checkpoints.zip && \
   cd ../ && \
+
   cd Global/ && \
   wget https://facevc.blob.core.windows.net/zhanbo/old_photo/pretrain/Global/checkpoints.zip && \
   unzip checkpoints.zip && \
