@@ -3,8 +3,10 @@ FROM nvidia/cuda:11.1-cudnn8-devel-ubuntu20.04
 WORKDIR /workspace
 RUN apt update && DEBIAN_FRONTEND=noninteractive apt install \
   git bzip2 wget unzip python3-pip python3-dev cmake libgl1-mesa-dev python-is-python3 libgtk2.0-dev -yq && \
-  
+
   git clone https://github.com/microsoft/Bringing-Old-Photos-Back-to-Life.git && \
+  cd Bringing-Old-Photos-Back-to-Life && \
+
   cd Face_Enhancement/models/networks/ && \
   git clone https://github.com/vacancy/Synchronized-BatchNorm-PyTorch && \
   cp -rf Synchronized-BatchNorm-PyTorch/sync_batchnorm . && \
