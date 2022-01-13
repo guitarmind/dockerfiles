@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends --fix-missing \
     # c++
     g++ \
     # others
-    wget unzip git && \
+    wget unzip git vim tmux htop && \
 
     git clone https://github.com/TencentARC/GFPGAN.git && \
     cd GFPGAN && \
