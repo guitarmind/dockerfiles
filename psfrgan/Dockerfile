@@ -2,7 +2,8 @@ FROM nvidia/cuda:11.1-cudnn8-devel-ubuntu20.04
 
 WORKDIR /workspace
 
-RUN apt-get update && apt-get install -y --no-install-recommends --fix-missing \
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive \
+    apt-get install -y --no-install-recommends --fix-missing \
     # python
     python3.8 python3-pip python3-setuptools python3-dev \
     # OpenCV deps
