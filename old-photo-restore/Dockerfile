@@ -33,7 +33,7 @@ RUN apt update && DEBIAN_FRONTEND=noninteractive apt install \
   rm -f checkpoints.zip && \
   cd ../ && \
 
-  pip3 install numpy dlib && \
+  pip3 install six numpy matplotlib dlib && \
   pip3 install -r requirements.txt && \
   git clone https://github.com/NVlabs/SPADE.git && \
   cd SPADE/ && pip3 install -r requirements.txt && \

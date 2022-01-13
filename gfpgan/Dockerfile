@@ -30,6 +30,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends --fix-missing \
         -P experiments/pretrained_models && \
     wget https://github.com/TencentARC/GFPGAN/releases/download/v0.1.0/GFPGANv1.pth \
         -P experiments/pretrained_models && \
+    wget https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.1/RealESRGAN_x2plus.pth \
+        -P /usr/local/lib/python3.8/dist-packages/realesrgan/weights && \
+    wget https://github.com/xinntao/facexlib/releases/download/v0.1.0/detection_Resnet50_Final.pth \
+        -P /usr/local/lib/python3.8/dist-packages/facexlib/weights && \
 
     rm -rf /var/cache/apt/* /var/lib/apt/lists/* && \
     apt-get autoremove -y && apt-get clean && \
