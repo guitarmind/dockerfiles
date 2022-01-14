@@ -36,7 +36,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive \
         -O ./pretrain_models --folder && \
     
     rm -rf /var/cache/apt/* /var/lib/apt/lists/* && \
-    apt-get autoremove -y && apt-get clean && \
+    apt-get autoremove -y && apt-get clean
 
 CMD ["python3", "test_enhance_single_unalign.py", "--test_img_path ", \
      "./test_dir/test_hzgg.jpg", "--results_dir", "test_hzgg_results", "--gpus", "-1"]
