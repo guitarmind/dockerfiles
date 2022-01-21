@@ -6,8 +6,8 @@ ENV LANG=C.UTF-8 LC_ALL=C.UTF-8 \
     # Disabling SSL verification
     SSL_NO_VERIFY=1 \
     PYTHONDONTWRITEBYTECODE=true \
-    PATH=/usr/local/cuda-11.1/bin:$PATH \
-    LD_LIBRARY_PATH=/usr/local/cuda-11.1/lib64:$LD_LIBRARY_PATH \
+    PATH=/usr/local/cuda-11.3/bin:$PATH \
+    LD_LIBRARY_PATH=/usr/local/cuda-11.3/lib64:$LD_LIBRARY_PATH \
     TZ=Asia/Taipei
 
 EXPOSE 8888 6006 8090
@@ -175,7 +175,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         && \
         python3 -c "import tensorflow as tf; print(tf.__version__)" \
         && \
-    ln -s /usr/local/cuda-11.1/targets/x86_64-linux/lib/libcusolver.so.11 /usr/local/cuda-11.1/targets/x86_64-linux/lib/libcusolver.so.10 && \
+    ln -s /usr/local/cuda-11.3/targets/x86_64-linux/lib/libcusolver.so.11 /usr/local/cuda-11.3/targets/x86_64-linux/lib/libcusolver.so.10 && \
 
 # ==================================================================
 # OpenCV
@@ -237,7 +237,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     mkdir build && \
     cd build && \
     cmake .. -DUSE_CUDA=ON \
-        -DCMAKE_CUDA_COMPILER:PATH=/usr/local/cuda-11.1/bin/nvcc && \
+        -DCMAKE_CUDA_COMPILER:PATH=/usr/local/cuda-11.3/bin/nvcc && \
     make -j$(nproc) && \
     cd .. && \
     cd python-package/ && \
