@@ -88,6 +88,23 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     rm libnvinfer7_7.2.3-1+cuda11.1_amd64.deb && \
 
 # ==================================================================
+# rapidsai
+# ------------------------------------------------------------------
+    # Install Miniconda
+    # wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-py37_4.8.3-Linux-x86_64.sh -O ~/miniconda.sh && \
+    #     /bin/bash ~/miniconda.sh -b -p /opt/conda && \
+    #     rm ~/miniconda.sh && \
+    #     ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh && \
+    #     . /opt/conda/etc/profile.d/conda.sh && \
+    #     conda activate base && \
+    #     echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
+    #     echo "conda activate base" >> ~/.bashrc && \
+
+    # # RapidsAI for CUDA 11.1
+    # conda install -y -c rapidsai -c nvidia -c conda-forge \
+    #     -c defaults cudf=21.06 cuml=21.06 python=3.7 cudatoolkit=11.0 && \
+
+# ==================================================================
 # Essesntial Packages
 # ------------------------------------------------------------------
 
@@ -302,6 +319,8 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         dtw-python \
         grad-cam \
         lpips \
+        pyinstaller[encryption] \
+        pyarmor \
         && \
 
     cd /root/ && \
