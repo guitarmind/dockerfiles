@@ -145,6 +145,8 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 # ------------------------------------------------------------------
 
     $PIP_INSTALL \
+        jinja2==2.11.3 \
+        MarkupSafe==2.0.1 \
         yapf==0.32.0 \
         jupyter==1.0.0 \
         jupyter_contrib_nbextensions==0.5.1 \
