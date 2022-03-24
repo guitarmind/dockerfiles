@@ -145,10 +145,10 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 # ------------------------------------------------------------------
 
     $PIP_INSTALL \
-        yapf \
-        jupyter \
-        jupyter_contrib_nbextensions \
-        jupyter_nbextensions_configurator \
+        yapf==0.32.0 \
+        jupyter==1.0.0 \
+        jupyter_contrib_nbextensions==0.5.1 \
+        jupyter_nbextensions_configurator==0.4.1 \
         jedi==0.17.2 \
         parso==0.7.1 \
         nbconvert==5.6.1 \
@@ -159,7 +159,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     jupyter nbextension enable toggle_all_line_numbers/main && \
 
     python3.7 -m pip --no-cache-dir install --default-timeout=100 \
-        jupyterlab && \
+        jupyterlab==3.2.5 && \
 
 # ==================================================================
 # Pytorch
