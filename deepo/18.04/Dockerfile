@@ -56,6 +56,8 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         zlib1g-dev \
         libffi-dev \
         python3-gi \
+        nvidia-cuda-toolkit \
+        nginx \
         && \
 
     # Change default python3 to 3.7 version
@@ -138,6 +140,8 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         scikit-learn \
         matplotlib \
         seaborn \
+        flask \
+        gunicorn \
         && \
 
 # ==================================================================
