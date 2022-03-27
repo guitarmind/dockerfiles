@@ -8,16 +8,15 @@ ENV LANG=C.UTF-8 LC_ALL=C.UTF-8 \
     PYTHONDONTWRITEBYTECODE=true \
     PATH=/usr/local/cuda-11.1/bin:$PATH \
     LD_LIBRARY_PATH=/usr/local/cuda-11.1/lib64:$LD_LIBRARY_PATH \
-    TZ=Asia/Taipei
+    TZ=Asia/Taipei \
+    APT_INSTALL="apt-get install -y --no-install-recommends" \
+    PIP_INSTALL="python3 -m pip --no-cache-dir install --upgrade --default-timeout=100" \
+    GIT_CLONE="git clone --depth 10" \
+    TENSORRT_VERSION="7.2.3-1+cuda11.1"
 
 EXPOSE 8888 6006 8090
 
-RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
-    PIP_INSTALL="python3 -m pip --no-cache-dir install --upgrade --default-timeout=100" && \
-    GIT_CLONE="git clone --depth 10" && \
-    TENSORRT_VERSION="7.2.3-1+cuda11.1" && \
-
-    rm -rf /var/lib/apt/lists/* \
+RUN rm -rf /var/lib/apt/lists/* \
            /etc/apt/sources.list.d/cuda.list \
            /etc/apt/sources.list.d/nvidia-ml.list && \
 
@@ -55,8 +54,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         zlib1g-dev \
         libffi-dev \
         python3-gi \
-        nginx \
-        && \
+        nginx
 
 # ==================================================================
 # CUDA Packages & Tools
@@ -64,7 +62,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 
     # TensorRT
     # Based on https://www.tensorflow.org/install/gpu#install_cuda_with_apt
-    cd /root/ && \
+RUN cd /root/ && \
     wget http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/nvidia-machine-learning-repo-ubuntu1804_1.0.0-1_amd64.deb && \
     apt install ./nvidia-machine-learning-repo-ubuntu1804_1.0.0-1_amd64.deb && \
     apt-get update && \
@@ -76,7 +74,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         libnvinfer-dev=$TENSORRT_VERSION \
         libnvinfer-plugin7=$TENSORRT_VERSION \
         && \
-    rm libnvinfer7_7.2.3-1+cuda11.1_amd64.deb && \
+    rm libnvinfer7_7.2.3-1+cuda11.1_amd64.deb
 
 # ==================================================================
 # rapidsai
@@ -99,7 +97,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 # Essesntial Packages
 # ------------------------------------------------------------------
 
-    DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
+RUN DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
         software-properties-common \
         && \
     add-apt-repository ppa:deadsnakes/ppa -y && \
@@ -152,13 +150,13 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 
     python3 -m pip --no-cache-dir install --default-timeout=100 \
         jupyterlab-server==2.10.3 \
-        jupyterlab==3.2.5 && \
+        jupyterlab==3.2.5
 
 # ==================================================================
 # Pytorch
 # ------------------------------------------------------------------
 
-    $PIP_INSTALL \
+RUN $PIP_INSTALL \
         torch==1.9.1+cu111 \
         torchvision==0.10.1+cu111 \
         torchaudio==0.9.1 \
@@ -169,14 +167,13 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         torchlibrosa \
         pytorch-lightning==1.4.8 \
         torch_optimizer \
-        torchinfo \
-        && \
+        torchinfo
 
 # ==================================================================
 # Tensorflow
 # ------------------------------------------------------------------
 
-    $PIP_INSTALL \
+RUN $PIP_INSTALL \
         h5py \
         tensorflow==2.4.0 \
         tensorflow-determinism \
@@ -185,13 +182,13 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         && \
         python -c "import tensorflow as tf; print(tf.__version__)" \
         && \
-    ln -s /usr/local/cuda-11.1/targets/x86_64-linux/lib/libcusolver.so.11 /usr/local/cuda-11.1/targets/x86_64-linux/lib/libcusolver.so.10 && \
+    ln -s /usr/local/cuda-11.1/targets/x86_64-linux/lib/libcusolver.so.11 /usr/local/cuda-11.1/targets/x86_64-linux/lib/libcusolver.so.10
 
 # ==================================================================
 # OpenCV
 # ------------------------------------------------------------------
 
-    apt-get install -y \
+RUN apt-get install -y \
         build-essential \
         cmake && \
     $GIT_CLONE --branch 4.4.0 https://github.com/opencv/opencv ~/opencv && \
@@ -217,14 +214,14 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
           .. && \
     make -j"$(nproc)" install && \
     python3 -c "import cv2; print(cv2.__version__)" && \
-    ln -s /usr/local/include/opencv4/opencv2 /usr/local/include/opencv2 && \
+    ln -s /usr/local/include/opencv4/opencv2 /usr/local/include/opencv2
 
 # ==================================================================
 # Xgboost & LightGBM
 # ------------------------------------------------------------------
 
     # Upgrade CMake
-    apt-get remove -y --purge --auto-remove cmake && \
+RUN apt-get remove -y --purge --auto-remove cmake && \
     mkdir /opt/cmake && \
     cd /opt/cmake && \
     wget https://github.com/Kitware/CMake/releases/download/v3.18.6/cmake-3.18.6-Linux-x86_64.sh && \
@@ -268,7 +265,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     cd python-package/ && \
     python3 setup.py install --precompile && \
     python3 -c "import lightgbm as lgb; print(lgb.__version__)" && \
-    cd .. && \
+    cd ..
 
 # ==================================================================
 # Darknet (YOLOv3, YOLOv4)
@@ -288,7 +285,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 # MISC.
 # ------------------------------------------------------------------
 
-    $PIP_INSTALL \
+RUN $PIP_INSTALL \
         timm \
         omegaconf \
         ensemble-boxes \
@@ -313,10 +310,9 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         grad-cam \
         lpips \
         pyinstaller[encryption] \
-        pyarmor \
-        && \
+        pyarmor
 
-    cd /root/ && \
+RUN cd /root/ && \
     wget https://download.pytorch.org/models/alexnet-owt-7be5be79.pth && \
     mkdir -p /root/.cache/torch/hub/checkpoints && \
     cp alexnet-owt-7be5be79.pth /root/.cache/torch/hub/checkpoints/ && \
