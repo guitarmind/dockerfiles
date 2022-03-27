@@ -64,19 +64,19 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 
     # TensorRT
     # Based on https://www.tensorflow.org/install/gpu#install_cuda_with_apt
-    cd /root/ && \
-    wget http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/nvidia-machine-learning-repo-ubuntu1804_1.0.0-1_amd64.deb && \
-    apt install ./nvidia-machine-learning-repo-ubuntu1804_1.0.0-1_amd64.deb && \
-    apt-get update && \
-    wget https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/libnvinfer7_7.2.3-1+cuda11.1_amd64.deb && \
-    apt install -y ./libnvinfer7_7.2.3-1+cuda11.1_amd64.deb && \
-    apt-get update && \
-    DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
-        libnvinfer7=$TENSORRT_VERSION \
-        libnvinfer-dev=$TENSORRT_VERSION \
-        libnvinfer-plugin7=$TENSORRT_VERSION \
-        && \
-    rm libnvinfer7_7.2.3-1+cuda11.1_amd64.deb && \
+    # cd /root/ && \
+    # wget http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/nvidia-machine-learning-repo-ubuntu1804_1.0.0-1_amd64.deb && \
+    # apt install ./nvidia-machine-learning-repo-ubuntu1804_1.0.0-1_amd64.deb && \
+    # apt-get update && \
+    # wget https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/libnvinfer7_7.2.3-1+cuda11.1_amd64.deb && \
+    # apt install -y ./libnvinfer7_7.2.3-1+cuda11.1_amd64.deb && \
+    # apt-get update && \
+    # DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
+    #     libnvinfer7=$TENSORRT_VERSION \
+    #     libnvinfer-dev=$TENSORRT_VERSION \
+    #     libnvinfer-plugin7=$TENSORRT_VERSION \
+    #     && \
+    # rm libnvinfer7_7.2.3-1+cuda11.1_amd64.deb && \
 
 # ==================================================================
 # Essesntial Packages
@@ -107,6 +107,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         cloudpickle \
         scikit-learn \
         matplotlib \
+        opencv-python==4.4.0.46 \
         seaborn \
         flask \
         gunicorn \
@@ -169,38 +170,6 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         python3 -c "import tensorflow as tf; print(tf.__version__)" \
         && \
     ln -s /usr/local/cuda-11.1/targets/x86_64-linux/lib/libcusolver.so.11 /usr/local/cuda-11.1/targets/x86_64-linux/lib/libcusolver.so.10 && \
-
-# ==================================================================
-# OpenCV
-# ------------------------------------------------------------------
-
-    apt-get install -y \
-        build-essential \
-        cmake && \
-    $GIT_CLONE --branch 4.4.0 https://github.com/opencv/opencv ~/opencv && \
-    mkdir -p ~/opencv/build && cd ~/opencv/build && \
-    wget -O opencv_contrib.zip https://github.com/opencv/opencv_contrib/archive/refs/tags/4.4.0.zip && \
-    unzip opencv_contrib.zip && \
-    cmake -D CMAKE_BUILD_TYPE=RELEASE \
-          -D CMAKE_INSTALL_PREFIX=/usr/local \
-          -D OPENCV_EXTRA_MODULES_PATH=~/opencv/build/opencv_contrib-4.4.0/modules \
-          -D WITH_IPP=OFF \
-          -D WITH_CUDA=OFF \
-          -D OPENCV_DNN_CUDA=OFF \
-          -D WITH_OPENCL=OFF \
-          -D BUILD_TESTS=OFF \
-          -D BUILD_PERF_TESTS=OFF \
-          -D BUILD_opencv_python3=ON \
-          -D PYTHON_DEFAULT_EXECUTABLE=/usr/bin/python \
-          -D PYTHON3_NUMPY_INCLUDE_DIRS=/usr/local/lib/python/dist-packages/numpy/core/include \
-          -D PYTHON3_LIBRARIES=/usr/lib/python/config-3.8m-x86_64-linux-gnu/libpython.so \
-          -D PYTHON3_INCLUDE_DIR=/usr/include/python \
-          -D PYTHON3_EXECUTABLE=/usr/bin/python \
-          -D PYTHON3_PACKAGES_PATH=/usr/local/lib/python/dist-packages \
-          .. && \
-    make -j"$(nproc)" install && \
-    python3 -c "import cv2; print(cv2.__version__)" && \
-    ln -s /usr/local/include/opencv4/opencv2 /usr/local/include/opencv2 && \
 
 # ==================================================================
 # MISC.
