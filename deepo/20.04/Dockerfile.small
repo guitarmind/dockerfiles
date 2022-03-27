@@ -59,26 +59,6 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         && \
 
 # ==================================================================
-# CUDA Packages & Tools
-# ------------------------------------------------------------------
-
-    # TensorRT
-    # Based on https://www.tensorflow.org/install/gpu#install_cuda_with_apt
-    # cd /root/ && \
-    # wget http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/nvidia-machine-learning-repo-ubuntu1804_1.0.0-1_amd64.deb && \
-    # apt install ./nvidia-machine-learning-repo-ubuntu1804_1.0.0-1_amd64.deb && \
-    # apt-get update && \
-    # wget https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/libnvinfer7_7.2.3-1+cuda11.1_amd64.deb && \
-    # apt install -y ./libnvinfer7_7.2.3-1+cuda11.1_amd64.deb && \
-    # apt-get update && \
-    # DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
-    #     libnvinfer7=$TENSORRT_VERSION \
-    #     libnvinfer-dev=$TENSORRT_VERSION \
-    #     libnvinfer-plugin7=$TENSORRT_VERSION \
-    #     && \
-    # rm libnvinfer7_7.2.3-1+cuda11.1_amd64.deb && \
-
-# ==================================================================
 # Essesntial Packages
 # ------------------------------------------------------------------
 
@@ -107,7 +87,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         cloudpickle \
         scikit-learn \
         matplotlib \
-        opencv-python-headless==4.4.0.46 \
+        opencv-contrib-python-headless==4.4.0.46 \
         seaborn \
         flask \
         gunicorn \
@@ -148,6 +128,8 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         torchvision==0.10.1+cu111 \
         torchaudio==0.9.1 \
         -f https://download.pytorch.org/whl/torch_stable.html \
+        && \
+    python3 -c "import torch; print(f'CUDA available: {torch.cuda.is_available()}')" \
         && \
 
     $PIP_INSTALL \
