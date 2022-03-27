@@ -28,7 +28,6 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 # ------------------------------------------------------------------
 
     DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
-        # build-essential \
         apt-utils \
         ca-certificates \
         cmake \
@@ -49,20 +48,19 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         python3-venv \
         python3-setuptools \
         python3-pybind11 \
-        # libblas-dev \
-        # liblapack-dev \
-        # libjpeg-dev \
-        # zlib1g-dev \
-        # libffi-dev \
+        libblas-dev \
+        liblapack-dev \
+        libjpeg-dev \
+        zlib1g-dev \
+        libffi-dev \
         python3-gi \
-        nginx \
-        && \
+        nginx
 
 # ==================================================================
 # Essesntial Packages
 # ------------------------------------------------------------------
 
-    DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
+RUN DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
         software-properties-common \
         && \
     add-apt-repository ppa:deadsnakes/ppa -y && \
@@ -117,13 +115,13 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 
     python3 -m pip --no-cache-dir install --default-timeout=100 \
         jupyterlab-server==2.10.3 \
-        jupyterlab==3.2.5 && \
+        jupyterlab==3.2.5
 
 # ==================================================================
 # Pytorch
 # ------------------------------------------------------------------
 
-    $PIP_INSTALL \
+RUN $PIP_INSTALL \
         torch==1.9.1+cu111 \
         torchvision==0.10.1+cu111 \
         torchaudio==0.9.1 \
@@ -136,14 +134,13 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         torchlibrosa \
         pytorch-lightning==1.4.8 \
         torch_optimizer \
-        torchinfo \
-        && \
+        torchinfo
 
 # ==================================================================
 # Tensorflow
 # ------------------------------------------------------------------
 
-    $PIP_INSTALL \
+RUN $PIP_INSTALL \
         h5py \
         tensorflow==2.5.3 \
         tensorflow-determinism \
@@ -152,13 +149,13 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         && \
         python3 -c "import tensorflow as tf; print(tf.__version__)" \
         && \
-    ln -s /usr/local/cuda-11.1/targets/x86_64-linux/lib/libcusolver.so.11 /usr/local/cuda-11.1/targets/x86_64-linux/lib/libcusolver.so.10 && \
+    ln -s /usr/local/cuda-11.1/targets/x86_64-linux/lib/libcusolver.so.11 /usr/local/cuda-11.1/targets/x86_64-linux/lib/libcusolver.so.10
 
 # ==================================================================
 # MISC.
 # ------------------------------------------------------------------
 
-    $PIP_INSTALL \
+RUN $PIP_INSTALL \
         timm \
         yellowbrick \
         plotly \
@@ -173,10 +170,9 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         grad-cam \
         lpips \
         pyinstaller[encryption] \
-        pyarmor \
-        && \
+        pyarmor
 
-    cd /root/ && \
+RUN cd /root/ && \
     wget https://download.pytorch.org/models/alexnet-owt-7be5be79.pth && \
     mkdir -p /root/.cache/torch/hub/checkpoints && \
     cp alexnet-owt-7be5be79.pth /root/.cache/torch/hub/checkpoints/ && \
