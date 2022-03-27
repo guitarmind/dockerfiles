@@ -8,16 +8,15 @@ ENV LANG=C.UTF-8 LC_ALL=C.UTF-8 \
     PYTHONDONTWRITEBYTECODE=true \
     PATH=/usr/local/cuda-11.1/bin:$PATH \
     LD_LIBRARY_PATH=/usr/local/cuda-11.1/lib64:$LD_LIBRARY_PATH \
-    TZ=Asia/Taipei
+    TZ=Asia/Taipei \
+    APT_INSTALL="apt-get install -y --no-install-recommends" \
+    PIP_INSTALL="python3 -m pip --no-cache-dir install --upgrade --default-timeout=100" \
+    GIT_CLONE="git clone --depth 10" \
+    TENSORRT_VERSION="7.2.3-1+cuda11.1"
 
 EXPOSE 8888 6006 8090
 
-RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
-    PIP_INSTALL="python3 -m pip --no-cache-dir install --upgrade --default-timeout=100" && \
-    GIT_CLONE="git clone --depth 10" && \
-    TENSORRT_VERSION="7.2.3-1+cuda11.1" && \
-
-    rm -rf /var/lib/apt/lists/* \
+RUN rm -rf /var/lib/apt/lists/* \
            /etc/apt/sources.list.d/cuda.list \
            /etc/apt/sources.list.d/nvidia-ml.list && \
 
