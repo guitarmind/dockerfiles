@@ -207,12 +207,12 @@ RUN apt-get install -y \
           -D BUILD_TESTS=OFF \
           -D BUILD_PERF_TESTS=OFF \
           -D BUILD_opencv_python3=ON \
-          -D PYTHON_DEFAULT_EXECUTABLE=/usr/bin/python \
-          -D PYTHON3_NUMPY_INCLUDE_DIRS=/usr/local/lib/python/dist-packages/numpy/core/include \
-          -D PYTHON3_LIBRARIES=/usr/lib/python/config-3.8m-x86_64-linux-gnu/libpython.so \
-          -D PYTHON3_INCLUDE_DIR=/usr/include/python \
-          -D PYTHON3_EXECUTABLE=/usr/bin/python \
-          -D PYTHON3_PACKAGES_PATH=/usr/local/lib/python/dist-packages \
+          -D PYTHON_DEFAULT_EXECUTABLE=/usr/bin/python3 \
+          -D PYTHON3_NUMPY_INCLUDE_DIRS=/usr/local/lib/python3.8/dist-packages/numpy/core/include \
+          -D PYTHON3_LIBRARIES=/usr/lib/python3.8/config-3.8-x86_64-linux-gnu/libpython3.8.so \
+          -D PYTHON3_INCLUDE_DIR=/usr/include/python3.8 \
+          -D PYTHON3_EXECUTABLE=/usr/bin/python3 \
+          -D PYTHON3_PACKAGES_PATH=/usr/local/lib/python3.8/dist-packages \
           .. && \
     make -j"$(nproc)" install && \
     python3 -c "import cv2; print(cv2.__version__)" && \
