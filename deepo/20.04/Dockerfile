@@ -162,10 +162,12 @@ RUN $PIP_INSTALL \
         torchaudio==0.9.1 \
         -f https://download.pytorch.org/whl/torch_stable.html \
         && \
+    python3 -c "import torch; print(f'CUDA available: {torch.cuda.is_available()}')" \
+        && \
 
     $PIP_INSTALL \
         torchlibrosa \
-        pytorch-lightning==1.4.8 \
+        pytorch-lightning==1.4.9 \
         torch_optimizer \
         torchinfo
 
@@ -180,7 +182,7 @@ RUN $PIP_INSTALL \
         tensorflow-addons \
         tensorboard \
         && \
-        python -c "import tensorflow as tf; print(tf.__version__)" \
+        python3 -c "import tensorflow as tf; print(tf.__version__)" \
         && \
     ln -s /usr/local/cuda-11.1/targets/x86_64-linux/lib/libcusolver.so.11 /usr/local/cuda-11.1/targets/x86_64-linux/lib/libcusolver.so.10
 
