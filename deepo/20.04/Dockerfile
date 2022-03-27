@@ -341,7 +341,7 @@ bind-key C-a send-prefix\n\
     find /usr/local/lib/python3.*/ -name 'tests' -exec rm -r '{}' + && \
     find /usr/local/lib/python3.*/dist-packages/ -name '*.so' -print -exec sh -c 'file "{}" | grep -q "not stripped" && strip -s "{}"' \; && \
 
-    apt-get remove -y build-essential cmake && \
+    apt-get remove -y cmake && \
     rm -rf /opt/cmake /usr/local/bin/cmake /usr/bin/cmake && \
     apt-get clean -y && \
     apt-get autoremove -y && \
