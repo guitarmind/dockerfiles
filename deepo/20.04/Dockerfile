@@ -13,7 +13,7 @@ ENV LANG=C.UTF-8 LC_ALL=C.UTF-8 \
 EXPOSE 8888 6006 8090
 
 RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
-    PIP_INSTALL="python -m pip --no-cache-dir install --upgrade --default-timeout=100" && \
+    PIP_INSTALL="python3 -m pip --no-cache-dir install --upgrade --default-timeout=100" && \
     GIT_CLONE="git clone --depth 10" && \
     TENSORRT_VERSION="7.2.3-1+cuda11.1" && \
 
@@ -45,10 +45,10 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         tmux \
         unzip \
         python3-pip \
-        python-dev \
+        python3-dev \
         python3-venv \
         python3-setuptools \
-        python-pybind11 \
+        python3-pybind11 \
         libblas-dev \
         liblapack-dev \
         libjpeg-dev \
@@ -104,7 +104,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         && \
     add-apt-repository ppa:deadsnakes/ppa -y && \
     apt-get update --fix-missing && \
-    python -m pip install --upgrade pip && \
+    python3 -m pip install --upgrade pip && \
     $PIP_INSTALL \
         pip \
         setuptools \
@@ -150,7 +150,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     jupyter nbextension enable collapsible_headings/main && \
     jupyter nbextension enable toggle_all_line_numbers/main && \
 
-    python -m pip --no-cache-dir install --default-timeout=100 \
+    python3 -m pip --no-cache-dir install --default-timeout=100 \
         jupyterlab-server==2.10.3 \
         jupyterlab==3.2.5 && \
 
