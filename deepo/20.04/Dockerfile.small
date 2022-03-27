@@ -107,11 +107,12 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         cloudpickle \
         scikit-learn \
         matplotlib \
-        opencv-python==4.4.0.46 \
+        opencv-python-headless==4.4.0.46 \
         seaborn \
         flask \
         gunicorn \
         && \
+    python3 -c "import cv2; print(cv2.__version__)" && \
 
 # ==================================================================
 # Jupyter Notebook
@@ -162,7 +163,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 
     $PIP_INSTALL \
         h5py \
-        tensorflow==2.4.0 \
+        tensorflow==2.5.3 \
         tensorflow-determinism \
         tensorflow-addons \
         tensorboard \
