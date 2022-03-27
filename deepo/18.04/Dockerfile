@@ -152,6 +152,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         jinja2==2.11.3 \
         MarkupSafe==2.0.1 \
         yapf==0.32.0 \
+        ipywidgets==7.6.5 \
         jupyter==1.0.0 \
         jupyter_contrib_nbextensions==0.5.1 \
         jupyter_nbextensions_configurator==0.4.1 \
@@ -165,6 +166,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     jupyter nbextension enable toggle_all_line_numbers/main && \
 
     python3.7 -m pip --no-cache-dir install --default-timeout=100 \
+        jupyterlab-server==2.10.3 \
         jupyterlab==3.2.5 && \
 
 # ==================================================================
