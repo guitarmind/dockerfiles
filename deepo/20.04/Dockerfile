@@ -87,7 +87,13 @@ RUN cd /root/ && \
         libnvinfer-dev=$TENSORRT_VERSION \
         libnvinfer-plugin7=$TENSORRT_VERSION \
         && \
-    rm libnvinfer7_7.2.3-1+cuda11.1_amd64.deb
+    rm libnvinfer7_7.2.3-1+cuda11.1_amd64.deb && \
+
+    # Clean up
+    apt-get clean -y && \
+    apt-get autoremove -y && \
+    rm -rf /tmp/* && \
+    rm -rf /var/cache/apk/*
 
 # ==================================================================
 # rapidsai
@@ -330,7 +336,7 @@ RUN apt-get remove -y --purge --auto-remove cmake && \
     cd python-package/ && \
     python3 setup.py install --precompile && \
     python3 -c "import lightgbm as lgb; print(lgb.__version__)" && \
-    cd .. &&
+    cd .. && \
 
     # Clean up
     apt-get remove -y cmake && \
