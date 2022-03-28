@@ -54,7 +54,20 @@ RUN rm -rf /var/lib/apt/lists/* \
         zlib1g-dev \
         libffi-dev \
         python3-gi \
-        nginx
+        nginx \
+        && \
+
+    # Clean up
+    find /usr/local/lib/python3.*/ -follow -type f -name '*.a' -delete && \
+    find /usr/local/lib/python3.*/ -follow -type f -name '*.pyc' -delete && \
+    find /usr/local/lib/python3.*/ -follow -type f -name '*.js.map' -delete && \
+    find /usr/local/lib/python3.*/ -name 'tests' -exec rm -r '{}' + && \
+    find /usr/local/lib/python3.*/dist-packages/ -name '*.so' -print -exec sh -c 'file "{}" | grep -q "not stripped" && strip -s "{}"' \; && \
+
+    apt-get clean -y && \
+    apt-get autoremove -y && \
+    rm -rf /tmp/* && \
+    rm -rf /var/cache/apk/*
 
 # ==================================================================
 # CUDA Packages & Tools
@@ -150,7 +163,20 @@ RUN DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
 
     python3 -m pip --no-cache-dir install --default-timeout=100 \
         jupyterlab-server==2.10.3 \
-        jupyterlab==3.2.5
+        jupyterlab==3.2.5 \
+        && \
+
+    # Clean up
+    find /usr/local/lib/python3.*/ -follow -type f -name '*.a' -delete && \
+    find /usr/local/lib/python3.*/ -follow -type f -name '*.pyc' -delete && \
+    find /usr/local/lib/python3.*/ -follow -type f -name '*.js.map' -delete && \
+    find /usr/local/lib/python3.*/ -name 'tests' -exec rm -r '{}' + && \
+    find /usr/local/lib/python3.*/dist-packages/ -name '*.so' -print -exec sh -c 'file "{}" | grep -q "not stripped" && strip -s "{}"' \; && \
+
+    apt-get clean -y && \
+    apt-get autoremove -y && \
+    rm -rf /tmp/* && \
+    rm -rf /var/cache/apk/*
 
 # ==================================================================
 # Pytorch
@@ -169,7 +195,20 @@ RUN $PIP_INSTALL \
         torchlibrosa \
         pytorch-lightning==1.4.9 \
         torch_optimizer \
-        torchinfo
+        torchinfo \
+        && \
+
+    # Clean up
+    find /usr/local/lib/python3.*/ -follow -type f -name '*.a' -delete && \
+    find /usr/local/lib/python3.*/ -follow -type f -name '*.pyc' -delete && \
+    find /usr/local/lib/python3.*/ -follow -type f -name '*.js.map' -delete && \
+    find /usr/local/lib/python3.*/ -name 'tests' -exec rm -r '{}' + && \
+    find /usr/local/lib/python3.*/dist-packages/ -name '*.so' -print -exec sh -c 'file "{}" | grep -q "not stripped" && strip -s "{}"' \; && \
+
+    apt-get clean -y && \
+    apt-get autoremove -y && \
+    rm -rf /tmp/* && \
+    rm -rf /var/cache/apk/*
 
 # ==================================================================
 # Tensorflow
@@ -184,7 +223,19 @@ RUN $PIP_INSTALL \
         && \
         python3 -c "import tensorflow as tf; print(tf.__version__)" \
         && \
-    ln -s /usr/local/cuda-11.1/targets/x86_64-linux/lib/libcusolver.so.11 /usr/local/cuda-11.1/targets/x86_64-linux/lib/libcusolver.so.10
+    ln -s /usr/local/cuda-11.1/targets/x86_64-linux/lib/libcusolver.so.11 /usr/local/cuda-11.1/targets/x86_64-linux/lib/libcusolver.so.10 && \
+
+    # Clean up
+    find /usr/local/lib/python3.*/ -follow -type f -name '*.a' -delete && \
+    find /usr/local/lib/python3.*/ -follow -type f -name '*.pyc' -delete && \
+    find /usr/local/lib/python3.*/ -follow -type f -name '*.js.map' -delete && \
+    find /usr/local/lib/python3.*/ -name 'tests' -exec rm -r '{}' + && \
+    find /usr/local/lib/python3.*/dist-packages/ -name '*.so' -print -exec sh -c 'file "{}" | grep -q "not stripped" && strip -s "{}"' \; && \
+
+    apt-get clean -y && \
+    apt-get autoremove -y && \
+    rm -rf /tmp/* && \
+    rm -rf /var/cache/apk/*
 
 # ==================================================================
 # OpenCV
@@ -216,7 +267,19 @@ RUN apt-get install -y \
           .. && \
     make -j"$(nproc)" install && \
     python3 -c "import cv2; print(cv2.__version__)" && \
-    ln -s /usr/local/include/opencv4/opencv2 /usr/local/include/opencv2
+    ln -s /usr/local/include/opencv4/opencv2 /usr/local/include/opencv2 && \
+
+    # Clean up
+    find /usr/local/lib/python3.*/ -follow -type f -name '*.a' -delete && \
+    find /usr/local/lib/python3.*/ -follow -type f -name '*.pyc' -delete && \
+    find /usr/local/lib/python3.*/ -follow -type f -name '*.js.map' -delete && \
+    find /usr/local/lib/python3.*/ -name 'tests' -exec rm -r '{}' + && \
+    find /usr/local/lib/python3.*/dist-packages/ -name '*.so' -print -exec sh -c 'file "{}" | grep -q "not stripped" && strip -s "{}"' \; && \
+
+    apt-get clean -y && \
+    apt-get autoremove -y && \
+    rm -rf /tmp/* && \
+    rm -rf /var/cache/apk/*
 
 # ==================================================================
 # Xgboost & LightGBM
@@ -267,7 +330,22 @@ RUN apt-get remove -y --purge --auto-remove cmake && \
     cd python-package/ && \
     python3 setup.py install --precompile && \
     python3 -c "import lightgbm as lgb; print(lgb.__version__)" && \
-    cd ..
+    cd .. &&
+
+    # Clean up
+    apt-get remove -y cmake && \
+    rm -rf /opt/cmake /usr/local/bin/cmake /usr/bin/cmake && \
+
+    find /usr/local/lib/python3.*/ -follow -type f -name '*.a' -delete && \
+    find /usr/local/lib/python3.*/ -follow -type f -name '*.pyc' -delete && \
+    find /usr/local/lib/python3.*/ -follow -type f -name '*.js.map' -delete && \
+    find /usr/local/lib/python3.*/ -name 'tests' -exec rm -r '{}' + && \
+    find /usr/local/lib/python3.*/dist-packages/ -name '*.so' -print -exec sh -c 'file "{}" | grep -q "not stripped" && strip -s "{}"' \; && \
+
+    apt-get clean -y && \
+    apt-get autoremove -y && \
+    rm -rf /tmp/* && \
+    rm -rf /var/cache/apk/*
 
 # ==================================================================
 # Darknet (YOLOv3, YOLOv4)
@@ -312,7 +390,20 @@ RUN $PIP_INSTALL \
         grad-cam \
         lpips \
         pyinstaller[encryption] \
-        pyarmor
+        pyarmor \
+        && \
+
+    # Clean up
+    find /usr/local/lib/python3.*/ -follow -type f -name '*.a' -delete && \
+    find /usr/local/lib/python3.*/ -follow -type f -name '*.pyc' -delete && \
+    find /usr/local/lib/python3.*/ -follow -type f -name '*.js.map' -delete && \
+    find /usr/local/lib/python3.*/ -name 'tests' -exec rm -r '{}' + && \
+    find /usr/local/lib/python3.*/dist-packages/ -name '*.so' -print -exec sh -c 'file "{}" | grep -q "not stripped" && strip -s "{}"' \; && \
+
+    apt-get clean -y && \
+    apt-get autoremove -y && \
+    rm -rf /tmp/* && \
+    rm -rf /var/cache/apk/*
 
 RUN cd /root/ && \
     wget https://download.pytorch.org/models/alexnet-owt-7be5be79.pth && \
@@ -339,8 +430,6 @@ bind-key C-a send-prefix\n\
     find /usr/local/lib/python3.*/ -name 'tests' -exec rm -r '{}' + && \
     find /usr/local/lib/python3.*/dist-packages/ -name '*.so' -print -exec sh -c 'file "{}" | grep -q "not stripped" && strip -s "{}"' \; && \
 
-    apt-get remove -y cmake && \
-    rm -rf /opt/cmake /usr/local/bin/cmake /usr/bin/cmake && \
     apt-get clean -y && \
     apt-get autoremove -y && \
     rm -rf /tmp/* && \
