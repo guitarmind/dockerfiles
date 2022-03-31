@@ -53,7 +53,9 @@ RUN rm -rf /var/lib/apt/lists/* \
         zlib1g-dev \
         libffi-dev \
         python3-gi \
-        nginx
+        nginx \
+        python3.7 \
+        python-is-python3
 
 # ==================================================================
 # Essesntial Packages
