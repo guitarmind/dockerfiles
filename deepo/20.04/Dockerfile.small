@@ -67,7 +67,7 @@ RUN DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
     python3 -m pip install --upgrade pip && \
     $PIP_INSTALL \
         pip \
-        setuptools \
+        setuptools==50.3.2 \
         future \
         protobuf \
         psutil \
@@ -84,7 +84,7 @@ RUN DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
         cloudpickle \
         scikit-learn \
         matplotlib \
-        opencv-contrib-python-headless==4.4.0.46 \
+        opencv-contrib-python-headless==4.4.0.40 \
         seaborn \
         flask \
         gunicorn \
