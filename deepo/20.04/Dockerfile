@@ -391,6 +391,7 @@ RUN $PIP_INSTALL \
         optuna \
         statsmodels==0.12.0 \
         tsfresh \
+        pytorch_tabnet \
         piq \
         dtw-python \
         grad-cam \
