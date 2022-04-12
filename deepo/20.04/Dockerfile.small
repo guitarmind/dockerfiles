@@ -167,7 +167,8 @@ RUN $PIP_INSTALL \
         grad-cam \
         lpips \
         pyinstaller[encryption] \
-        pyarmor
+        pyarmor \
+        kornia
 
 RUN cd /root/ && \
     wget https://download.pytorch.org/models/alexnet-owt-7be5be79.pth && \
