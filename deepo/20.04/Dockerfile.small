@@ -52,6 +52,7 @@ RUN rm -rf /var/lib/apt/lists/* \
         libjpeg-dev \
         zlib1g-dev \
         libffi-dev \
+        libopenblas-dev \
         python3-gi \
         nginx
 
@@ -168,7 +169,9 @@ RUN $PIP_INSTALL \
         lpips \
         pyinstaller[encryption] \
         pyarmor \
-        kornia
+        kornia \
+        bm3d
+
 
 RUN cd /root/ && \
     wget https://download.pytorch.org/models/alexnet-owt-7be5be79.pth && \
