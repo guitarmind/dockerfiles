@@ -74,7 +74,6 @@ RUN DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
         psutil \
         wheel \
         && \
-    python3 -m pip uninstall opencv-python opencv-python-headless && \
     $PIP_INSTALL \
         llvmlite \
         pythran \
@@ -86,7 +85,7 @@ RUN DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
         cloudpickle \
         scikit-learn \
         matplotlib \
-        opencv-contrib-python-headless==4.4.0.40 \
+        opencv-contrib-python-headless==4.4.0.46 \
         seaborn \
         flask \
         gunicorn \
