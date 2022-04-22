@@ -85,7 +85,7 @@ RUN DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
         cloudpickle \
         scikit-learn \
         matplotlib \
-        opencv-contrib-python-headless==4.4.0.46 \
+        opencv-contrib-python-headless<4.3 \
         seaborn \
         flask \
         gunicorn \
