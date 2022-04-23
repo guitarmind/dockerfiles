@@ -89,7 +89,6 @@ RUN DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
         flask \
         gunicorn \
         && \
-    python3 -c "import cv2; print(cv2.__version__)" && \
 
 # ==================================================================
 # Jupyter Notebook
@@ -171,8 +170,8 @@ RUN $PIP_INSTALL \
         pyinstaller[encryption] \
         pyarmor \
         kornia \
-        bm3d
-
+        bm3d && \
+    python3 -c "import cv2; print(cv2.__version__)"
 
 RUN cd /root/ && \
     wget https://download.pytorch.org/models/alexnet-owt-7be5be79.pth && \
