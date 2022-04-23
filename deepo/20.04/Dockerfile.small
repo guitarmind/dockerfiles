@@ -85,7 +85,6 @@ RUN DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
         cloudpickle \
         scikit-learn \
         matplotlib \
-        "opencv-contrib-python-headless<4.3" \
         seaborn \
         flask \
         gunicorn \
@@ -154,6 +153,8 @@ RUN $PIP_INSTALL \
 # ------------------------------------------------------------------
 
 RUN $PIP_INSTALL \
+        "opencv-python<4.3" \
+        "opencv-python-headless<4.3" \
         timm \
         yellowbrick \
         plotly \
