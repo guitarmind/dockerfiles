@@ -53,6 +53,7 @@ RUN rm -rf /var/lib/apt/lists/* \
         libjpeg-dev \
         zlib1g-dev \
         libffi-dev \
+        libopenblas-dev \
         python3-gi \
         nginx \
         && \
@@ -144,6 +145,7 @@ RUN $PIP_INSTALL \
         && \
 
     $PIP_INSTALL \
+        torchmetrics==v0.6.0 \
         pytorch-lightning==1.4.9 \
         torch_optimizer \
         torchinfo
@@ -182,7 +184,8 @@ RUN $PIP_INSTALL \
         grad-cam \
         lpips \
         pyinstaller[encryption] \
-        pyarmor
+        pyarmor \
+        bm3d
 
 RUN cd /root/ && \
     wget https://download.pytorch.org/models/alexnet-owt-7be5be79.pth && \
