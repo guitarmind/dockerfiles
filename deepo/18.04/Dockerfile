@@ -329,6 +329,8 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         lpips \
         pyinstaller[encryption] \
         pyarmor \
+        # kornia \
+        bm3d
         && \
 
     cd /root/ && \
