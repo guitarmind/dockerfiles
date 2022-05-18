@@ -185,7 +185,9 @@ RUN $PIP_INSTALL \
         lpips \
         pyinstaller[encryption] \
         pyarmor \
-        bm3d
+        bm3d \
+        typing_extensions==4.2.0 \
+        nni
 
 RUN cd /root/ && \
     wget https://download.pytorch.org/models/alexnet-owt-7be5be79.pth && \

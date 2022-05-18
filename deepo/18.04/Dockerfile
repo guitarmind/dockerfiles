@@ -193,7 +193,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 
     $PIP_INSTALL \
         h5py \
-        tensorflow==2.4.0 \
+        tensorflow==2.5.3 \
         tensorflow-determinism \
         tensorflow-addons \
         tensorboard \
@@ -331,6 +331,8 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         pyarmor \
         # kornia \
         bm3d \
+        typing_extensions==4.2.0 \
+        nni \
         && \
 
     cd /root/ && \
