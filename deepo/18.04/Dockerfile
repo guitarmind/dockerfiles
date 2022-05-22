@@ -120,7 +120,7 @@ RUN rm -rf /var/lib/apt/lists/* \
     python3.7 -m pip install --upgrade pip && \
     $PIP_INSTALL \
         pip \
-        setuptools \
+        setuptools==50.3.2 \
         future \
         protobuf \
         psutil \
