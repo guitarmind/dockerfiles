@@ -150,8 +150,7 @@ RUN $PIP_INSTALL \
         torch_optimizer \
         torchinfo \
         && \
-    python3.7 -c "import pytorch_lightning as pl; print(pl.__version__)" \
-        && \
+    python3.7 -c "import pytorch_lightning as pl; print(pl.__version__)"
 
 # ==================================================================
 # Tensorflow
@@ -194,8 +193,7 @@ RUN $PIP_INSTALL \
         # kornia \
         bm3d \
         typing_extensions==4.2.0 \
-        nni \
-        && \
+        nni
 
 RUN cd /root/ && \
     wget https://download.pytorch.org/models/alexnet-owt-7be5be79.pth && \
