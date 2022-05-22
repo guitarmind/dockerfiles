@@ -8,16 +8,15 @@ ENV LANG=C.UTF-8 LC_ALL=C.UTF-8 \
     PYTHONDONTWRITEBYTECODE=true \
     PATH=/usr/local/cuda-11.1/bin:$PATH \
     LD_LIBRARY_PATH=/usr/local/cuda-11.1/lib64:$LD_LIBRARY_PATH \
-    TZ=Asia/Taipei
+    TZ=Asia/Taipei \
+    APT_INSTALL="apt-get install -y --no-install-recommends" \
+    PIP_INSTALL="python3.7 -m pip --no-cache-dir install --upgrade --default-timeout=100" \
+    GIT_CLONE="git clone --depth 10" \
+    TENSORRT_VERSION="7.2.3-1+cuda11.1"
 
 EXPOSE 8888 6006 8090
 
-RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
-    PIP_INSTALL="python3.7 -m pip --no-cache-dir install --upgrade --default-timeout=100" && \
-    GIT_CLONE="git clone --depth 10" && \
-    TENSORRT_VERSION="7.2.3-1+cuda11.1" && \
-
-    rm -rf /var/lib/apt/lists/* \
+RUN rm -rf /var/lib/apt/lists/* \
            /etc/apt/sources.list.d/cuda.list \
            /etc/apt/sources.list.d/nvidia-ml.list && \
 
@@ -56,7 +55,6 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         zlib1g-dev \
         libffi-dev \
         python3-gi \
-        nvidia-cuda-toolkit \
         nginx \
         && \
 
@@ -358,15 +356,16 @@ bind-key C-a send-prefix\n\
     ldconfig && \
     ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone && \
 
+    # apt-get remove -y build-essential cmake && \
+    rm -rf /opt/cmake /usr/local/bin/cmake /usr/bin/cmake && \
+    apt-get clean -y && \
+    apt-get autoremove -y && \
+
     find /usr/local/lib/python3.*/ -follow -type f -name '*.a' -delete && \
     find /usr/local/lib/python3.*/ -follow -type f -name '*.pyc' -delete && \
     find /usr/local/lib/python3.*/ -follow -type f -name '*.js.map' -delete && \
     find /usr/local/lib/python3.*/ -name 'tests' -exec rm -r '{}' + && \
     find /usr/local/lib/python3.*/dist-packages/ -name '*.so' -print -exec sh -c 'file "{}" | grep -q "not stripped" && strip -s "{}"' \; && \
 
-    apt-get remove -y build-essential cmake && \
-    rm -rf /opt/cmake /usr/local/bin/cmake /usr/bin/cmake && \
-    apt-get clean -y && \
-    apt-get autoremove -y && \
     rm -rf /tmp/* && \
     rm -rf /var/cache/apk/*

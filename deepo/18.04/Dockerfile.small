@@ -183,11 +183,16 @@ RUN $PIP_INSTALL \
         dtw-python \
         grad-cam \
         lpips \
+        && \
+
+    python3.7 -m pip --no-cache-dir install --no-deps --default-timeout=10 \
         pyinstaller[encryption] \
         pyarmor \
+        # kornia \
         bm3d \
         typing_extensions==4.2.0 \
-        nni
+        nni \
+        && \
 
 RUN cd /root/ && \
     wget https://download.pytorch.org/models/alexnet-owt-7be5be79.pth && \
