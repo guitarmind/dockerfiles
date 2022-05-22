@@ -148,7 +148,10 @@ RUN $PIP_INSTALL \
         torchmetrics==v0.6.0 \
         pytorch-lightning==1.4.9 \
         torch_optimizer \
-        torchinfo
+        torchinfo \
+        && \
+    python3.7 -c "import pytorch_lightning as pl; print(pl.__version__)" \
+        && \
 
 # ==================================================================
 # Tensorflow

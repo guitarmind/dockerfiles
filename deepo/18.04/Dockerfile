@@ -174,16 +174,18 @@ RUN rm -rf /var/lib/apt/lists/* \
     $PIP_INSTALL \
         torch==1.9.1+cu111 \
         torchvision==0.10.1+cu111 \
-        torchaudio==0.9.1 \
         -f https://download.pytorch.org/whl/torch_stable.html \
+        && \
+    python3.7 -c "import torch; print(f'CUDA available: {torch.cuda.is_available()}')" \
         && \
 
     $PIP_INSTALL \
-        torchlibrosa \
         torchmetrics==v0.6.0 \
         pytorch-lightning==1.4.9 \
         torch_optimizer \
         torchinfo \
+        && \
+    python3.7 -c "import pytorch_lightning as pl; print(pl.__version__)" \
         && \
 
 # ==================================================================
