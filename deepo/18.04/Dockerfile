@@ -182,7 +182,8 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 
     $PIP_INSTALL \
         torchlibrosa \
-        pytorch-lightning==1.4.8 \
+        torchmetrics==v0.6.0 \
+        pytorch-lightning==1.4.9 \
         torch_optimizer \
         torchinfo \
         && \
@@ -327,6 +328,9 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
         dtw-python \
         grad-cam \
         lpips \
+        && \
+
+    python3.7 -m pip --no-cache-dir install --no-deps --default-timeout=10 \
         pyinstaller[encryption] \
         pyarmor \
         # kornia \
