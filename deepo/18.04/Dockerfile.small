@@ -100,7 +100,7 @@ RUN DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
         cloudpickle \
         scikit-learn \
         matplotlib \
-        opencv-contrib-python-headless==4.4.0.40 \
+        # opencv-contrib-python-headless==4.4.0.40 \
         seaborn \
         flask \
         gunicorn \
@@ -185,9 +185,9 @@ RUN $PIP_INSTALL \
         dtw-python \
         grad-cam \
         lpips \
-        && \
+        # && \
 
-    python3.7 -m pip --no-cache-dir install --no-deps --default-timeout=10 \
+    # python3.7 -m pip --no-cache-dir install --no-deps --default-timeout=10 \
         pyinstaller[encryption] \
         pyarmor \
         # kornia \
