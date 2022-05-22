@@ -328,9 +328,9 @@ RUN rm -rf /var/lib/apt/lists/* \
         dtw-python \
         grad-cam \
         lpips \
-        && \
+        # && \
 
-    python3.7 -m pip --no-cache-dir install --no-deps --default-timeout=10 \
+    # python3.7 -m pip --no-cache-dir install --no-deps --default-timeout=10 \
         pyinstaller[encryption] \
         pyarmor \
         # kornia \
@@ -338,6 +338,7 @@ RUN rm -rf /var/lib/apt/lists/* \
         typing_extensions==4.2.0 \
         nni \
         && \
+    nnictl --version && \
 
     cd /root/ && \
     wget https://download.pytorch.org/models/alexnet-owt-7be5be79.pth && \
