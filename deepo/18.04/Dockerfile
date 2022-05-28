@@ -194,7 +194,7 @@ RUN rm -rf /var/lib/apt/lists/* \
 
     $PIP_INSTALL \
         h5py \
-        tensorflow==2.5.3 \
+        tensorflow==2.4.0 \
         tensorflow-determinism \
         tensorflow-addons \
         tensorboard \
