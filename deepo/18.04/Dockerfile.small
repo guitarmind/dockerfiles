@@ -195,7 +195,7 @@ RUN $PIP_INSTALL \
         typing_extensions==4.2.0 \
         nni \
         && \
-    python3.7 -c "import cv2; print(cv2.__version__)" &&
+    python3.7 -c "import cv2; print(cv2.__version__)" && \
     nnictl --version
 
 RUN cd /root/ && \
