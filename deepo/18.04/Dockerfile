@@ -56,6 +56,7 @@ RUN rm -rf /var/lib/apt/lists/* \
         libffi-dev \
         python3-gi \
         nginx \
+        git-lfs \
         && \
 
     # Change default python3 to 3.7 version
