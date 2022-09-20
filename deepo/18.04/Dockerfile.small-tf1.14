@@ -1,4 +1,4 @@
-FROM nvidia/cuda:11.1-cudnn8-devel-ubuntu18.04
+FROM nvidia/cuda:10.0-cudnn7-devel-ubuntu18.04
 
 ENV CUDA_HOME=/usr/local/cuda
 
@@ -6,13 +6,13 @@ ENV LANG=C.UTF-8 LC_ALL=C.UTF-8 \
     # Disabling SSL verification
     SSL_NO_VERIFY=1 \
     PYTHONDONTWRITEBYTECODE=true \
-    PATH=/usr/local/cuda-11.1/bin:$PATH \
-    LD_LIBRARY_PATH=/usr/local/cuda-11.1/lib64:$LD_LIBRARY_PATH \
+    PATH=/usr/local/cuda-10.0/bin:$PATH \
+    LD_LIBRARY_PATH=/usr/local/cuda-10.0/lib64:$LD_LIBRARY_PATH \
     TZ=Asia/Taipei \
     APT_INSTALL="apt-get install -y --no-install-recommends" \
     PIP_INSTALL="python3.7 -m pip --no-cache-dir install --upgrade --default-timeout=100" \
     GIT_CLONE="git clone --depth 10" \
-    TENSORRT_VERSION="7.2.3-1+cuda11.1"
+    TENSORRT_VERSION="7.2.3-1+cuda10.0"
 
 EXPOSE 8888 6006 8090
 
@@ -84,7 +84,7 @@ RUN DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
     python3.7 -m pip install --upgrade pip && \
     $PIP_INSTALL \
         pip \
-        setuptools==50.3.2 \
+        setuptools==59.5.0 \
         future \
         protobuf \
         psutil \
@@ -160,13 +160,10 @@ RUN $PIP_INSTALL \
         h5py \
         tensorflow==1.14.0 \
         keras==2.3.1 \
-        # tensorflow-determinism \
-        # tensorflow-addons \
+        tensorflow-addons \
         tensorboard \
         && \
-        python3.7 -c "import tensorflow as tf; print(tf.__version__)" \
-        && \
-    ln -s /usr/local/cuda-11.1/targets/x86_64-linux/lib/libcusolver.so.11 /usr/local/cuda-11.1/targets/x86_64-linux/lib/libcusolver.so.10
+        python3.7 -c "import tensorflow as tf; print(tf.__version__)"
 
 # ==================================================================
 # MISC.
