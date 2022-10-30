@@ -338,6 +338,7 @@ RUN rm -rf /var/lib/apt/lists/* \
         bm3d \
         typing_extensions==4.2.0 \
         nni \
+        anomalib \
         && \
     nnictl --version && \
 
