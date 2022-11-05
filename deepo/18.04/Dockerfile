@@ -332,7 +332,7 @@ RUN rm -rf /var/lib/apt/lists/* \
         # && \
 
     # python3.7 -m pip --no-cache-dir install --no-deps --default-timeout=10 \
-        pyinstaller[encryption] \
+        # pyinstaller[encryption] \
         pyarmor \
         # kornia \
         bm3d \
