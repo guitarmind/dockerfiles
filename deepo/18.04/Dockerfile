@@ -7,13 +7,13 @@ ENV LANG=C.UTF-8 LC_ALL=C.UTF-8 \
     # Disabling SSL verification
     SSL_NO_VERIFY=1 \
     PYTHONDONTWRITEBYTECODE=true \
-    PATH=/usr/local/cuda-11.1/bin:$PATH \
-    LD_LIBRARY_PATH=/usr/local/cuda-11.1/lib64:$LD_LIBRARY_PATH \
+    PATH=/usr/local/cuda-11.2/bin:$PATH \
+    LD_LIBRARY_PATH=/usr/local/cuda-11.2/lib64:$LD_LIBRARY_PATH \
     TZ=Asia/Taipei \
     APT_INSTALL="apt-get install -y --no-install-recommends" \
-    PIP_INSTALL="python3.7 -m pip --no-cache-dir install --upgrade --default-timeout=100" \
+    PIP_INSTALL="pip --no-cache-dir install --upgrade --default-timeout=100" \
     GIT_CLONE="git clone --depth 10" \
-    TENSORRT_VERSION="7.2.3-1+cuda11.1"
+    TENSORRT_VERSION="7.2.3-1+cuda11.2"
 
 EXPOSE 8888 6006 8090
 
@@ -75,19 +75,19 @@ RUN rm -rf /var/lib/apt/lists/* \
 
     # TensorRT
     # Based on https://www.tensorflow.org/install/gpu#install_cuda_with_apt
-    cd /root/ && \
-    wget http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/nvidia-machine-learning-repo-ubuntu1804_1.0.0-1_amd64.deb && \
-    apt install ./nvidia-machine-learning-repo-ubuntu1804_1.0.0-1_amd64.deb && \
-    apt-get update && \
-    wget https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/libnvinfer7_7.2.3-1+cuda11.1_amd64.deb && \
-    apt install -y ./libnvinfer7_7.2.3-1+cuda11.1_amd64.deb && \
-    apt-get update && \
-    DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
-        libnvinfer7=$TENSORRT_VERSION \
-        libnvinfer-dev=$TENSORRT_VERSION \
-        libnvinfer-plugin7=$TENSORRT_VERSION \
-        && \
-    rm libnvinfer7_7.2.3-1+cuda11.1_amd64.deb && \
+    # cd /root/ && \
+    # wget http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/nvidia-machine-learning-repo-ubuntu1804_1.0.0-1_amd64.deb && \
+    # apt install ./nvidia-machine-learning-repo-ubuntu1804_1.0.0-1_amd64.deb && \
+    # apt-get update && \
+    # wget https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/libnvinfer7_7.2.3-1+cuda11.1_amd64.deb && \
+    # apt install -y ./libnvinfer7_7.2.3-1+cuda11.1_amd64.deb && \
+    # apt-get update && \
+    # DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
+    #     libnvinfer7=$TENSORRT_VERSION \
+    #     libnvinfer-dev=$TENSORRT_VERSION \
+    #     libnvinfer-plugin7=$TENSORRT_VERSION \
+    #     && \
+    # rm libnvinfer7_7.2.3-1+cuda11.1_amd64.deb && \
 
 # ==================================================================
 # rapidsai
@@ -119,9 +119,11 @@ RUN rm -rf /var/lib/apt/lists/* \
         https://bootstrap.pypa.io/pip/2.7/get-pip.py && \
     python ~/get-pip.py && \
     python -m pip install --upgrade pip && \
-    python3.7 -m pip install --upgrade pip && \
+    # python3.7 -m pip install --upgrade pip && \
+    wget -O ~/get-pip3.py \
+        https://bootstrap.pypa.io/get-pip.py && \
+    python3.7 ~/get-pip3.py && \
     $PIP_INSTALL \
-        pip \
         setuptools==50.3.2 \
         future \
         protobuf \
@@ -133,7 +135,7 @@ RUN rm -rf /var/lib/apt/lists/* \
         pythran \
         pybind11 \
         Cython \
-        numpy \
+        numpy==1.19.2 \
         scipy \
         pandas==0.25.3 \
         cloudpickle \
@@ -165,9 +167,25 @@ RUN rm -rf /var/lib/apt/lists/* \
     jupyter nbextension enable collapsible_headings/main && \
     jupyter nbextension enable toggle_all_line_numbers/main && \
 
-    python3.7 -m pip --no-cache-dir install --default-timeout=100 \
+    pip --no-cache-dir install --default-timeout=100 \
         jupyterlab-server==2.10.3 \
         jupyterlab==3.2.5 && \
+
+# ==================================================================
+# Tensorflow
+# ------------------------------------------------------------------
+
+    $PIP_INSTALL \
+        h5py \
+        tensorflow==2.5.0 \
+        tensorflow-determinism \
+        tensorflow-addons \
+        tensorboard \
+        typing_extensions==3.7.4 \
+        && \
+        python3 -c "import tensorflow as tf; print(tf.__version__)" \
+        && \
+    ln -s /usr/local/cuda-11.2/targets/x86_64-linux/lib/libcusolver.so.11 /usr/local/cuda-11.2/targets/x86_64-linux/lib/libcusolver.so.10 && \
 
 # ==================================================================
 # Pytorch
@@ -178,7 +196,7 @@ RUN rm -rf /var/lib/apt/lists/* \
         torchvision==0.10.1+cu111 \
         -f https://download.pytorch.org/whl/torch_stable.html \
         && \
-    python3.7 -c "import torch; print(f'CUDA available: {torch.cuda.is_available()}')" \
+    python3 -c "import torch; print(f'CUDA available: {torch.cuda.is_available()}')" \
         && \
 
     $PIP_INSTALL \
@@ -187,23 +205,8 @@ RUN rm -rf /var/lib/apt/lists/* \
         torch_optimizer \
         torchinfo \
         && \
-    python3.7 -c "import pytorch_lightning as pl; print(pl.__version__)" \
+    python3 -c "import pytorch_lightning as pl; print(pl.__version__)" \
         && \
-
-# ==================================================================
-# Tensorflow
-# ------------------------------------------------------------------
-
-    $PIP_INSTALL \
-        h5py \
-        tensorflow==2.4.0 \
-        tensorflow-determinism \
-        tensorflow-addons \
-        tensorboard \
-        && \
-        python3 -c "import tensorflow as tf; print(tf.__version__)" \
-        && \
-    ln -s /usr/local/cuda-11.1/targets/x86_64-linux/lib/libcusolver.so.11 /usr/local/cuda-11.1/targets/x86_64-linux/lib/libcusolver.so.10 && \
 
 # ==================================================================
 # OpenCV
@@ -212,13 +215,13 @@ RUN rm -rf /var/lib/apt/lists/* \
     apt-get install -y \
         build-essential \
         cmake && \
-    $GIT_CLONE --branch 4.4.0 https://github.com/opencv/opencv ~/opencv && \
+    $GIT_CLONE --branch 4.5.5 https://github.com/opencv/opencv ~/opencv && \
     mkdir -p ~/opencv/build && cd ~/opencv/build && \
-    wget -O opencv_contrib.zip https://github.com/opencv/opencv_contrib/archive/refs/tags/4.4.0.zip && \
+    wget -O opencv_contrib.zip https://github.com/opencv/opencv_contrib/archive/refs/tags/4.5.5.zip && \
     unzip opencv_contrib.zip && \
     cmake -D CMAKE_BUILD_TYPE=RELEASE \
           -D CMAKE_INSTALL_PREFIX=/usr/local \
-          -D OPENCV_EXTRA_MODULES_PATH=~/opencv/build/opencv_contrib-4.4.0/modules \
+          -D OPENCV_EXTRA_MODULES_PATH=~/opencv/build/opencv_contrib-4.5.5/modules \
           -D WITH_IPP=OFF \
           -D WITH_CUDA=ON \
           -D OPENCV_DNN_CUDA=ON \
@@ -260,18 +263,18 @@ RUN rm -rf /var/lib/apt/lists/* \
     mkdir -p /etc/OpenCL/vendors && echo "libnvidia-opencl.so.1" > /etc/OpenCL/vendors/nvidia.icd && \
 
     # Xgboost
-    $GIT_CLONE --branch v1.3.3 --recursive https://github.com/dmlc/xgboost ~/xgboost && \
-    cd ~/xgboost && \
-    mkdir build && \
-    cd build && \
-    cmake .. -DUSE_CUDA=ON \
-        -DCMAKE_CUDA_COMPILER:PATH=/usr/local/cuda-11.1/bin/nvcc && \
-    make -j$(nproc) && \
-    cd .. && \
-    cd python-package/ && \
-    python3 setup.py install --use-cuda --use-nccl && \
-    python3 -c "import xgboost as xgb; print(xgb.__version__)" && \
-    cd .. && \
+    # $GIT_CLONE --branch v1.3.3 --recursive https://github.com/dmlc/xgboost ~/xgboost && \
+    # cd ~/xgboost && \
+    # mkdir build && \
+    # cd build && \
+    # cmake .. -DUSE_CUDA=ON \
+    #     -DCMAKE_CUDA_COMPILER:PATH=/usr/local/cuda-11.2/bin/nvcc && \
+    # make -j$(nproc) && \
+    # cd .. && \
+    # cd python-package/ && \
+    # python3 setup.py install --use-cuda --use-nccl && \
+    # python3 -c "import xgboost as xgb; print(xgb.__version__)" && \
+    # cd .. && \
 
     # LightGBM
     $GIT_CLONE --branch v3.2.1 --recursive https://github.com/Microsoft/LightGBM ~/LightGBM && \
@@ -307,7 +310,7 @@ RUN rm -rf /var/lib/apt/lists/* \
 # ------------------------------------------------------------------
 
     $PIP_INSTALL \
-        timm \
+        timm==0.6.11 \
         omegaconf \
         ensemble-boxes \
         pycocotools \
@@ -330,16 +333,10 @@ RUN rm -rf /var/lib/apt/lists/* \
         dtw-python \
         grad-cam \
         lpips \
-        # && \
-
-    # python3.7 -m pip --no-cache-dir install --no-deps --default-timeout=10 \
-        # pyinstaller[encryption] \
+        pyinstaller[encryption] \
         pyarmor \
-        # kornia \
         bm3d \
-        typing_extensions==4.2.0 \
-        nni \
-        # anomalib \
+        nni==2.5.0 \
         && \
     nnictl --version && \
 
