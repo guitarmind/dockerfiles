@@ -1,4 +1,5 @@
-FROM nvidia/cuda:11.1-cudnn8-devel-ubuntu18.04
+FROM nvidia/cuda:11.2.0-cudnn8-devel-ubuntu18.04
+# FROM nvidia/cuda:11.1-cudnn8-devel-ubuntu18.04
 
 ENV CUDA_HOME=/usr/local/cuda
 
@@ -338,7 +339,7 @@ RUN rm -rf /var/lib/apt/lists/* \
         bm3d \
         typing_extensions==4.2.0 \
         nni \
-        anomalib \
+        # anomalib \
         && \
     nnictl --version && \
 
