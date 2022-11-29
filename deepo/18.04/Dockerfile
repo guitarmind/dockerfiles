@@ -310,6 +310,7 @@ RUN rm -rf /var/lib/apt/lists/* \
 # ------------------------------------------------------------------
 
     pip --no-cache-dir install --upgrade --default-timeout=100 \
+        opencv-python==4.5.5.64 \
         opencv-python-headless==4.5.5.64 \
         timm==0.6.11 \
         omegaconf \
