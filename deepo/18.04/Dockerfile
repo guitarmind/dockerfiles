@@ -310,6 +310,7 @@ RUN rm -rf /var/lib/apt/lists/* \
 # ------------------------------------------------------------------
 
     $PIP_INSTALL \
+        opencv-python-headless==4.5.5.64 \
         timm==0.6.11 \
         omegaconf \
         ensemble-boxes \
