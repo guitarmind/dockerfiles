@@ -152,7 +152,7 @@ RUN rm -rf /var/lib/apt/lists/* \
 
     $PIP_INSTALL \
         jinja2==2.11.3 \
-        MarkupSafe==2.0.1 \
+        markupsafe==2.0.1 \
         yapf==0.32.0 \
         ipywidgets==7.6.5 \
         jupyter==1.0.0 \
