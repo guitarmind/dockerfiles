@@ -11,7 +11,8 @@ ENV LANG=C.UTF-8 LC_ALL=C.UTF-8 \
     LD_LIBRARY_PATH=/usr/local/cuda-11.2/lib64:$LD_LIBRARY_PATH \
     TZ=Asia/Taipei \
     APT_INSTALL="apt-get install -y --no-install-recommends" \
-    PIP_INSTALL="pip --no-cache-dir install --upgrade --default-timeout=100" \
+    PIP_INSTALL="pip --no-cache-dir install --default-timeout=100" \
+    # PIP_INSTALL="pip --no-cache-dir install --upgrade --default-timeout=100" \
     GIT_CLONE="git clone --depth 10" \
     TENSORRT_VERSION="7.2.3-1+cuda11.2"
 
