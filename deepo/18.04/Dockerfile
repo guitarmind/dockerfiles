@@ -68,7 +68,7 @@ RUN rm -rf /var/lib/apt/lists/* \
     cd /usr/lib/python3/dist-packages/ && \
     cp apt_pkg.cpython-36m-x86_64-linux-gnu.so apt_pkg.so && \
     cd /usr/lib/python3/dist-packages/gi && \
-    ln -s _gi.cpython-36m-x86_64-linux-gnu.so _gi.cpython-37m-x86_64-linux-gnu.so && \
+    ln -s _gi.cpython-36m-x86_64-linux-gnu.so _gi.cpython-37m-x86_64-linux-gnu.so
 
 # ==================================================================
 # CUDA Packages & Tools
@@ -111,7 +111,7 @@ RUN rm -rf /var/lib/apt/lists/* \
 # Essesntial Packages
 # ------------------------------------------------------------------
 
-    DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
+RUN DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
         software-properties-common \
         && \
     add-apt-repository ppa:deadsnakes/ppa -y && \
@@ -144,14 +144,13 @@ RUN rm -rf /var/lib/apt/lists/* \
         matplotlib \
         seaborn \
         flask \
-        gunicorn \
-        && \
+        gunicorn
 
 # ==================================================================
 # Jupyter Notebook
 # ------------------------------------------------------------------
 
-    $PIP_INSTALL \
+RUN $PIP_INSTALL \
         jinja2==2.11.3 \
         markupsafe==2.0.1 \
         yapf==0.32.0 \
@@ -170,13 +169,13 @@ RUN rm -rf /var/lib/apt/lists/* \
 
     pip --no-cache-dir install --default-timeout=100 \
         jupyterlab-server==2.10.3 \
-        jupyterlab==3.2.5 && \
+        jupyterlab==3.2.5
 
 # ==================================================================
 # Tensorflow
 # ------------------------------------------------------------------
 
-    $PIP_INSTALL \
+RUN $PIP_INSTALL \
         h5py \
         tensorflow==2.5.0 \
         tensorflow-determinism \
@@ -186,13 +185,13 @@ RUN rm -rf /var/lib/apt/lists/* \
         && \
         python3 -c "import tensorflow as tf; print(tf.__version__)" \
         && \
-    ln -s /usr/local/cuda-11.2/targets/x86_64-linux/lib/libcusolver.so.11 /usr/local/cuda-11.2/targets/x86_64-linux/lib/libcusolver.so.10 && \
+    ln -s /usr/local/cuda-11.2/targets/x86_64-linux/lib/libcusolver.so.11 /usr/local/cuda-11.2/targets/x86_64-linux/lib/libcusolver.so.10
 
 # ==================================================================
 # Pytorch
 # ------------------------------------------------------------------
 
-    $PIP_INSTALL \
+RUN $PIP_INSTALL \
         torch==1.9.1+cu111 \
         torchvision==0.10.1+cu111 \
         -f https://download.pytorch.org/whl/torch_stable.html \
@@ -206,14 +205,13 @@ RUN rm -rf /var/lib/apt/lists/* \
         torch_optimizer \
         torchinfo \
         && \
-    python3 -c "import pytorch_lightning as pl; print(pl.__version__)" \
-        && \
+    python3 -c "import pytorch_lightning as pl; print(pl.__version__)"
 
 # ==================================================================
 # OpenCV
 # ------------------------------------------------------------------
 
-    apt-get install -y \
+RUN apt-get install -y \
         build-essential \
         cmake && \
     $GIT_CLONE --branch 4.5.5 https://github.com/opencv/opencv ~/opencv && \
@@ -239,14 +237,14 @@ RUN rm -rf /var/lib/apt/lists/* \
           .. && \
     make -j"$(nproc)" install && \
     python3 -c "import cv2; print(cv2.__version__)" && \
-    ln -s /usr/local/include/opencv4/opencv2 /usr/local/include/opencv2 && \
+    ln -s /usr/local/include/opencv4/opencv2 /usr/local/include/opencv2
 
 # ==================================================================
 # Xgboost & LightGBM
 # ------------------------------------------------------------------
 
     # Upgrade CMake
-    apt-get remove -y --purge --auto-remove cmake && \
+RUN apt-get remove -y --purge --auto-remove cmake && \
     mkdir /opt/cmake && \
     cd /opt/cmake && \
     wget https://github.com/Kitware/CMake/releases/download/v3.18.6/cmake-3.18.6-Linux-x86_64.sh && \
@@ -290,7 +288,7 @@ RUN rm -rf /var/lib/apt/lists/* \
     cd python-package/ && \
     python3 setup.py install --precompile && \
     python3 -c "import lightgbm as lgb; print(lgb.__version__)" && \
-    cd .. && \
+    cd ..
 
 # ==================================================================
 # Darknet (YOLOv3, YOLOv4)
@@ -310,7 +308,7 @@ RUN rm -rf /var/lib/apt/lists/* \
 # MISC.
 # ------------------------------------------------------------------
 
-    pip --no-cache-dir install --default-timeout=100 \
+RUN pip --no-cache-dir install --default-timeout=100 \
         opencv-python==4.5.5.64 \
         opencv-python-headless==4.5.5.64 \
         timm==0.6.11 \
