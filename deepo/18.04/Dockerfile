@@ -136,9 +136,9 @@ RUN DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
         pythran \
         pybind11 \
         Cython \
-        numpy==1.19.2 \
+        numpy==1.21.6 \
         scipy \
-        pandas==0.25.3 \
+        pandas==1.3.5 \
         cloudpickle \
         scikit-learn \
         matplotlib \
@@ -167,16 +167,16 @@ RUN $PIP_INSTALL \
 # ------------------------------------------------------------------
 
 RUN $PIP_INSTALL \
-        torch==1.9.1+cu111 \
-        torchvision==0.10.1+cu111 \
+        torch==1.12.1+cu113 \
+        torchvision==0.13.1+cu113 \
         -f https://download.pytorch.org/whl/torch_stable.html \
         && \
     python3 -c "import torch; print(f'CUDA available: {torch.cuda.is_available()}')" \
         && \
 
     $PIP_INSTALL \
-        torchmetrics==v0.6.0 \
-        pytorch-lightning==1.4.9 \
+        torchmetrics==0.11.0 \
+        pytorch-lightning==1.8.6 \
         torch_optimizer \
         torchinfo \
         && \
