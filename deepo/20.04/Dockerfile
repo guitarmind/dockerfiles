@@ -246,7 +246,7 @@ RUN $PIP_INSTALL \
     apt-get clean -y && \
     apt-get autoremove -y && \
     rm -rf /tmp/* && \
-    rm -rf /var/cache/apk/*
+    rm -rf /var/cache/apk/* && \
 
     echo "\
 unbind C-b\n\
