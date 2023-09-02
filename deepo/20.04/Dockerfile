@@ -175,50 +175,6 @@ RUN $PIP_INSTALL \
     rm -rf /var/cache/apk/*
 
 # ==================================================================
-# OpenCV
-# ------------------------------------------------------------------
-
-RUN apt-get install -y \
-        build-essential \
-        cmake && \
-    $GIT_CLONE --branch 4.4.0 https://github.com/opencv/opencv ~/opencv && \
-    mkdir -p ~/opencv/build && cd ~/opencv/build && \
-    wget -O opencv_contrib.zip https://github.com/opencv/opencv_contrib/archive/refs/tags/4.4.0.zip && \
-    unzip opencv_contrib.zip && \
-    cmake -D CMAKE_BUILD_TYPE=RELEASE \
-          -D CMAKE_INSTALL_PREFIX=/usr/local \
-          -D OPENCV_EXTRA_MODULES_PATH=~/opencv/build/opencv_contrib-4.4.0/modules \
-          -D WITH_IPP=OFF \
-          -D WITH_CUDA=ON \
-          -D OPENCV_DNN_CUDA=ON \
-          -D WITH_OPENCL=OFF \
-          -D BUILD_TESTS=OFF \
-          -D BUILD_PERF_TESTS=OFF \
-          -D BUILD_opencv_python3=ON \
-          -D PYTHON_DEFAULT_EXECUTABLE=/usr/bin/python3 \
-          -D PYTHON3_NUMPY_INCLUDE_DIRS=/usr/local/lib/python3.8/dist-packages/numpy/core/include \
-          -D PYTHON3_LIBRARIES=/usr/lib/python3.8/config-3.8-x86_64-linux-gnu/libpython3.8.so \
-          -D PYTHON3_INCLUDE_DIR=/usr/include/python3.8 \
-          -D PYTHON3_EXECUTABLE=/usr/bin/python3 \
-          -D PYTHON3_PACKAGES_PATH=/usr/local/lib/python3.8/dist-packages \
-          .. && \
-    make -j"$(nproc)" install && \
-    python3 -c "import cv2; print(cv2.__version__)" && \
-    ln -s /usr/local/include/opencv4/opencv2 /usr/local/include/opencv2 && \
-
-    # Clean up
-    find /usr/local/lib/python3.*/ -follow -type f -name '*.a' -delete && \
-    find /usr/local/lib/python3.*/ -follow -type f -name '*.pyc' -delete && \
-    find /usr/local/lib/python3.*/ -follow -type f -name '*.js.map' -delete && \
-    find /usr/local/lib/python3.*/ -name 'tests' -exec rm -r '{}' + && \
-    find /usr/local/lib/python3.*/dist-packages/ -name '*.so' -print -exec sh -c 'file "{}" | grep -q "not stripped" && strip -s "{}"' \; && \
-
-    apt-get clean -y && \
-    apt-get autoremove -y && \
-    rm -rf /tmp/* && \
-    rm -rf /var/cache/apk/*
-
-# ==================================================================
 # MISC.
 # ------------------------------------------------------------------
 
