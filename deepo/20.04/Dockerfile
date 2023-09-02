@@ -1,4 +1,5 @@
-FROM nvidia/cuda:11.1-cudnn8-devel-ubuntu20.04
+# FROM nvidia/cuda:11.1-cudnn8-devel-ubuntu20.04
+FROM nvidia/cuda:11.4.3-cudnn8-devel-ubuntu20.04
 
 ENV CUDA_HOME=/usr/local/cuda
 
@@ -6,13 +7,13 @@ ENV LANG=C.UTF-8 LC_ALL=C.UTF-8 \
     # Disabling SSL verification
     SSL_NO_VERIFY=1 \
     PYTHONDONTWRITEBYTECODE=true \
-    PATH=/usr/local/cuda-11.1/bin:$PATH \
-    LD_LIBRARY_PATH=/usr/local/cuda-11.1/lib64:$LD_LIBRARY_PATH \
+    PATH=/usr/local/cuda-11.4/bin:$PATH \
+    LD_LIBRARY_PATH=/usr/local/cuda-11.4/lib64:$LD_LIBRARY_PATH \
     TZ=Asia/Taipei \
     APT_INSTALL="apt-get install -y --no-install-recommends" \
     PIP_INSTALL="python3 -m pip --no-cache-dir install --upgrade --default-timeout=100" \
-    GIT_CLONE="git clone --depth 10" \
-    TENSORRT_VERSION="7.2.3-1+cuda11.1"
+    GIT_CLONE="git clone --depth 10"
+    # TENSORRT_VERSION="7.2.3-1+cuda11.1"
 
 EXPOSE 8888 6006 8090
 
@@ -68,49 +69,6 @@ RUN rm -rf /var/lib/apt/lists/* \
     apt-get autoremove -y && \
     rm -rf /tmp/* && \
     rm -rf /var/cache/apk/*
-
-# ==================================================================
-# CUDA Packages & Tools
-# ------------------------------------------------------------------
-
-    # TensorRT
-    # Based on https://www.tensorflow.org/install/gpu#install_cuda_with_apt
-RUN cd /root/ && \
-    wget http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/nvidia-machine-learning-repo-ubuntu1804_1.0.0-1_amd64.deb && \
-    apt install ./nvidia-machine-learning-repo-ubuntu1804_1.0.0-1_amd64.deb && \
-    apt-get update && \
-    wget https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/libnvinfer7_7.2.3-1+cuda11.1_amd64.deb && \
-    apt install -y ./libnvinfer7_7.2.3-1+cuda11.1_amd64.deb && \
-    apt-get update && \
-    DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
-        libnvinfer7=$TENSORRT_VERSION \
-        libnvinfer-dev=$TENSORRT_VERSION \
-        libnvinfer-plugin7=$TENSORRT_VERSION \
-        && \
-    rm libnvinfer7_7.2.3-1+cuda11.1_amd64.deb && \
-
-    # Clean up
-    apt-get clean -y && \
-    apt-get autoremove -y && \
-    rm -rf /tmp/* && \
-    rm -rf /var/cache/apk/*
-
-# ==================================================================
-# rapidsai
-# ------------------------------------------------------------------
-    # Install Miniconda
-    # wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-py37_4.8.3-Linux-x86_64.sh -O ~/miniconda.sh && \
-    #     /bin/bash ~/miniconda.sh -b -p /opt/conda && \
-    #     rm ~/miniconda.sh && \
-    #     ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh && \
-    #     . /opt/conda/etc/profile.d/conda.sh && \
-    #     conda activate base && \
-    #     echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
-    #     echo "conda activate base" >> ~/.bashrc && \
-
-    # # RapidsAI for CUDA 11.1
-    # conda install -y -c rapidsai -c nvidia -c conda-forge \
-    #     -c defaults cudf=21.06 cuml=21.06 python=3.8 cudatoolkit=11.0 && \
 
 # ==================================================================
 # Essesntial Packages
@@ -189,47 +147,20 @@ RUN DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
 # ------------------------------------------------------------------
 
 RUN $PIP_INSTALL \
-        torch==1.9.1+cu111 \
-        torchvision==0.10.1+cu111 \
-        torchaudio==0.9.1 \
+        torch==1.12.1+cu113 \
+        torchvision==0.13.1+cu113 \
         -f https://download.pytorch.org/whl/torch_stable.html \
         && \
     python3 -c "import torch; print(f'CUDA available: {torch.cuda.is_available()}')" \
         && \
 
     $PIP_INSTALL \
-        torchlibrosa \
-        pytorch-lightning==1.4.9 \
+        torchmetrics==0.11.0 \
+        pytorch-lightning==1.8.6 \
         torch_optimizer \
         torchinfo \
         && \
-
-    # Clean up
-    find /usr/local/lib/python3.*/ -follow -type f -name '*.a' -delete && \
-    find /usr/local/lib/python3.*/ -follow -type f -name '*.pyc' -delete && \
-    find /usr/local/lib/python3.*/ -follow -type f -name '*.js.map' -delete && \
-    find /usr/local/lib/python3.*/ -name 'tests' -exec rm -r '{}' + && \
-    find /usr/local/lib/python3.*/dist-packages/ -name '*.so' -print -exec sh -c 'file "{}" | grep -q "not stripped" && strip -s "{}"' \; && \
-
-    apt-get clean -y && \
-    apt-get autoremove -y && \
-    rm -rf /tmp/* && \
-    rm -rf /var/cache/apk/*
-
-# ==================================================================
-# Tensorflow
-# ------------------------------------------------------------------
-
-RUN $PIP_INSTALL \
-        h5py \
-        tensorflow==2.4.0 \
-        tensorflow-determinism \
-        tensorflow-addons \
-        tensorboard \
-        && \
-        python3 -c "import tensorflow as tf; print(tf.__version__)" \
-        && \
-    ln -s /usr/local/cuda-11.1/targets/x86_64-linux/lib/libcusolver.so.11 /usr/local/cuda-11.1/targets/x86_64-linux/lib/libcusolver.so.10 && \
+    python3 -c "import pytorch_lightning as pl; print(pl.__version__)" && \
 
     # Clean up
     find /usr/local/lib/python3.*/ -follow -type f -name '*.a' -delete && \
@@ -288,116 +219,20 @@ RUN apt-get install -y \
     rm -rf /var/cache/apk/*
 
 # ==================================================================
-# Xgboost & LightGBM
-# ------------------------------------------------------------------
-
-    # Upgrade CMake
-RUN apt-get remove -y --purge --auto-remove cmake && \
-    mkdir /opt/cmake && \
-    cd /opt/cmake && \
-    wget https://github.com/Kitware/CMake/releases/download/v3.18.6/cmake-3.18.6-Linux-x86_64.sh && \
-    sh ./cmake-3.18.6-Linux-x86_64.sh --prefix=/opt/cmake --skip-license && \
-    ln -s /opt/cmake/bin/cmake /usr/local/bin/cmake && \
-    ln -s /opt/cmake/bin/cmake /usr/bin/cmake && \
-    cmake --version && \
-
-    DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
-        nvidia-opencl-dev opencl-headers \
-        libboost-dev \
-        libboost-system-dev \
-        libboost-filesystem-dev \
-        libsndfile1 && \
-    mkdir -p /etc/OpenCL/vendors && echo "libnvidia-opencl.so.1" > /etc/OpenCL/vendors/nvidia.icd && \
-
-    # Xgboost
-    $GIT_CLONE --branch v1.3.3 --recursive https://github.com/dmlc/xgboost ~/xgboost && \
-    cd ~/xgboost && \
-    mkdir build && \
-    cd build && \
-    cmake .. -DUSE_CUDA=ON \
-        -DCMAKE_CUDA_COMPILER:PATH=/usr/local/cuda-11.1/bin/nvcc && \
-    make -j$(nproc) && \
-    cd .. && \
-    cd python-package/ && \
-    python3 setup.py install --use-cuda --use-nccl && \
-    python3 -c "import xgboost as xgb; print(xgb.__version__)" && \
-    cd .. && \
-
-    # LightGBM
-    $GIT_CLONE --branch v3.2.1 --recursive https://github.com/Microsoft/LightGBM ~/LightGBM && \
-    cd ~/LightGBM && \
-    mkdir build && \
-    cd build && \
-    cmake -DUSE_GPU=1 \
-        -DOpenCL_LIBRARY=/usr/local/cuda/lib64/libOpenCL.so \
-        -DOpenCL_INCLUDE_DIR=/usr/local/cuda/include/ .. && \
-    make -j$(nproc) && \
-    cd .. && \
-    cd python-package/ && \
-    python3 setup.py install --precompile && \
-    python3 -c "import lightgbm as lgb; print(lgb.__version__)" && \
-    cd .. && \
-
-    # Clean up
-    apt-get remove -y cmake && \
-    rm -rf /opt/cmake /usr/local/bin/cmake /usr/bin/cmake && \
-
-    find /usr/local/lib/python3.*/ -follow -type f -name '*.a' -delete && \
-    find /usr/local/lib/python3.*/ -follow -type f -name '*.pyc' -delete && \
-    find /usr/local/lib/python3.*/ -follow -type f -name '*.js.map' -delete && \
-    find /usr/local/lib/python3.*/ -name 'tests' -exec rm -r '{}' + && \
-    find /usr/local/lib/python3.*/dist-packages/ -name '*.so' -print -exec sh -c 'file "{}" | grep -q "not stripped" && strip -s "{}"' \; && \
-
-    apt-get clean -y && \
-    apt-get autoremove -y && \
-    rm -rf /tmp/* && \
-    rm -rf /var/cache/apk/*
-
-# ==================================================================
-# Darknet (YOLOv3, YOLOv4)
-# ------------------------------------------------------------------
-    # ln -s /usr/local/cuda/lib64/stubs/libcuda.so /usr/local/cuda/lib64/stubs/libcuda.so.1 && \
-    # LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs/:$LD_LIBRARY_PATH && \
-    # git clone https://github.com/AlexeyAB/darknet.git ~/darknet && \
-    # cd ~/darknet && \
-    # mkdir build_release && \
-    # cd build_release && \
-    # cmake .. -DCMAKE_PREFIX_PATH=~/opencv/build  && \
-    # cmake --build . --target install --parallel $(nproc) && \
-    # cp ./darknet /usr/local/bin/ && \
-    # cd .. && \
-
-# ==================================================================
 # MISC.
 # ------------------------------------------------------------------
 
 RUN $PIP_INSTALL \
+        transformers==4.32.0 \
+        accelerate \
+        tiktoken \
+        einops \
+        transformers_stream_generator==0.0.4 \
+        pillow \
+        tensorboard \
         timm \
-        omegaconf \
-        ensemble-boxes \
-        pycocotools \
-        featuretools \
-        yellowbrick \
-        imgaug \
-        plotly \
-        shap \
         albumentations \
         transformers \
-        nltk \
-        spacy \
-        umap-learn \
-        scikit-image \
-        iterative-stratification \
-        optuna \
-        statsmodels==0.12.0 \
-        tsfresh \
-        pytorch_tabnet \
-        piq \
-        dtw-python \
-        grad-cam \
-        lpips \
-        pyinstaller[encryption] \
-        pyarmor \
         && \
 
     # Clean up
@@ -411,12 +246,6 @@ RUN $PIP_INSTALL \
     apt-get autoremove -y && \
     rm -rf /tmp/* && \
     rm -rf /var/cache/apk/*
-
-RUN cd /root/ && \
-    wget https://download.pytorch.org/models/alexnet-owt-7be5be79.pth && \
-    mkdir -p /root/.cache/torch/hub/checkpoints && \
-    cp alexnet-owt-7be5be79.pth /root/.cache/torch/hub/checkpoints/ && \
-    rm alexnet-owt-7be5be79.pth && \
 
     echo "\
 unbind C-b\n\
