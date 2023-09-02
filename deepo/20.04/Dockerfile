@@ -100,8 +100,6 @@ RUN DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
         scikit-learn \
         matplotlib \
         seaborn \
-        flask \
-        gunicorn \
         && \
 
 # ==================================================================
@@ -190,6 +188,7 @@ RUN $PIP_INSTALL \
         albumentations \
         transformers \
         gradio \
+        markupsafe==2.0.1 \
         && \
 
     # Clean up
