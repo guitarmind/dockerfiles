@@ -233,6 +233,7 @@ RUN $PIP_INSTALL \
         timm \
         albumentations \
         transformers \
+        gradio \
         && \
 
     # Clean up
