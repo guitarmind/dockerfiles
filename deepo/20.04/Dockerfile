@@ -196,7 +196,8 @@ RUN $PIP_INSTALL \
         mmengine==0.6.0 \
         && \
 
-    mim install "mmcv>=2.0.0rc4 mmdet>=3.0.0rc6" && \
+    mim install "mmcv>=2.0.0rc4" && \
+    mim install "mmdet>=3.0.0rc6" && \
 
     # Clean up
     find /usr/local/lib/python3.*/ -follow -type f -name '*.a' -delete && \
