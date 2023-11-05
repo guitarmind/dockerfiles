@@ -59,18 +59,6 @@ RUN rm -rf /var/lib/apt/lists/* \
         nginx \
         && \
 
-    # Clean up
-    find /usr/local/lib/python3.*/ -follow -type f -name '*.a' -delete && \
-    find /usr/local/lib/python3.*/ -follow -type f -name '*.pyc' -delete && \
-    find /usr/local/lib/python3.*/ -follow -type f -name '*.js.map' -delete && \
-    find /usr/local/lib/python3.*/ -name 'tests' -exec rm -r '{}' + && \
-    find /usr/local/lib/python3.*/dist-packages/ -name '*.so' -print -exec sh -c 'file "{}" | grep -q "not stripped" && strip -s "{}"' \; && \
-
-    apt-get clean -y && \
-    apt-get autoremove -y && \
-    rm -rf /tmp/* && \
-    rm -rf /var/cache/apk/*
-
 # ==================================================================
 # Essesntial Packages
 # ------------------------------------------------------------------
@@ -129,18 +117,6 @@ RUN DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
         jupyterlab==3.2.5 \
         && \
 
-    # Clean up
-    find /usr/local/lib/python3.*/ -follow -type f -name '*.a' -delete && \
-    find /usr/local/lib/python3.*/ -follow -type f -name '*.pyc' -delete && \
-    find /usr/local/lib/python3.*/ -follow -type f -name '*.js.map' -delete && \
-    find /usr/local/lib/python3.*/ -name 'tests' -exec rm -r '{}' + && \
-    find /usr/local/lib/python3.*/dist-packages/ -name '*.so' -print -exec sh -c 'file "{}" | grep -q "not stripped" && strip -s "{}"' \; && \
-
-    apt-get clean -y && \
-    apt-get autoremove -y && \
-    rm -rf /tmp/* && \
-    rm -rf /var/cache/apk/*
-
 # ==================================================================
 # Pytorch
 # ------------------------------------------------------------------
@@ -161,18 +137,6 @@ RUN $PIP_INSTALL \
         && \
     python3 -c "import pytorch_lightning as pl; print(pl.__version__)" && \
 
-    # Clean up
-    find /usr/local/lib/python3.*/ -follow -type f -name '*.a' -delete && \
-    find /usr/local/lib/python3.*/ -follow -type f -name '*.pyc' -delete && \
-    find /usr/local/lib/python3.*/ -follow -type f -name '*.js.map' -delete && \
-    find /usr/local/lib/python3.*/ -name 'tests' -exec rm -r '{}' + && \
-    find /usr/local/lib/python3.*/dist-packages/ -name '*.so' -print -exec sh -c 'file "{}" | grep -q "not stripped" && strip -s "{}"' \; && \
-
-    apt-get clean -y && \
-    apt-get autoremove -y && \
-    rm -rf /tmp/* && \
-    rm -rf /var/cache/apk/*
-
 # ==================================================================
 # MISC.
 # ------------------------------------------------------------------
@@ -190,7 +154,6 @@ RUN $PIP_INSTALL \
         transformers \
         gradio \
         markupsafe==2.0.1 \
-        cython \
         && \
 
     python3 -c "import cv2; print(cv2.__version__)"
@@ -213,18 +176,6 @@ RUN $PIP_INSTALL \
     python3 setup.py build install && \
     python3 test.py && \
 
-    # Clean up
-    find /usr/local/lib/python3.*/ -follow -type f -name '*.a' -delete && \
-    find /usr/local/lib/python3.*/ -follow -type f -name '*.pyc' -delete && \
-    find /usr/local/lib/python3.*/ -follow -type f -name '*.js.map' -delete && \
-    find /usr/local/lib/python3.*/ -name 'tests' -exec rm -r '{}' + && \
-    find /usr/local/lib/python3.*/dist-packages/ -name '*.so' -print -exec sh -c 'file "{}" | grep -q "not stripped" && strip -s "{}"' \; && \
-
-    apt-get clean -y && \
-    apt-get autoremove -y && \
-    rm -rf /tmp/* && \
-    rm -rf /var/cache/apk/* && \
-
     echo "\
 unbind C-b\n\
 set-option -g prefix C-a\n\
@@ -238,6 +189,7 @@ bind-key C-a send-prefix\n\
     ldconfig && \
     ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone && \
 
+    # Clean up
     find /usr/local/lib/python3.*/ -follow -type f -name '*.a' -delete && \
     find /usr/local/lib/python3.*/ -follow -type f -name '*.pyc' -delete && \
     find /usr/local/lib/python3.*/ -follow -type f -name '*.js.map' -delete && \
@@ -248,3 +200,4 @@ bind-key C-a send-prefix\n\
     apt-get autoremove -y && \
     rm -rf /tmp/* && \
     rm -rf /var/cache/apk/*
+
