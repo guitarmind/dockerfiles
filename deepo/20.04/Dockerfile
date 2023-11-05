@@ -1,5 +1,6 @@
 # FROM nvidia/cuda:11.1-cudnn8-devel-ubuntu20.04
 FROM nvidia/cuda:11.3.1-cudnn8-devel-ubuntu20.04
+# FROM nvidia/cuda:11.6.2-cudnn8-devel-ubuntu20.04
 
 ENV CUDA_HOME=/usr/local/cuda
 
@@ -7,8 +8,8 @@ ENV LANG=C.UTF-8 LC_ALL=C.UTF-8 \
     # Disabling SSL verification
     SSL_NO_VERIFY=1 \
     PYTHONDONTWRITEBYTECODE=true \
-    PATH=/usr/local/cuda-11.4/bin:$PATH \
-    LD_LIBRARY_PATH=/usr/local/cuda-11.4/lib64:$LD_LIBRARY_PATH \
+    PATH=/usr/local/cuda-11.3/bin:$PATH \
+    LD_LIBRARY_PATH=/usr/local/cuda-11.3/lib64:$LD_LIBRARY_PATH \
     TZ=Asia/Taipei \
     APT_INSTALL="apt-get install -y --no-install-recommends" \
     PIP_INSTALL="python3 -m pip --no-cache-dir install --upgrade --default-timeout=100" \
