@@ -14,15 +14,10 @@ ENV LANG=C.UTF-8 LC_ALL=C.UTF-8 \
     APT_INSTALL="apt-get install -y --no-install-recommends" \
     PIP_INSTALL="python3 -m pip --no-cache-dir install --upgrade --default-timeout=100" \
     GIT_CLONE="git clone --depth 10"
-    # TENSORRT_VERSION="7.2.3-1+cuda11.1"
 
 EXPOSE 8888 6006 8090
 
-RUN rm -rf /var/lib/apt/lists/* \
-           /etc/apt/sources.list.d/cuda.list \
-           /etc/apt/sources.list.d/nvidia-ml.list && \
-
-    apt-get update --fix-missing && \
+RUN apt-get update --fix-missing && \
 
 # ==================================================================
 # System Packages & Tools
@@ -56,72 +51,72 @@ RUN rm -rf /var/lib/apt/lists/* \
         zlib1g-dev \
         libffi-dev \
         python3-gi \
-        nginx \
-        && \
+        nginx
+        # && \
 
 # ==================================================================
 # Essesntial Packages
 # ------------------------------------------------------------------
 
-    DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
-        software-properties-common \
-        && \
-    add-apt-repository ppa:deadsnakes/ppa -y && \
-    apt-get update --fix-missing && \
-    python3 -m pip install --upgrade pip && \
-    $PIP_INSTALL \
-        pip \
-        setuptools \
-        future \
-        protobuf \
-        psutil \
-        wheel \
-        && \
-    $PIP_INSTALL \
-        llvmlite \
-        pythran \
-        pybind11 \
-        Cython \
-        numpy \
-        scipy \
-        pandas==0.25.3 \
-        cloudpickle \
-        scikit-learn \
-        matplotlib \
-        seaborn
+    # DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
+    #     software-properties-common \
+    #     && \
+    # add-apt-repository ppa:deadsnakes/ppa -y && \
+    # apt-get update --fix-missing && \
+    # python3 -m pip install --upgrade pip && \
+    # $PIP_INSTALL \
+    #     pip \
+    #     setuptools \
+    #     future \
+    #     protobuf \
+    #     psutil \
+    #     wheel \
+    #     && \
+    # $PIP_INSTALL \
+    #     llvmlite \
+    #     pythran \
+    #     pybind11 \
+    #     Cython \
+    #     numpy \
+    #     scipy \
+    #     pandas==0.25.3 \
+    #     cloudpickle \
+    #     scikit-learn \
+    #     matplotlib \
+    #     seaborn
 
 # ==================================================================
 # Jupyter Notebook
 # ------------------------------------------------------------------
 
-RUN $PIP_INSTALL \
-        jinja2==2.11.3 \
-        MarkupSafe==2.0.1 \
-        yapf==0.40.1 \
-        ipywidgets==7.6.5 \
-        jupyter==1.0.0 \
-        jupyter_contrib_nbextensions==0.5.1 \
-        jupyter_nbextensions_configurator==0.4.1 \
-        jedi==0.17.2 \
-        parso==0.7.1 \
-        nbconvert==5.6.1 \
-        && \
-    jupyter contrib nbextension install --user && \
-    jupyter nbextension enable code_prettify/code_prettify && \
-    jupyter nbextension enable collapsible_headings/main && \
-    jupyter nbextension enable toggle_all_line_numbers/main && \
+# RUN $PIP_INSTALL \
+#         jinja2==2.11.3 \
+#         MarkupSafe==2.0.1 \
+#         yapf==0.40.1 \
+#         ipywidgets==7.6.5 \
+#         jupyter==1.0.0 \
+#         jupyter_contrib_nbextensions==0.5.1 \
+#         jupyter_nbextensions_configurator==0.4.1 \
+#         jedi==0.17.2 \
+#         parso==0.7.1 \
+#         nbconvert==5.6.1 \
+#         && \
+#     jupyter contrib nbextension install --user && \
+#     jupyter nbextension enable code_prettify/code_prettify && \
+#     jupyter nbextension enable collapsible_headings/main && \
+#     jupyter nbextension enable toggle_all_line_numbers/main && \
 
-    python3 -m pip --no-cache-dir install --default-timeout=100 \
-        jupyterlab-server==2.10.3 \
-        jupyterlab==3.2.5 \
+#     python3 -m pip --no-cache-dir install --default-timeout=100 \
+#         jupyterlab-server==2.10.3 \
+#         jupyterlab==3.2.5 \
 
-    && \
+#     && \
 
 # ==================================================================
 # Pytorch
 # ------------------------------------------------------------------
 
-    $PIP_INSTALL \
+RUN $PIP_INSTALL \
         torch==1.12.1+cu113 \
         torchvision==0.13.1+cu113 \
         -f https://download.pytorch.org/whl/torch_stable.html \
