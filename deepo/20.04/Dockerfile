@@ -63,7 +63,7 @@ RUN rm -rf /var/lib/apt/lists/* \
 # Essesntial Packages
 # ------------------------------------------------------------------
 
-RUN DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
+    DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
         software-properties-common \
         && \
     add-apt-repository ppa:deadsnakes/ppa -y && \
@@ -88,14 +88,13 @@ RUN DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
         cloudpickle \
         scikit-learn \
         matplotlib \
-        seaborn \
-        && \
+        seaborn
 
 # ==================================================================
 # Jupyter Notebook
 # ------------------------------------------------------------------
 
-    $PIP_INSTALL \
+RUN $PIP_INSTALL \
         jinja2==2.11.3 \
         MarkupSafe==2.0.1 \
         yapf==0.40.1 \
@@ -115,13 +114,14 @@ RUN DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
     python3 -m pip --no-cache-dir install --default-timeout=100 \
         jupyterlab-server==2.10.3 \
         jupyterlab==3.2.5 \
-        && \
+
+    && \
 
 # ==================================================================
 # Pytorch
 # ------------------------------------------------------------------
 
-RUN $PIP_INSTALL \
+    $PIP_INSTALL \
         torch==1.12.1+cu113 \
         torchvision==0.13.1+cu113 \
         -f https://download.pytorch.org/whl/torch_stable.html \
@@ -135,7 +135,7 @@ RUN $PIP_INSTALL \
         torch_optimizer \
         torchinfo \
         && \
-    python3 -c "import pytorch_lightning as pl; print(pl.__version__)" && \
+    python3 -c "import pytorch_lightning as pl; print(pl.__version__)"
 
 # ==================================================================
 # MISC.
