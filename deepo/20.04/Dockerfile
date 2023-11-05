@@ -1,5 +1,5 @@
 # FROM nvidia/cuda:11.1-cudnn8-devel-ubuntu20.04
-FROM nvidia/cuda:11.4.3-cudnn8-devel-ubuntu20.04
+FROM nvidia/cuda:11.3.1-cudnn8-devel-ubuntu20.04
 
 ENV CUDA_HOME=/usr/local/cuda
 
