@@ -109,7 +109,7 @@ RUN DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
     $PIP_INSTALL \
         jinja2==2.11.3 \
         MarkupSafe==2.0.1 \
-        yapf==0.32.0 \
+        yapf==0.40.1 \
         ipywidgets==7.6.5 \
         jupyter==1.0.0 \
         jupyter_contrib_nbextensions==0.5.1 \
@@ -189,15 +189,28 @@ RUN $PIP_INSTALL \
         transformers \
         gradio \
         markupsafe==2.0.1 \
+        cython \
         && \
 
-    $PIP_INSTALL \
-        openmim \
-        mmengine==0.6.0 \
-        && \
+    python3 -c "import cv2; print(cv2.__version__)"
 
-    mim install "mmcv>=2.0.0rc4" && \
-    mim install "mmdet>=3.0.0rc6" && \
+# ==================================================================
+# GroundingDINO
+# ------------------------------------------------------------------
+
+RUN $PIP_INSTALL \
+        submitit \
+        termcolor \
+        addict \
+        supervision==0.6.0 \
+        colorlog \
+        pyyaml>3.10 \
+        pycocotools \
+        && \
+    $GIT_CLONE https://github.com/longzw1997/Open-GroundingDino.git && \
+    cd Open-GroundingDino/models/GroundingDINO/ops && \
+    python3 setup.py build install && \
+    python3 test.py && \
 
     # Clean up
     find /usr/local/lib/python3.*/ -follow -type f -name '*.a' -delete && \
