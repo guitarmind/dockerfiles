@@ -83,13 +83,14 @@ RUN apt-get update --fix-missing && \
         cloudpickle \
         scikit-learn \
         matplotlib \
-        seaborn
+        seaborn \
+        && \
 
 # ==================================================================
 # Jupyter Notebook
 # ------------------------------------------------------------------
 
-RUN $PIP_INSTALL \
+    $PIP_INSTALL \
         jinja2==2.11.3 \
         MarkupSafe==2.0.1 \
         yapf==0.40.1 \
@@ -116,7 +117,7 @@ RUN $PIP_INSTALL \
 # Pytorch
 # ------------------------------------------------------------------
 
-RUN $PIP_INSTALL \
+    $PIP_INSTALL \
         torch==1.12.1+cu113 \
         torchvision==0.13.1+cu113 \
         -f https://download.pytorch.org/whl/torch_stable.html \
@@ -150,13 +151,15 @@ RUN $PIP_INSTALL \
         markupsafe==2.0.1 \
         && \
 
-    python3 -c "import cv2; print(cv2.__version__)"
+    python3 -c "import cv2; print(cv2.__version__)" \
+
+    && \
 
 # ==================================================================
 # GroundingDINO
 # ------------------------------------------------------------------
 
-RUN $PIP_INSTALL \
+    $PIP_INSTALL \
         submitit \
         termcolor \
         addict \
