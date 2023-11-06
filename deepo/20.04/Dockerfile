@@ -51,7 +51,7 @@ RUN apt-get update --fix-missing && \
         zlib1g-dev \
         libffi-dev \
         python3-gi \
-        nginx
+        nginx \
         && \
 
 # ==================================================================
