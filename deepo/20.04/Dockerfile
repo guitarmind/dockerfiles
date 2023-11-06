@@ -151,15 +151,13 @@ RUN $PIP_INSTALL \
         markupsafe==2.0.1 \
         && \
 
-    python3 -c "import cv2; print(cv2.__version__)" \
-
-    && \
+    python3 -c "import cv2; print(cv2.__version__)"
 
 # ==================================================================
 # GroundingDINO
 # ------------------------------------------------------------------
 
-    $PIP_INSTALL \
+RUN $PIP_INSTALL \
         submitit \
         termcolor \
         addict \
