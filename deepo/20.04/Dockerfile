@@ -146,7 +146,6 @@ RUN $PIP_INSTALL \
         tensorboard \
         timm \
         albumentations \
-        transformers \
         gradio \
         markupsafe==2.0.1 \
         && \
