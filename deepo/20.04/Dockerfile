@@ -58,33 +58,33 @@ RUN apt-get update --fix-missing && \
 # Essesntial Packages
 # ------------------------------------------------------------------
 
-    DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
-        software-properties-common \
-        && \
-    add-apt-repository ppa:deadsnakes/ppa -y && \
-    apt-get update --fix-missing && \
-    python3 -m pip install --upgrade pip && \
-    $PIP_INSTALL \
-        pip \
-        setuptools \
-        future \
-        protobuf \
-        psutil \
-        wheel \
-        && \
-    $PIP_INSTALL \
-        llvmlite \
-        pythran \
-        pybind11 \
-        Cython \
-        numpy \
-        scipy \
-        pandas==0.25.3 \
-        cloudpickle \
-        scikit-learn \
-        matplotlib \
-        seaborn \
-        && \
+    # DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
+    #     software-properties-common \
+    #     && \
+    # add-apt-repository ppa:deadsnakes/ppa -y && \
+    # apt-get update --fix-missing && \
+    # python3 -m pip install --upgrade pip && \
+    # $PIP_INSTALL \
+    #     pip \
+    #     setuptools \
+    #     future \
+    #     protobuf \
+    #     psutil \
+    #     wheel \
+    #     && \
+    # $PIP_INSTALL \
+    #     llvmlite \
+    #     pythran \
+    #     pybind11 \
+    #     Cython \
+    #     numpy \
+    #     scipy \
+    #     pandas==0.25.3 \
+    #     cloudpickle \
+    #     scikit-learn \
+    #     matplotlib \
+    #     seaborn \
+    #     && \
 
 # ==================================================================
 # Jupyter Notebook
@@ -139,23 +139,23 @@ RUN apt-get update --fix-missing && \
 # MISC.
 # ------------------------------------------------------------------
 
-    $PIP_INSTALL \
-        transformers==4.32.0 \
-        accelerate \
-        tiktoken \
-        einops \
-        transformers_stream_generator==0.0.4 \
-        pillow \
-        tensorboard \
-        timm \
-        albumentations \
-        gradio \
-        markupsafe==2.0.1 \
-        && \
+    # $PIP_INSTALL \
+    #     transformers==4.32.0 \
+    #     accelerate \
+    #     tiktoken \
+    #     einops \
+    #     transformers_stream_generator==0.0.4 \
+    #     pillow \
+    #     tensorboard \
+    #     timm \
+    #     albumentations \
+    #     gradio \
+    #     markupsafe==2.0.1 \
+    #     && \
 
-    python3 -c "import cv2; print(cv2.__version__)" \
+    # python3 -c "import cv2; print(cv2.__version__)" \
 
-    && \
+    # && \
 
 # ==================================================================
 # GroundingDINO
