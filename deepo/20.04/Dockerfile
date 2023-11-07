@@ -90,28 +90,28 @@ RUN apt-get update --fix-missing && \
 # Jupyter Notebook
 # ------------------------------------------------------------------
 
-    $PIP_INSTALL \
-        jinja2==2.11.3 \
-        MarkupSafe==2.0.1 \
-        yapf==0.40.1 \
-        ipywidgets==7.6.5 \
-        jupyter==1.0.0 \
-        jupyter_contrib_nbextensions==0.5.1 \
-        jupyter_nbextensions_configurator==0.4.1 \
-        jedi==0.17.2 \
-        parso==0.7.1 \
-        nbconvert==5.6.1 \
-        && \
-    jupyter contrib nbextension install --user && \
-    jupyter nbextension enable code_prettify/code_prettify && \
-    jupyter nbextension enable collapsible_headings/main && \
-    jupyter nbextension enable toggle_all_line_numbers/main && \
+    # $PIP_INSTALL \
+    #     jinja2==2.11.3 \
+    #     MarkupSafe==2.0.1 \
+    #     yapf==0.40.1 \
+    #     ipywidgets==7.6.5 \
+    #     jupyter==1.0.0 \
+    #     jupyter_contrib_nbextensions==0.5.1 \
+    #     jupyter_nbextensions_configurator==0.4.1 \
+    #     jedi==0.17.2 \
+    #     parso==0.7.1 \
+    #     nbconvert==5.6.1 \
+    #     && \
+    # jupyter contrib nbextension install --user && \
+    # jupyter nbextension enable code_prettify/code_prettify && \
+    # jupyter nbextension enable collapsible_headings/main && \
+    # jupyter nbextension enable toggle_all_line_numbers/main && \
 
-    python3 -m pip --no-cache-dir install --default-timeout=100 \
-        jupyterlab-server==2.10.3 \
-        jupyterlab==3.2.5 \
+    # python3 -m pip --no-cache-dir install --default-timeout=100 \
+    #     jupyterlab-server==2.10.3 \
+    #     jupyterlab==3.2.5 \
 
-    && \
+    # && \
 
 # ==================================================================
 # Pytorch
@@ -131,13 +131,15 @@ RUN apt-get update --fix-missing && \
         torch_optimizer \
         torchinfo \
         && \
-    python3 -c "import pytorch_lightning as pl; print(pl.__version__)"
+    python3 -c "import pytorch_lightning as pl; print(pl.__version__)" \
+
+    && \
 
 # ==================================================================
 # MISC.
 # ------------------------------------------------------------------
 
-RUN $PIP_INSTALL \
+    $PIP_INSTALL \
         transformers==4.32.0 \
         accelerate \
         tiktoken \
@@ -151,13 +153,15 @@ RUN $PIP_INSTALL \
         markupsafe==2.0.1 \
         && \
 
-    python3 -c "import cv2; print(cv2.__version__)"
+    python3 -c "import cv2; print(cv2.__version__)" \
+
+    && \
 
 # ==================================================================
 # GroundingDINO
 # ------------------------------------------------------------------
 
-RUN $PIP_INSTALL \
+    $PIP_INSTALL \
         submitit \
         termcolor \
         addict \
