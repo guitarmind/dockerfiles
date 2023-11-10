@@ -90,16 +90,9 @@ RUN apt-get update --fix-missing && \
 # ------------------------------------------------------------------
 
     $PIP_INSTALL \
-        jinja2==2.11.3 \
-        MarkupSafe==2.0.1 \
-        yapf==0.40.1 \
-        ipywidgets==7.6.5 \
-        jupyter==1.0.0 \
-        jupyter_contrib_nbextensions==0.5.1 \
-        jupyter_nbextensions_configurator==0.4.1 \
-        jedi==0.17.2 \
-        parso==0.7.1 \
-        nbconvert==5.6.1 \
+        jupyter \
+        jupyter_contrib_nbextensions \
+        jupyter_nbextensions_configurator \
         && \
     jupyter contrib nbextension install --user && \
     jupyter nbextension enable code_prettify/code_prettify && \
