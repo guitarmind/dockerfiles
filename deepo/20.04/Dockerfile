@@ -106,11 +106,11 @@ RUN apt-get update --fix-missing && \
     jupyter nbextension enable collapsible_headings/main && \
     jupyter nbextension enable toggle_all_line_numbers/main && \
 
-    python3 -m pip --no-cache-dir install --default-timeout=100 \
-        jupyterlab-server==2.10.3 \
-        jupyterlab==3.2.5 \
+    # python3 -m pip --no-cache-dir install --default-timeout=100 \
+    #     jupyterlab-server==2.10.3 \
+    #     jupyterlab==3.2.5 \
 
-    && \
+    # && \
 
 # ==================================================================
 # Pytorch
