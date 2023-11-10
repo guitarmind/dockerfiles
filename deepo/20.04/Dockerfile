@@ -90,6 +90,7 @@ RUN apt-get update --fix-missing && \
 # ------------------------------------------------------------------
 
     $PIP_INSTALL \
+        traitlets==5.9.0 \
         jsonschema'[format]' \
         jupyter \
         jupyter_contrib_nbextensions \
