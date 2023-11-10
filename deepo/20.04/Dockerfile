@@ -58,33 +58,32 @@ RUN apt-get update --fix-missing && \
 # Essesntial Packages
 # ------------------------------------------------------------------
 
-    DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
-        software-properties-common \
-        && \
-    add-apt-repository ppa:deadsnakes/ppa -y && \
-    apt-get update --fix-missing && \
-    python3 -m pip install --upgrade pip && \
-    $PIP_INSTALL \
-        pip \
-        setuptools \
-        future \
-        protobuf \
-        psutil \
-        wheel \
-        && \
-    $PIP_INSTALL \
-        llvmlite \
-        pythran \
-        pybind11 \
-        Cython \
-        numpy \
-        scipy \
-        pandas==0.25.3 \
-        cloudpickle \
-        scikit-learn \
-        matplotlib \
-        seaborn \
-        && \
+    # DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
+    #     software-properties-common \
+    #     && \
+    # apt-get update --fix-missing && \
+    # python3 -m pip install --upgrade pip && \
+    # $PIP_INSTALL \
+    #     pip \
+    #     setuptools \
+    #     future \
+    #     protobuf \
+    #     psutil \
+    #     wheel \
+    #     && \
+    # $PIP_INSTALL \
+    #     llvmlite \
+    #     pythran \
+    #     pybind11 \
+    #     Cython \
+    #     numpy \
+    #     scipy \
+    #     pandas==0.25.3 \
+    #     cloudpickle \
+    #     scikit-learn \
+    #     matplotlib \
+    #     seaborn \
+    #     && \
 
 # ==================================================================
 # Jupyter Notebook
@@ -140,6 +139,12 @@ RUN apt-get update --fix-missing && \
 # ------------------------------------------------------------------
 
     $PIP_INSTALL \
+        numpy \
+        scipy \
+        pandas==0.25.3 \
+        scikit-learn \
+        matplotlib \
+        seaborn \
         transformers \
         accelerate \
         tiktoken \
