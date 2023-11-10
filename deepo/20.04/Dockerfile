@@ -90,6 +90,7 @@ RUN apt-get update --fix-missing && \
 # ------------------------------------------------------------------
 
     $PIP_INSTALL \
+        jsonschema'[format]' \
         jupyter \
         jupyter_contrib_nbextensions \
         jupyter_nbextensions_configurator \
