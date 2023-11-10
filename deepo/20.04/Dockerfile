@@ -59,6 +59,7 @@ RUN apt-get update --fix-missing && \
 # ------------------------------------------------------------------
 
     $PIP_INSTALL \
+        yapf \
         traitlets==5.9.0 \
         jsonschema'[format]' \
         notebook==6.4.12 \
