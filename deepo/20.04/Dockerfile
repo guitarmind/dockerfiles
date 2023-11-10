@@ -92,6 +92,7 @@ RUN apt-get update --fix-missing && \
     $PIP_INSTALL \
         traitlets==5.9.0 \
         jsonschema'[format]' \
+        notebook==6.4.12 \
         jupyter \
         jupyter_contrib_nbextensions \
         jupyter_nbextensions_configurator \
