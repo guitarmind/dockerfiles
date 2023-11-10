@@ -58,60 +58,60 @@ RUN apt-get update --fix-missing && \
 # Essesntial Packages
 # ------------------------------------------------------------------
 
-    # DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
-    #     software-properties-common \
-    #     && \
-    # add-apt-repository ppa:deadsnakes/ppa -y && \
-    # apt-get update --fix-missing && \
-    # python3 -m pip install --upgrade pip && \
-    # $PIP_INSTALL \
-    #     pip \
-    #     setuptools \
-    #     future \
-    #     protobuf \
-    #     psutil \
-    #     wheel \
-    #     && \
-    # $PIP_INSTALL \
-    #     llvmlite \
-    #     pythran \
-    #     pybind11 \
-    #     Cython \
-    #     numpy \
-    #     scipy \
-    #     pandas==0.25.3 \
-    #     cloudpickle \
-    #     scikit-learn \
-    #     matplotlib \
-    #     seaborn \
-    #     && \
+    DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
+        software-properties-common \
+        && \
+    add-apt-repository ppa:deadsnakes/ppa -y && \
+    apt-get update --fix-missing && \
+    python3 -m pip install --upgrade pip && \
+    $PIP_INSTALL \
+        pip \
+        setuptools \
+        future \
+        protobuf \
+        psutil \
+        wheel \
+        && \
+    $PIP_INSTALL \
+        llvmlite \
+        pythran \
+        pybind11 \
+        Cython \
+        numpy \
+        scipy \
+        pandas==0.25.3 \
+        cloudpickle \
+        scikit-learn \
+        matplotlib \
+        seaborn \
+        && \
 
 # ==================================================================
 # Jupyter Notebook
 # ------------------------------------------------------------------
 
-    # $PIP_INSTALL \
-    #     jinja2==2.11.3 \
-    #     MarkupSafe==2.0.1 \
-    #     yapf==0.40.1 \
-    #     ipywidgets==7.6.5 \
-    #     jupyter==1.0.0 \
-    #     jupyter_contrib_nbextensions==0.5.1 \
-    #     jupyter_nbextensions_configurator==0.4.1 \
-    #     jedi==0.17.2 \
-    #     parso==0.7.1 \
-    #     nbconvert==5.6.1 \
-    #     && \
-    # jupyter contrib nbextension install --user && \
-    # jupyter nbextension enable code_prettify/code_prettify && \
-    # jupyter nbextension enable collapsible_headings/main && \
-    # jupyter nbextension enable toggle_all_line_numbers/main && \
+    $PIP_INSTALL \
+        jinja2==2.11.3 \
+        MarkupSafe==2.0.1 \
+        yapf==0.40.1 \
+        ipywidgets==7.6.5 \
+        jupyter==1.0.0 \
+        jupyter_contrib_nbextensions==0.5.1 \
+        jupyter_nbextensions_configurator==0.4.1 \
+        jedi==0.17.2 \
+        parso==0.7.1 \
+        nbconvert==5.6.1 \
+        && \
+    jupyter contrib nbextension install --user && \
+    jupyter nbextension enable code_prettify/code_prettify && \
+    jupyter nbextension enable collapsible_headings/main && \
+    jupyter nbextension enable toggle_all_line_numbers/main && \
 
-    # python3 -m pip --no-cache-dir install --default-timeout=100 \
-    #     jupyterlab-server==2.10.3 \
-    #     jupyterlab==3.2.5 \
+    python3 -m pip --no-cache-dir install --default-timeout=100 \
+        jupyterlab-server==2.10.3 \
+        jupyterlab==3.2.5 \
 
-    # && \
+    && \
 
 # ==================================================================
 # Pytorch
@@ -139,23 +139,22 @@ RUN apt-get update --fix-missing && \
 # MISC.
 # ------------------------------------------------------------------
 
-    # $PIP_INSTALL \
-    #     transformers==4.32.0 \
-    #     accelerate \
-    #     tiktoken \
-    #     einops \
-    #     transformers_stream_generator==0.0.4 \
-    #     pillow \
-    #     tensorboard \
-    #     timm \
-    #     albumentations \
-    #     gradio \
-    #     markupsafe==2.0.1 \
-    #     && \
+    $PIP_INSTALL \
+        transformers \
+        accelerate \
+        tiktoken \
+        einops \
+        pillow \
+        tensorboard \
+        timm \
+        albumentations \
+        gradio \
+        markupsafe==2.0.1 \
+        && \
 
-    # python3 -c "import cv2; print(cv2.__version__)" \
+    python3 -c "import cv2; print(cv2.__version__)" \
 
-    # && \
+    && \
 
 # ==================================================================
 # GroundingDINO
