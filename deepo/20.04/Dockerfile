@@ -55,37 +55,6 @@ RUN apt-get update --fix-missing && \
         && \
 
 # ==================================================================
-# Essesntial Packages
-# ------------------------------------------------------------------
-
-    # DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
-    #     software-properties-common \
-    #     && \
-    # apt-get update --fix-missing && \
-    # python3 -m pip install --upgrade pip && \
-    # $PIP_INSTALL \
-    #     pip \
-    #     setuptools \
-    #     future \
-    #     protobuf \
-    #     psutil \
-    #     wheel \
-    #     && \
-    # $PIP_INSTALL \
-    #     llvmlite \
-    #     pythran \
-    #     pybind11 \
-    #     Cython \
-    #     numpy \
-    #     scipy \
-    #     pandas==0.25.3 \
-    #     cloudpickle \
-    #     scikit-learn \
-    #     matplotlib \
-    #     seaborn \
-    #     && \
-
-# ==================================================================
 # Jupyter Notebook
 # ------------------------------------------------------------------
 
@@ -101,12 +70,6 @@ RUN apt-get update --fix-missing && \
     jupyter nbextension enable code_prettify/code_prettify && \
     jupyter nbextension enable collapsible_headings/main && \
     jupyter nbextension enable toggle_all_line_numbers/main && \
-
-    # python3 -m pip --no-cache-dir install --default-timeout=100 \
-    #     jupyterlab-server==2.10.3 \
-    #     jupyterlab==3.2.5 \
-
-    # && \
 
 # ==================================================================
 # Pytorch
