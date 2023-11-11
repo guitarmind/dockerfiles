@@ -59,7 +59,7 @@ RUN apt-get update --fix-missing && \
 # ------------------------------------------------------------------
 
     $PIP_INSTALL \
-        yapf \
+        yapf==0.40.1 \
         traitlets==5.9.0 \
         jsonschema'[format]' \
         notebook==6.4.12 \
@@ -101,7 +101,7 @@ RUN apt-get update --fix-missing && \
     $PIP_INSTALL \
         numpy \
         scipy \
-        pandas==0.25.3 \
+        pandas \
         scikit-learn \
         matplotlib \
         seaborn \
@@ -126,6 +126,7 @@ RUN apt-get update --fix-missing && \
 # ------------------------------------------------------------------
 
     $PIP_INSTALL \
+        jsonlines \
         submitit \
         termcolor \
         addict \
@@ -138,6 +139,13 @@ RUN apt-get update --fix-missing && \
     cd Open-GroundingDino/models/GroundingDINO/ops && \
     python3 setup.py build install && \
     python3 test.py && \
+    $GIT_CLONE https://github.com/IDEA-Research/GroundingDINO.git && \
+    cd GroundingDINO && \
+    pip install -e . && \
+    mkdir weights && \
+    cd weights && \
+    wget https://github.com/IDEA-Research/GroundingDINO/releases/download/v0.1.0-alpha/groundingdino_swint_ogc.pth && \
+    cd .. && \
 
     echo "\
 unbind C-b\n\
