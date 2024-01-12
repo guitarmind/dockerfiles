@@ -1,6 +1,4 @@
-# FROM nvidia/cuda:11.1-cudnn8-devel-ubuntu20.04
-FROM nvidia/cuda:11.3.1-cudnn8-devel-ubuntu20.04
-# FROM nvidia/cuda:11.6.2-cudnn8-devel-ubuntu20.04
+FROM nvidia/cuda:11.7.1-cudnn8-devel-ubuntu22.04
 
 ENV CUDA_HOME=/usr/local/cuda
 
@@ -8,8 +6,8 @@ ENV LANG=C.UTF-8 LC_ALL=C.UTF-8 \
     # Disabling SSL verification
     SSL_NO_VERIFY=1 \
     PYTHONDONTWRITEBYTECODE=true \
-    PATH=/usr/local/cuda-11.3/bin:$PATH \
-    LD_LIBRARY_PATH=/usr/local/cuda-11.3/lib64:$LD_LIBRARY_PATH \
+    PATH=/usr/local/cuda-11.7/bin:$PATH \
+    LD_LIBRARY_PATH=/usr/local/cuda-11.7/lib64:$LD_LIBRARY_PATH \
     TZ=Asia/Taipei \
     APT_INSTALL="apt-get install -y --no-install-recommends" \
     PIP_INSTALL="python3 -m pip --no-cache-dir install --upgrade --default-timeout=100" \
@@ -77,8 +75,8 @@ RUN apt-get update --fix-missing && \
 # ------------------------------------------------------------------
 
     $PIP_INSTALL \
-        torch==1.12.1+cu113 \
-        torchvision==0.13.1+cu113 \
+        torch==2.0.1+cu117 \
+        torchvision==0.15.2+cu117 \
         -f https://download.pytorch.org/whl/torch_stable.html \
         && \
     python3 -c "import torch; print(f'CUDA available: {torch.cuda.is_available()}')" \
@@ -134,18 +132,27 @@ RUN apt-get update --fix-missing && \
         colorlog \
         pyyaml>3.10 \
         pycocotools \
+        causal-conv1d==1.1.1 \
+        mamba-ssm \
         && \
-    $GIT_CLONE https://github.com/longzw1997/Open-GroundingDino.git && \
-    cd Open-GroundingDino/models/GroundingDINO/ops && \
-    python3 setup.py build install && \
-    python3 test.py && \
-    $GIT_CLONE https://github.com/IDEA-Research/GroundingDINO.git && \
-    cd GroundingDINO && \
+
+    $GIT_CLONE https://github.com/bowang-lab/U-Mamba && \
+    cd U-Mamba/umamba && \
     pip install -e . && \
-    mkdir weights && \
-    cd weights && \
-    wget https://github.com/IDEA-Research/GroundingDINO/releases/download/v0.1.0-alpha/groundingdino_swint_ogc.pth && \
-    cd .. && \
+
+    python3 -c "import mamba_ssm; print(mamba_ssm.__version__)" \
+
+    # $GIT_CLONE https://github.com/longzw1997/Open-GroundingDino.git && \
+    # cd Open-GroundingDino/models/GroundingDINO/ops && \
+    # python3 setup.py build install && \
+    # python3 test.py && \
+    # $GIT_CLONE https://github.com/IDEA-Research/GroundingDINO.git && \
+    # cd GroundingDINO && \
+    # pip install -e . && \
+    # mkdir weights && \
+    # cd weights && \
+    # wget https://github.com/IDEA-Research/GroundingDINO/releases/download/v0.1.0-alpha/groundingdino_swint_ogc.pth && \
+    # cd .. && \
 
     echo "\
 unbind C-b\n\
