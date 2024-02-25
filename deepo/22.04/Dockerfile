@@ -57,7 +57,7 @@ RUN apt-get update --fix-missing && \
 # Tensorflow
 # ------------------------------------------------------------------
 
-RUN $PIP_INSTALL \
+    $PIP_INSTALL \
         h5py \
         tensorflow==2.15.0 \
         && \
