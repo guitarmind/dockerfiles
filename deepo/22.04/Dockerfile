@@ -1,4 +1,5 @@
-FROM nvidia/cuda:11.7.1-cudnn8-devel-ubuntu22.04
+FROM nvidia/cuda:12.2.2-cudnn8-devel-ubuntu22.04
+# FROM nvidia/cuda:11.7.1-cudnn8-devel-ubuntu22.04
 
 ENV CUDA_HOME=/usr/local/cuda
 
@@ -50,6 +51,17 @@ RUN apt-get update --fix-missing && \
         libffi-dev \
         python3-gi \
         nginx \
+        && \
+
+# ==================================================================
+# Tensorflow
+# ------------------------------------------------------------------
+
+RUN $PIP_INSTALL \
+        h5py \
+        tensorflow==2.15.0 \
+        && \
+        python3 -c "import tensorflow as tf; print(tf.__version__)" \
         && \
 
 # ==================================================================
