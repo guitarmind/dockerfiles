@@ -75,15 +75,15 @@ RUN apt-get update --fix-missing && \
 # ------------------------------------------------------------------
 
     $PIP_INSTALL \
-        torch==2.0.1+cu117 \
-        torchvision==0.15.2+cu117 \
+        torch==2.0.0+cu117 \
+        torchvision==0.15.0+cu117 \
         -f https://download.pytorch.org/whl/torch_stable.html \
         && \
     python3 -c "import torch; print(f'CUDA available: {torch.cuda.is_available()}')" \
         && \
 
     $PIP_INSTALL \
-        torchmetrics==0.11.0 \
+        torchmetrics==0.10.3 \
         pytorch-lightning==1.8.6 \
         torch_optimizer \
         torchinfo \
@@ -126,7 +126,6 @@ RUN apt-get update --fix-missing && \
     $PIP_INSTALL \
         --extra-index-url https://download.pytorch.org/whl/cu117 \
         omegaconf \
-        torchmetrics==0.10.3 \
         fvcore \
         iopath \
         xformers==0.0.18 \
