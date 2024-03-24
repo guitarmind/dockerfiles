@@ -178,9 +178,9 @@ RUN apt update \
 
 COPY slurm.conf /etc/slurm/slurm.conf
 
-RUN service munge restart \
-    && service slurmd restart \
-    && service slurmctld restart
+# RUN service munge restart \
+#     && service slurmd restart \
+#     && service slurmctld restart
 
 # Clean apt-cache
 RUN apt autoremove -y \
@@ -190,5 +190,5 @@ RUN apt autoremove -y \
 ADD entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-ENTRYPOINT ["/entrypoint.sh"]
-CMD ["/bin/bash"]
+# ENTRYPOINT ["/entrypoint.sh"]
+# CMD ["/bin/bash"]
