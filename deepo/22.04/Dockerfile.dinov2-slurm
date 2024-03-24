@@ -169,14 +169,14 @@ bind-key C-a send-prefix\n\
 # Install munge & slurm
 RUN apt update \
     && apt install munge slurm-wlm slurm-wlm-doc slurm-wlm-torque -y \
-    && rm -rf  /var/spool/slurm-llnl \
-    && mkdir /var/spool/slurm-llnl \
-    && chown -R slurm.slurm /var/spool/slurm-llnl \
-    && rm -rf /var/run/slurm-llnl/ \
-    && mkdir /var/run/slurm-llnl/ \
-    && chown -R slurm.slurm /var/run/slurm-llnl/
+    && rm -rf  /var/spool/slurm \
+    && mkdir /var/spool/slurm \
+    && chown -R slurm.slurm /var/spool/slurm \
+    && rm -rf /var/run/slurm/ \
+    && mkdir /var/run/slurm/ \
+    && chown -R slurm.slurm /var/run/slurm/
 
-COPY slurm.conf /etc/slurm-llnl/slurm.conf
+COPY slurm.conf /etc/slurm/slurm.conf
 
 RUN service munge restart \
     && service slurmd restart \
